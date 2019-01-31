@@ -9,6 +9,15 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <TextBlock x:Name="textBlock_msg" HorizontalAlignment="center" Margin="0,40,0,0" Text="TextBlock" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <NavigationView x:Name="nvSample">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Icon="Play" Content="Menu Item1" Tag="Paper" />
+                <NavigationViewItem Icon="Save" Content="Menu Item2" Tag="SamplePage2" />
+                <NavigationViewItem Icon="Refresh" Content="Menu Item3" Tag="SamplePage3" />
+                <NavigationViewItem Icon="Download" Content="Menu Item4" Tag="SamplePage4" />
+            </NavigationView.MenuItems>
+            <Frame x:Name="contentFrame"/>
+        </NavigationView>
     </Grid>
 </Page>

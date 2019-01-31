@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Web.Syndication;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -25,6 +26,36 @@ namespace InkingNewstand
         public MainPage()
         {
             this.InitializeComponent();
+            FeedSync();
         }
+
+        public async void FeedSync()
+        {
+            var feed = await new SyndicationClient().RetrieveFeedAsync(new Uri("http://feed.mtime.com/movienews.rss"));
+            var items = feed.Items;
+            if(items != null)
+            {
+                foreach(var item in items)
+                {
+                    var links = item.Links;
+                    foreach(var link in links)
+                    {
+                        string a = link.Uri.AbsoluteUri;
+                    }
+                    Invoke(() => { textBlock_msg.Text += item.Summary.Text; });
+                }
+            }
+            else
+            {
+                Invoke(() => { textBlock_msg.Text = "fucked"; });
+            }
+        }
+
+
+        public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
+        }
+
     }
 }
