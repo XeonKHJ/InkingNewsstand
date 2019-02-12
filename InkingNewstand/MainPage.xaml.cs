@@ -26,29 +26,33 @@ namespace InkingNewstand
         public MainPage()
         {
             this.InitializeComponent();
-            FeedSync();
         }
 
-        public async void FeedSync()
+        public async void FeedSync(string rssUrl)
         {
-            var feed = await new SyndicationClient().RetrieveFeedAsync(new Uri("http://feed.mtime.com/movienews.rss"));
+            var feed = await new SyndicationClient().RetrieveFeedAsync(new Uri(rssUrl));
             var items = feed.Items;
-            if(items != null)
-            {
-                foreach(var item in items)
-                {
-                    var links = item.Links;
-                    foreach(var link in links)
-                    {
-                        string a = link.Uri.AbsoluteUri;
-                    }
-                    Invoke(() => { textBlock_msg.Text += item.Summary.Text; });
-                }
-            }
-            else
-            {
-                Invoke(() => { textBlock_msg.Text = "fucked"; });
-            }
+            MixedFeeds mixedFeeds = new MixedFeeds("电影");
+            mixedFeeds.AddFeed(feed);
+            //传送items到Paper页面
+            this.Frame.Navigate(typeof(Paper), mixedFeeds);
+
+            //if(items != null)
+            //{
+            //    foreach(var item in items)
+            //    {
+            //        var links = item.Links;
+            //        foreach(var link in links)
+            //        {
+            //            string a = link.Uri.AbsoluteUri;
+            //        }
+            //        Invoke(() => { textBlock_msg.Text += item.Summary.Text; });
+            //    }
+            //}
+            //else
+            //{
+            //    Invoke(() => { textBlock_msg.Text = "fucked"; });
+            //}
         }
 
 
@@ -57,5 +61,9 @@ namespace InkingNewstand
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
         }
 
+        private void FeedButton_Click(object sender, RoutedEventArgs e)
+        {
+            FeedSync(rssTextBlock.Text);
+        }
     }
 }

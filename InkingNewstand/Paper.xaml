@@ -12,11 +12,25 @@
         <!--标题模板-->
     </Page.Resources>
     <Grid>
-        <RelativePanel x:Name="titlePanel" Height="200" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="DarkGray">
-            <TextBlock x:Name="titleTextBlock" Text="Title" FontSize="130" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                       RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True"></TextBlock>
-            <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
+        <InkCanvas></InkCanvas>
+        <RelativePanel>
+            <RelativePanel x:Name="titlePanel" Height="200" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="DarkGray" 
+                           RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                <TextBlock x:Name="titleTextBlock" Text="Title" FontSize="130" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True"></TextBlock>
+                <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
+            </RelativePanel>
+            <RelativePanel x:Name="contentPanel" RelativePanel.Below= "titlePanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                <!--报刊文章布局-->
+                <GridView ItemsSource="{x:Bind feeds.Items}" 
+                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" 
+                          RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" HorizontalAlignment="Stretch">
+                    <GridView.Background>
+                        Gray
+                    </GridView.Background>
+                </GridView>
+            </RelativePanel>
         </RelativePanel>
-        <RelativePanel></RelativePanel>
+        
     </Grid>
 </Page>

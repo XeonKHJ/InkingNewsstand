@@ -26,5 +26,48 @@ namespace InkingNewstand
         {
             this.InitializeComponent();
         }
+
+        private void layoutNews(MixedFeeds feeds)
+        {
+            var items = feeds.Items;
+            titleTextBlock.Text = feeds.PaperTitle;
+            int no = 0;
+            //foreach(var item in items)
+            //{
+            //    var newsBlock = new RelativePanel();
+            //    var newsTitleTextBlock = new TextBlock();
+            //    newsTitleTextBlock.Text = item.Title.Text;
+            //    newsTitleTextBlock.FontSize = 50;
+            //    contentPanel.Children.Add(newsTitleTextBlock);
+            //    RelativePanel.SetAlignRightWithPanel(newsTitleTextBlock, true);
+            //    RelativePanel.SetAlignLeftWithPanel(newsTitleTextBlock, true);
+            //    if (no == 0)
+            //    {
+            //        RelativePanel.SetAlignTopWithPanel(newsTitleTextBlock, true);
+            //    }
+            //    else
+            //    {
+            //        RelativePanel.SetBelow(newsTitleTextBlock, contentPanel.Children[contentPanel.Children.Count - 2]);
+            //    }
+            //    ++no;
+            //}
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (!(e.Parameter is MixedFeeds))
+            {
+                throw new Exception();
+            }
+            feeds = (MixedFeeds)e.Parameter;
+            layoutNews(feeds);
+        }
+
+        public MixedFeeds feeds { get;  set; }
+
+        private void GridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            this.Frame.Navigate(typeof(NewsDetail), e.ClickedItem);
+        }
     }
 }
