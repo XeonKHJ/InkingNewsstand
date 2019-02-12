@@ -9,6 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <InkCanvas x:Name="inking"></InkCanvas>
         <NavigationView x:Name="nvSample">
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Play" Content="Menu Item1" Tag="Paper" />

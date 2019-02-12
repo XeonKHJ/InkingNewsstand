@@ -12,7 +12,6 @@
         <!--标题模板-->
     </Page.Resources>
     <Grid>
-        <InkCanvas></InkCanvas>
         <RelativePanel>
             <RelativePanel x:Name="titlePanel" Height="200" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="DarkGray" 
                            RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
@@ -31,6 +30,6 @@
                 </GridView>
             </RelativePanel>
         </RelativePanel>
-        
+        <InkCanvas />
     </Grid>
 </Page>
