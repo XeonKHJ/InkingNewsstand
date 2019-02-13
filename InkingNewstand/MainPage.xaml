@@ -10,15 +10,15 @@
 
     <Grid>
         <InkCanvas x:Name="inking"></InkCanvas>
-        <NavigationView x:Name="nvSample">
+        <NavigationView x:Name="nvSample" ItemInvoked="NvSample_ItemInvoked">
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Play" Content="Menu Item1" Tag="Paper" />
                 <NavigationViewItem Icon="Save" Content="Menu Item2" Tag="SamplePage2" />
                 <NavigationViewItem Icon="Refresh" Content="Menu Item3" Tag="SamplePage3" />
                 <NavigationViewItem Icon="Download" Content="Menu Item4" Tag="SamplePage4" />
             </NavigationView.MenuItems>
-            <Frame x:Name="contentFrame">
-                <Grid>
+            <Frame x:Name="av">
+                <Grid Tag="SamplePage2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>

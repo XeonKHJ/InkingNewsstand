@@ -27,7 +27,7 @@ namespace InkingNewstand
             this.InitializeComponent();
         }
 
-        private void layoutNews(MixedFeeds feeds)
+        private void layoutNews(NewsPaper feeds)
         {
             var items = feeds.Items;
             titleTextBlock.Text = feeds.PaperTitle;
@@ -55,15 +55,15 @@ namespace InkingNewstand
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (!(e.Parameter is MixedFeeds))
+            if (!(e.Parameter is NewsPaper))
             {
                 throw new Exception();
             }
-            feeds = (MixedFeeds)e.Parameter;
+            feeds = (NewsPaper)e.Parameter;
             layoutNews(feeds);
         }
 
-        public MixedFeeds feeds { get;  set; }
+        public NewsPaper feeds { get;  set; }
 
         List<NewsItem> row1NewsItemList
         {

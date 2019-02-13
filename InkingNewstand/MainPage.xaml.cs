@@ -33,7 +33,7 @@ namespace InkingNewstand
             var feed = await new SyndicationClient().RetrieveFeedAsync(new Uri(rssUrl));
             var feedXml = feed.GetXmlDocument(feed.SourceFormat);
             var items = feed.Items;
-            MixedFeeds mixedFeeds = new MixedFeeds("THE VERGE");
+            NewsPaper mixedFeeds = new NewsPaper("THE VERGE");
             mixedFeeds.AddFeed(feed);
             //传送items到Paper页面
             this.Frame.Navigate(typeof(Paper), mixedFeeds);
@@ -65,6 +65,11 @@ namespace InkingNewstand
         private void FeedButton_Click(object sender, RoutedEventArgs e)
         {
             FeedSync(rssTextBlock.Text);
+        }
+
+        private void NvSample_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            ;
         }
     }
 }

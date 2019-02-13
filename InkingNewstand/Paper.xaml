@@ -10,6 +10,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
+        <ItemsPanelTemplate x:Key="ListViewItemsHorizontalPanel">
+            <ItemsStackPanel Orientation="Vertical"/>
+        </ItemsPanelTemplate>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -35,20 +38,20 @@
         </RelativePanel>
         
             <!--报刊文章布局-->
-        <GridView x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
-                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="1">
-            <GridView.ItemTemplate>
+        <ListView ItemsPanel="{StaticResource ListViewItemsHorizontalPanel}" x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
+                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="1" >
+            <ListView.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
                     <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <Image x:Name="newsImage" Height="130" Source="{x:Bind CoverUrl}" RelativePanel.AlignLeftWithPanel="True"/>
-                        <StackPanel Background="Black" RelativePanel.RightOf="newsImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <StackPanel Background="Black" RelativePanel.RightOf="newsImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="130" >
                             <TextBlock FontSize="40" Text="{x:Bind Title}" Foreground="White" TextAlignment="DetectFromContent"/>
                             <TextBlock FontSize="10" Text="{x:Bind Summary}" Foreground="White" TextAlignment="DetectFromContent"/>
                         </StackPanel>
                     </RelativePanel>
                 </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
+            </ListView.ItemTemplate>
+        </ListView>
         <!--
         <GridView x:Name="row2NewsItems" ItemsSource="{x:Bind feeds.Items}" 
                           IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="2">
