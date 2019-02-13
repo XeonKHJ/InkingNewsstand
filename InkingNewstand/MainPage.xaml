@@ -23,7 +23,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="rssTextBlock" VerticalAlignment="center" Text="http://feed.mtime.com/news.rss" Grid.Column="0"></TextBox>
+                    <TextBox x:Name="rssTextBlock" VerticalAlignment="center" Text="https://www.theverge.com/rss/full.xml" Grid.Column="0"></TextBox>
                     <Button x:Name="feedButton" Content="获取内容" Grid.Column="1" Click="FeedButton_Click"></Button>
                 </Grid>
             </Frame>

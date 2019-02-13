@@ -65,6 +65,36 @@ namespace InkingNewstand
 
         public MixedFeeds feeds { get;  set; }
 
+        List<NewsItem> row1NewsItemList
+        {
+            get
+            {
+                return feeds.Items.GetRange(0, 2);
+            }
+        }
+        
+        List<NewsItem> row2NewsItemList
+        {
+            get
+            {
+                return feeds.Items.GetRange(2, 2);
+            }
+        }
+        List<NewsItem> row3NewsItemList
+        {
+            get
+            {
+                return feeds.Items.GetRange(6, 2);
+            }
+        }
+        List<NewsItem> restNewsItemList
+        {
+            get
+            {
+                return feeds.Items.GetRange(8, feeds.Items.Count - 8);
+            }
+        }
+
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             this.Frame.Navigate(typeof(NewsDetail), e.ClickedItem);

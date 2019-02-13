@@ -10,33 +10,74 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <!--标题模板-->
     </Page.Resources>
     <Grid>
-        <RelativePanel>
-            <RelativePanel x:Name="titlePanel" Height="200" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="DarkGray" 
-                           RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                <TextBlock x:Name="titleTextBlock" Text="Title" FontSize="130" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                           RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True"></TextBlock>
-                <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
-            </RelativePanel>
-            <RelativePanel x:Name="contentPanel" RelativePanel.Below= "titlePanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                <!--报刊文章布局-->
-                <GridView ItemsSource="{x:Bind feeds.Items}" 
-                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" 
-                          RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" HorizontalAlignment="Stretch">
-                    <GridView.ItemTemplate>
-                        <DataTemplate x:DataType="data:NewsItem">
-                            <StackPanel>
-                                <Image Width="150" Source="{x:Bind CoverUrl}"/>
-                                <TextBlock FontSize="16" Text="{x:Bind Title}"/>
-                                <TextBlock FontSize="10" Text="{x:Bind Summary}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </GridView.ItemTemplate>
-                </GridView>
-            </RelativePanel>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="TitleRow" Height="100" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0"
+                                                     EndPoint="1,0">
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Offset="0"
+                                                      Color="#FFF7C626" />
+                    <GradientStop Offset="1"
+                                                      Color="#FFE5127D" />
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <RelativePanel x:Name="titlePanel" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                           Grid.Row="0" d:IsLocked="True">
+            <TextBlock x:Name="titleTextBlock" Text="Title" FontSize="100" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" FontWeight="Bold"></TextBlock>
+            <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
         </RelativePanel>
-        <InkCanvas />
+        
+            <!--报刊文章布局-->
+        <GridView x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
+                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="1">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="data:NewsItem">
+                    <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Image x:Name="newsImage" Height="130" Source="{x:Bind CoverUrl}" RelativePanel.AlignLeftWithPanel="True"/>
+                        <StackPanel Background="Black" RelativePanel.RightOf="newsImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <TextBlock FontSize="40" Text="{x:Bind Title}" Foreground="White" TextAlignment="DetectFromContent"/>
+                            <TextBlock FontSize="10" Text="{x:Bind Summary}" Foreground="White" TextAlignment="DetectFromContent"/>
+                        </StackPanel>
+                    </RelativePanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+        <!--
+        <GridView x:Name="row2NewsItems" ItemsSource="{x:Bind feeds.Items}" 
+                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="2">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="data:NewsItem">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="400" Source="{x:Bind CoverUrl}"/>
+                        <RelativePanel Background="Black">
+                            <TextBlock FontSize="70" Text="{x:Bind Title}" Foreground="White"/>
+                            <TextBlock FontSize="10" Text="{x:Bind Summary}" />
+                        </RelativePanel>
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+        <GridView x:Name="row3NewsItems" ItemsSource="{x:Bind feeds.Items}" 
+                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="3">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="data:NewsItem">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="400" Source="{x:Bind CoverUrl}"/>
+                        <RelativePanel Background="Black">
+                            <TextBlock FontSize="70" Text="{x:Bind Title}" Foreground="White"/>
+                            <TextBlock FontSize="10" Text="{x:Bind Summary}" />
+                        </RelativePanel>
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+        -->
     </Grid>
 </Page>
