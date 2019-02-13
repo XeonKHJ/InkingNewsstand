@@ -31,6 +31,7 @@ namespace InkingNewstand
         public async void FeedSync(string rssUrl)
         {
             var feed = await new SyndicationClient().RetrieveFeedAsync(new Uri(rssUrl));
+            var feedXml = feed.GetXmlDocument(feed.SourceFormat);
             var items = feed.Items;
             MixedFeeds mixedFeeds = new MixedFeeds("电影");
             mixedFeeds.AddFeed(feed);

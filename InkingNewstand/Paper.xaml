@@ -5,6 +5,7 @@
     xmlns:local="using:InkingNewstand"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:InkingNewstand"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -24,9 +25,15 @@
                 <GridView ItemsSource="{x:Bind feeds.Items}" 
                           IsItemClickEnabled="True" ItemClick="GridView_ItemClick" 
                           RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" HorizontalAlignment="Stretch">
-                    <GridView.Background>
-                        Gray
-                    </GridView.Background>
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="data:NewsItem">
+                            <StackPanel>
+                                <Image Width="150" Source="{x:Bind CoverUrl}"/>
+                                <TextBlock FontSize="16" Text="{x:Bind Title}"/>
+                                <TextBlock FontSize="10" Text="{x:Bind Summary}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
                 </GridView>
             </RelativePanel>
         </RelativePanel>

@@ -34,8 +34,18 @@ namespace InkingNewstand
                 throw new Exception();
             }
             NewsItem news = (NewsItem)(e.Parameter);
-            var link = news.Item.Links[0];
-            newsWebView.Source = news.Item.Links[0].Uri;
+            if(news.Item.Content == null)
+            {
+                throw new Exception();
+            }
+            newsWebView.NavigateToString(news.Item.Content.Text);
+            
+            //foreach (var link1 in news.Item.Links)
+            //{
+            //    ;
+            //}
+            //var link = news.Item.Links[0];
+            //newsWebView.Source = news.Item.Links[0].Uri;
         }
     }
 }
