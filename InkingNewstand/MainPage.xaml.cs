@@ -67,9 +67,21 @@ namespace InkingNewstand
             FeedSync(rssTextBlock.Text);
         }
 
-        private void NvSample_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        private void NavigationView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
         {
-            ;
+            if(args.IsSettingsSelected)
+            {
+               //设置页面
+            }
+            else
+            {
+                var selectedItem = (NavigationViewItem)args.SelectedItem;
+                if(selectedItem != null)
+                {
+                    //string selectedItemTag = ((string)selectedItem.Tag);
+                    contentFrame.Navigate(Paper);
+                }
+            }
         }
     }
 }

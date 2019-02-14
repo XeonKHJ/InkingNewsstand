@@ -10,7 +10,7 @@
 
     <Grid>
         <InkCanvas x:Name="inking"></InkCanvas>
-        <NavigationView x:Name="nvSample" ItemInvoked="NvSample_ItemInvoked">
+        <NavigationView x:Name="nvSample" SelectionChanged="NavigationView_SelectionChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Play" Content="Menu Item1" Tag="Paper" />
                 <NavigationViewItem Icon="Save" Content="Menu Item2" Tag="SamplePage2" />
