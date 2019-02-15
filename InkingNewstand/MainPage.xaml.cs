@@ -83,7 +83,21 @@ namespace InkingNewstand
             }
         }
 
-        public List<NewsPaper> newspaperList { get; set; }
+        private async void GetNewsPapers()
+        {
+            newsPapers = await NewsPaper.GetNewsPapers();
+        }
+
+        List<NewsPaper> newsPapers;
+        public List<NewsPaper> newspaperList
+        {
+            get
+            {
+                List<NewsPaper> avc = new List<NewsPaper>();
+                avc.Add(new NewsPaper("添加"));
+                return avc;
+            }
+        }
 
         private void AddPaperButton_Click(object sender, RoutedEventArgs e)
         {

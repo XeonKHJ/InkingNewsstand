@@ -11,12 +11,11 @@
 
     <Grid>
         <NavigationView x:Name="nvSample" SelectionChanged="NvSample_SelectionChanged" IsBackButtonVisible="Collapsed" MenuItemsSource="{x:Bind newspaperList}">
-            <NavigationView.MenuItems>
-                <NavigationViewItem Icon="Add" Content="添加报纸" Tag="AddPaperPage" />
+            <NavigationView.MenuItemTemplate>
                 <DataTemplate x:DataType="data:NewsPaper">
                     <NavigationViewItem Content="{x:Bind PaperTitle}" Icon="Filter"></NavigationViewItem>
                 </DataTemplate>
-            </NavigationView.MenuItems>
+            </NavigationView.MenuItemTemplate>
             <Frame x:Name="contentFrame">
                 <Grid Tag="SamplePage2">
                     <Grid.ColumnDefinitions>

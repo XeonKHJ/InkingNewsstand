@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.Web.Syndication;
 
 namespace InkingNewstand
@@ -70,6 +71,17 @@ namespace InkingNewstand
                 }
                 return newsItems;
             }
+        }
+
+        public static async Task<List<NewsPaper>> GetNewsPapers()
+        {
+            var file = await ApplicationData.Current.LocalFolder.TryGetItemAsync("PaperList.dat") as StorageFile;
+            if (file == null)
+            {
+                return new List<NewsPaper>();
+            }
+            return new List<NewsPaper>();
+
         }
 
         /// <summary>

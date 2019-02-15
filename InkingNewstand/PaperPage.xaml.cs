@@ -72,7 +72,7 @@ namespace InkingNewstand
         {
             get
             {
-                return feeds.Items.GetRange(0, 2);
+                return feeds.Items;
             }
         }
         
