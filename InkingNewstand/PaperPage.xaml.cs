@@ -20,9 +20,9 @@ namespace InkingNewstand
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class Paper : Page
+    public sealed partial class PaperPage : Page
     {
-        public Paper()
+        public PaperPage()
         {
             this.InitializeComponent();
         }
@@ -59,8 +59,11 @@ namespace InkingNewstand
             {
                 throw new Exception();
             }
-            feeds = (NewsPaper)e.Parameter;
-            layoutNews(feeds);
+            else
+            {
+                feeds = (NewsPaper)e.Parameter;
+                layoutNews(feeds);
+            }
         }
 
         public NewsPaper feeds { get;  set; }
@@ -97,7 +100,7 @@ namespace InkingNewstand
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            this.Frame.Navigate(typeof(NewsDetail), e.ClickedItem);
+            this.Frame.Navigate(typeof(NewsDetailPage), e.ClickedItem);
         }
     }
 }

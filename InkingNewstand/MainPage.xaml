@@ -5,19 +5,19 @@
     xmlns:local="using:InkingNewstand"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:InkingNewstand"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <InkCanvas x:Name="inking"></InkCanvas>
-        <NavigationView x:Name="nvSample" SelectionChanged="NavigationView_SelectionChanged">
+        <NavigationView x:Name="nvSample" SelectionChanged="NvSample_SelectionChanged" IsBackButtonVisible="Collapsed" MenuItemsSource="{x:Bind newspaperList}">
             <NavigationView.MenuItems>
-                <NavigationViewItem Icon="Play" Content="Menu Item1" Tag="Paper" />
-                <NavigationViewItem Icon="Save" Content="Menu Item2" Tag="SamplePage2" />
-                <NavigationViewItem Icon="Refresh" Content="Menu Item3" Tag="SamplePage3" />
-                <NavigationViewItem Icon="Download" Content="Menu Item4" Tag="SamplePage4" />
+                <NavigationViewItem Icon="Add" Content="添加报纸" Tag="AddPaperPage" />
+                <DataTemplate x:DataType="data:NewsPaper">
+                    <NavigationViewItem Content="{x:Bind PaperTitle}" Icon="Filter"></NavigationViewItem>
+                </DataTemplate>
             </NavigationView.MenuItems>
-            <Frame x:Name="av">
+            <Frame x:Name="contentFrame">
                 <Grid Tag="SamplePage2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -28,5 +28,6 @@
                 </Grid>
             </Frame>
         </NavigationView>
+        <AppBarButton x:Name="addPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Add" Label="添加报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="AddPaperButton_Click"></AppBarButton>
     </Grid>
 </Page>

@@ -30,13 +30,13 @@ namespace InkingNewstand
 
         public async void FeedSync(string rssUrl)
         {
-            var feed = await new SyndicationClient().RetrieveFeedAsync(new Uri(rssUrl));
-            var feedXml = feed.GetXmlDocument(feed.SourceFormat);
-            var items = feed.Items;
-            NewsPaper mixedFeeds = new NewsPaper("THE VERGE");
-            mixedFeeds.AddFeed(feed);
+            //var feed = await new SyndicationClient().RetrieveFeedAsync(new Uri(rssUrl));
+            //var feedXml = feed.GetXmlDocument(feed.SourceFormat);
+            //var items = feed.Items;
+            //NewsPaper mixedFeeds = new NewsPaper("THE VERGE");
+            //mixedFeeds.AddFeed(feed);
             //传送items到Paper页面
-            this.Frame.Navigate(typeof(Paper), mixedFeeds);
+            //contentFrame.Navigate(typeof(PaperPage), mixedFeeds);
 
             //if(items != null)
             //{
@@ -67,21 +67,28 @@ namespace InkingNewstand
             FeedSync(rssTextBlock.Text);
         }
 
-        private void NavigationView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
+        private void NvSample_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            if(args.IsSettingsSelected)
+            if (args.IsSettingsSelected)
             {
-               //设置页面
+                //设置页面
             }
             else
             {
                 var selectedItem = (NavigationViewItem)args.SelectedItem;
-                if(selectedItem != null)
+                if ((string)selectedItem.Tag == "AddPaperPage")
                 {
-                    //string selectedItemTag = ((string)selectedItem.Tag);
-                    contentFrame.Navigate(Paper);
+                    contentFrame.Navigate(typeof(AddPaperPage));
                 }
             }
+        }
+
+        public List<NewsPaper> newspaperList { get; set; }
+
+        private void AddPaperButton_Click(object sender, RoutedEventArgs e)
+        {
+            addPaperButton.Visibility = Visibility.Collapsed;
+            contentFrame.Navigate(typeof(AddPaperPage));
         }
     }
 }

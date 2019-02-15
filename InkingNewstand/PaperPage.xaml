@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="InkingNewstand.Paper"
+    x:Class="InkingNewstand.PaperPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:InkingNewstand"
@@ -37,7 +37,7 @@
             <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
         </RelativePanel>
         
-            <!--报刊文章布局-->
+        <!--报刊文章布局-->
         <ListView ItemsPanel="{StaticResource ListViewItemsHorizontalPanel}" x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
                           IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="1" >
             <ListView.ItemTemplate>
