@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.Web.Syndication;
 
 namespace InkingNewstand
@@ -35,7 +36,14 @@ namespace InkingNewstand
             //1、读取报纸列表数据，获取当前报纸编号，若没有则新建
             string paperListFileName = "PaperList.dat";
             var paperListFile = await storageFolder.CreateFileAsync(paperListFileName, CreationCollisionOption.OpenIfExists);
-            
+
+            SortedDictionary<int, NewsPaper> paperListinFile = new SortedDictionary<int, NewsPaper>();
+
+            var stream = await paperListFile.OpenAsync(FileAccessMode.Read); //获取文件随机存取流
+            var inputStream = stream.GetInputStreamAt(0); //获取从0开始的输入流
+            var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
+            uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
+
 
             //打开/创建保存该报纸的文件
             string fileName = "sample.dat"; //修改成报纸名字
