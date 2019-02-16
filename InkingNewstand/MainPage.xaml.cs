@@ -26,6 +26,7 @@ namespace InkingNewstand
         public MainPage()
         {
             this.InitializeComponent();
+            GetNewsPapers();
         }
 
         public async void FeedSync(string rssUrl)
@@ -67,18 +68,23 @@ namespace InkingNewstand
             FeedSync(rssTextBlock.Text);
         }
 
+        /// <summary>
+        /// 导航栏选项选中后
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void NvSample_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             if (args.IsSettingsSelected)
             {
-                //设置页面
+                //跳转到设置页面
             }
             else
             {
-                var selectedItem = (NavigationViewItem)args.SelectedItem;
-                if ((string)selectedItem.Tag == "AddPaperPage")
+                var selectedItem = (NewsPaper)args.SelectedItem;
+                if (selectedItem.Count == 0)
                 {
-                    contentFrame.Navigate(typeof(AddPaperPage));
+                    AddPaperButton_Click(sender, new RoutedEventArgs());
                 }
             }
         }
@@ -86,6 +92,10 @@ namespace InkingNewstand
         private async void GetNewsPapers()
         {
             newsPapers = await NewsPaper.GetNewsPapers();
+            if(newsPapers.Count == 0)
+            {
+                newsPapers.Add(new NewsPaper("添加第一份报纸！"));
+            }
         }
 
         List<NewsPaper> newsPapers;

@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <NavigationView x:Name="nvSample" SelectionChanged="NvSample_SelectionChanged" IsBackButtonVisible="Collapsed" MenuItemsSource="{x:Bind newspaperList}">
+        <NavigationView x:Name="nvSample" SelectionChanged="NvSample_SelectionChanged" IsBackButtonVisible="Collapsed" MenuItemsSource="{x:Bind newsPapers}">
             <NavigationView.MenuItemTemplate>
                 <DataTemplate x:DataType="data:NewsPaper">
                     <NavigationViewItem Content="{x:Bind PaperTitle}" Icon="Filter"></NavigationViewItem>
