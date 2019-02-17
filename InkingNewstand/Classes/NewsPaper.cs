@@ -19,7 +19,6 @@ namespace InkingNewstand
         public NewsPaper(string paperName)
         {
             this.PaperTitle = paperName;
-            
         }
 
         /// <summary>
@@ -48,6 +47,7 @@ namespace InkingNewstand
             paperListinFile = (SortedDictionary<int, NewsPaper>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
 
             //2、获取当前报纸编号，若没有则新建
+            
 
             ////2.1、如果文件中没有保存任何东西，则新建一个paperListinFile
             if (paperListinFile == null)
