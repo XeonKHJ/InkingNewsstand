@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -33,17 +34,29 @@ namespace InkingNewstand
         {
             var storageFolder = ApplicationData.Current.LocalFolder;
 
-            //1、读取报纸列表数据，获取当前报纸编号，若没有则新建
+            //1、读取报纸列表数据
             string paperListFileName = "PaperList.dat";
             var paperListFile = await storageFolder.CreateFileAsync(paperListFileName, CreationCollisionOption.OpenIfExists);
 
             SortedDictionary<int, NewsPaper> paperListinFile = new SortedDictionary<int, NewsPaper>();
 
-            var stream = await paperListFile.OpenAsync(FileAccessMode.Read); //获取文件随机存取流
+            var stream = await paperListFile.OpenReadAsync(); //获取文件随机存取流
             var inputStream = stream.GetInputStreamAt(0); //获取从0开始的输入流
             var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
             uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
+            byte[] bytes = new byte[(uint)stream.Size]; //用来存储从文件中读出的数据
+            paperListinFile = (SortedDictionary<int, NewsPaper>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
 
+            //2、获取当前报纸编号，若没有则新建
+
+            ////2.1、如果文件中没有保存任何东西，则新建一个paperListinFile
+            if (paperListinFile == null)
+            {
+                paperListinFile = new SortedDictionary<int, NewsPaper>();
+            }
+            ////如果有了则直接查询
+            
+            
 
             //打开/创建保存该报纸的文件
             string fileName = "sample.dat"; //修改成报纸名字
@@ -55,6 +68,18 @@ namespace InkingNewstand
             await FileIO.WriteBufferAsync(saveFile, buffer);
 
             return saveFile;
+        }
+
+        private static Object ByteArrayToObject(byte[] arrBytes)
+        {
+            using (var memStream = new System.IO.MemoryStream())
+            {
+                var binForm = new BinaryFormatter();
+                memStream.Write(arrBytes, 0, arrBytes.Length);
+                memStream.Seek(0, System.IO.SeekOrigin.Begin);
+                var obj = binForm.Deserialize(memStream);
+                return obj;
+            }
         }
 
         /// <summary>
