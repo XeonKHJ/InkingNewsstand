@@ -120,7 +120,8 @@ namespace InkingNewstand
             {
                 var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
                 uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
-                byte[] bytes = new byte[(uint)stream.Size]; //用来存储从文件中读出的数据
+                byte[] bytes = new byte[(uint)stream.Size];
+                dataReader.ReadBytes(bytes);//用来存储从文件中读出的数据
                 paperListinFile = (SortedDictionary<int, NewsPaper>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
             }
             stream.Dispose();
