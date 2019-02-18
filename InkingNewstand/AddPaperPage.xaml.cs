@@ -44,6 +44,10 @@ namespace InkingNewstand
             newsPaper = new NewsPaper(newspaperTitleTextBox.Text);
             foreach(var element in rssInputPanel.Children)
             {
+                if ((element as TextBox).Text == "")
+                {
+                    continue;
+                }
                 await newsPaper.AddFeedLink(new Uri((element as TextBox).Text));
             }
 
