@@ -27,30 +27,12 @@ namespace InkingNewstand
             this.InitializeComponent();
         }
 
-        private void layoutNews(NewsPaper feeds)
+        private async void layoutNews(NewsPaper feeds)
         {
-            var items = feeds.Items;
+            newsItems = await feeds.GetNewsListAsync();
             titleTextBlock.Text = feeds.PaperTitle;
+            Bindings.Update();
             int no = 0;
-            //foreach(var item in items)
-            //{
-            //    var newsBlock = new RelativePanel();
-            //    var newsTitleTextBlock = new TextBlock();
-            //    newsTitleTextBlock.Text = item.Title.Text;
-            //    newsTitleTextBlock.FontSize = 50;
-            //    contentPanel.Children.Add(newsTitleTextBlock);
-            //    RelativePanel.SetAlignRightWithPanel(newsTitleTextBlock, true);
-            //    RelativePanel.SetAlignLeftWithPanel(newsTitleTextBlock, true);
-            //    if (no == 0)
-            //    {
-            //        RelativePanel.SetAlignTopWithPanel(newsTitleTextBlock, true);
-            //    }
-            //    else
-            //    {
-            //        RelativePanel.SetBelow(newsTitleTextBlock, contentPanel.Children[contentPanel.Children.Count - 2]);
-            //    }
-            //    ++no;
-            //}
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -68,33 +50,13 @@ namespace InkingNewstand
 
         public NewsPaper feeds { get;  set; }
 
+        List<NewsItem> newsItems;
+
         List<NewsItem> row1NewsItemList
         {
             get
             {
-                return feeds.Items;
-            }
-        }
-        
-        List<NewsItem> row2NewsItemList
-        {
-            get
-            {
-                return feeds.Items.GetRange(2, 2);
-            }
-        }
-        List<NewsItem> row3NewsItemList
-        {
-            get
-            {
-                return feeds.Items.GetRange(6, 2);
-            }
-        }
-        List<NewsItem> restNewsItemList
-        {
-            get
-            {
-                return feeds.Items.GetRange(8, feeds.Items.Count - 8);
+                return newsItems;
             }
         }
 

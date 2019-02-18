@@ -39,18 +39,21 @@ namespace InkingNewstand
         }
 
         NewsPaper newsPaper;
-        private async void AppBarButton_Click(object sender, RoutedEventArgs e)
+        private async void saveButton_Click(object sender, RoutedEventArgs e)
         {
             newsPaper = new NewsPaper(newspaperTitleTextBox.Text);
             foreach(var element in rssInputPanel.Children)
             {
-                if ((element as TextBox).Text == "")
+                try
+                {
+                    await newsPaper.AddFeedLink(new Uri((element as TextBox).Text));
+                }
+                catch(Exception exception)
                 {
                     continue;
                 }
-                await newsPaper.AddFeedLink(new Uri((element as TextBox).Text));
             }
-
+            await NewsPaper.SaveToFile(newsPaper);
             //!!要等上一句完成，要用同步异步操作了。
             this.Frame.Navigate(typeof(PaperPage), newsPaper);
         }

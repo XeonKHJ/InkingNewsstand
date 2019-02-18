@@ -91,7 +91,7 @@ namespace InkingNewstand
 
         private async void GetNewsPapers()
         {
-            newsPapers = await NewsPaper.GetNewsPapers();
+            newsPapers = await NewsPaper.ReadFromFile();
             if(newsPapers.Count == 0)
             {
                 newsPapers.Add(new NewsPaper("添加第一份报纸！"));

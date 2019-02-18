@@ -15,7 +15,7 @@
         <TextBlock Text="添加报纸" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" Margin="50,0,0,0"></TextBlock>
         <RelativePanel HorizontalAlignment="Right">
             <StackPanel Orientation="Horizontal">
-                <AppBarButton Icon="Save" Label="保存" Click="AppBarButton_Click"/>
+                <AppBarButton x:Name="saveButton" Icon="Save" Label="保存" Click="saveButton_Click"/>
                 <AppBarButton Icon="Delete" Label="删除" Visibility="Collapsed"/>
             </StackPanel>
         </RelativePanel>

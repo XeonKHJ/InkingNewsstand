@@ -10,12 +10,14 @@ using Windows.Web.Syndication;
 
 namespace InkingNewstand
 {
+    [Serializable]
     /// <summary>
     /// 报纸类 ，旧名字为MixedFeeds
     /// </summary>
     public class NewsPaper
     {
-        private List<SyndicationFeed> feeds = new List<SyndicationFeed>();
+        static private StorageFile paperListFile;
+        private List<Uri> feedUrls = new List<Uri>();
         public NewsPaper(string paperName)
         {
             this.PaperTitle = paperName;
@@ -38,7 +40,15 @@ namespace InkingNewstand
 
             //0、打开文件
             string paperListFileName = "PaperList.dat";
-            var paperListFile = await storageFolder.CreateFileAsync(paperListFileName, CreationCollisionOption.OpenIfExists);
+
+            try
+            {
+                paperListFile = await storageFolder.CreateFileAsync(paperListFileName, CreationCollisionOption.OpenIfExists);
+            }
+            catch(System.IO.FileLoadException exception)
+            {
+                ;
+            }
             SortedDictionary<int, NewsPaper> paperListinFile = new SortedDictionary<int, NewsPaper>();
 
             //1、读取报纸列表数据
@@ -50,6 +60,7 @@ namespace InkingNewstand
                 byte[] bytes = new byte[(uint)stream.Size]; //用来存储从文件中读出的数据
                 paperListinFile = (SortedDictionary<int, NewsPaper>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
             }
+            stream.Dispose();
 
             //2、获取当前报纸编号
             ////2.1、如果文件中没有保存任何东西，则新建一个paperListinFile
@@ -91,7 +102,16 @@ namespace InkingNewstand
             var storageFolder = ApplicationData.Current.LocalFolder;
             //0、打开文件
             string paperListFileName = "PaperList.dat";
-            var paperListFile = await storageFolder.CreateFileAsync(paperListFileName, CreationCollisionOption.OpenIfExists);
+
+            try
+            {
+                paperListFile = await storageFolder.CreateFileAsync(paperListFileName, CreationCollisionOption.OpenIfExists);
+            }
+            catch(System.IO.FileLoadException exception)
+            {
+                ;
+            }
+
             SortedDictionary<int, NewsPaper> paperListinFile = new SortedDictionary<int, NewsPaper>();
 
             //1、读取报纸列表数据
@@ -103,6 +123,12 @@ namespace InkingNewstand
                 byte[] bytes = new byte[(uint)stream.Size]; //用来存储从文件中读出的数据
                 paperListinFile = (SortedDictionary<int, NewsPaper>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
             }
+            stream.Dispose();
+
+            if(paperListinFile == null)
+            {
+                return new List<NewsPaper>();
+            }
 
             List<NewsPaper> newsPapers = new List<NewsPaper>();
             foreach(var paperPair in paperListinFile)
@@ -111,6 +137,7 @@ namespace InkingNewstand
             }
             return newsPapers;
         }
+
         /// <summary>
         ///  ///byte数组转换成object
         /// </summary>
@@ -123,11 +150,18 @@ namespace InkingNewstand
                 var binForm = new BinaryFormatter();
                 memStream.Write(arrBytes, 0, arrBytes.Length);
                 memStream.Seek(0, System.IO.SeekOrigin.Begin);
-                var obj = binForm.Deserialize(memStream);
+                Object obj;
+                try
+                {
+                    obj = binForm.Deserialize(memStream);
+                }
+                catch(System.Runtime.Serialization.SerializationException exception)
+                {
+                    obj = null;
+                }
                 return obj;
             }
         }
-
         /// <summary>
         /// object转换成byte数组
         /// </summary>
@@ -149,9 +183,9 @@ namespace InkingNewstand
         /// <param name="feedUrl">订阅源链接</param>
         public async Task AddFeedLink(Uri feedUrl)
         {
-            var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
-            var feedXml = feed.GetXmlDocument(feed.SourceFormat);
-            feeds.Add(feed);
+            //var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
+            //var feedXml = feed.GetXmlDocument(feed.SourceFormat);
+            feedUrls.Add(feedUrl);
         }
         
         /// <summary>
@@ -161,20 +195,19 @@ namespace InkingNewstand
         {
             get
             {
-                return feeds.Count;
+                return feedUrls.Count;
             }
         }
         
         /// <summary>
         /// 文章列表
         /// </summary>
-        public List<NewsItem> Items
+        public async Task<List<NewsItem>> GetNewsListAsync()
         {
-            get
-            {
                 List<SyndicationItem> mixedItemList = new List<SyndicationItem>();
-                foreach (var feed in feeds)
+                foreach (var feedUrl in feedUrls)
                 {
+                    var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
                     mixedItemList.AddRange(feed.Items);
                 }
                 List<NewsItem> newsItems = new List<NewsItem>();
@@ -183,7 +216,6 @@ namespace InkingNewstand
                     newsItems.Add(new NewsItem(item));
                 }
                 return newsItems;
-            }
         }
 
         /// <summary>
