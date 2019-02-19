@@ -29,16 +29,21 @@ namespace InkingNewstand
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            string content;
             if(!(e.Parameter is NewsItem))
             {
                 throw new Exception();
             }
             NewsItem news = (NewsItem)(e.Parameter);
-            if(news.Item.Content == null)
+            if(news.Item.Content != null)
             {
-                throw new Exception();
+                content = news.Item.Content.Text;
             }
-            newsWebView.NavigateToString(news.Item.Content.Text);
+            else
+            {
+                content = news.Item.Summary.Text;
+            }
+            newsWebView.NavigateToString(content);
             
             //foreach (var link1 in news.Item.Links)
             //{
