@@ -74,5 +74,10 @@ namespace InkingNewstand
             addPaperButton.Visibility = Visibility.Collapsed;
             contentFrame.Navigate(typeof(AddPaperPage));
         }
+
+        private void EditPaperButton_Click(object sender, RoutedEventArgs e)
+        {
+            contentFrame.Navigate(typeof(AddPaperPage), PaperPage.feeds);
+        }
     }
 }

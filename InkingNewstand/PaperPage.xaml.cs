@@ -48,7 +48,7 @@ namespace InkingNewstand
             }
         }
 
-        public NewsPaper feeds { get;  set; }
+        static public NewsPaper feeds { get;  set; }
 
         List<NewsItem> newsItems;
 

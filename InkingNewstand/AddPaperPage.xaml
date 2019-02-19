@@ -16,7 +16,7 @@
         <RelativePanel HorizontalAlignment="Right">
             <StackPanel Orientation="Horizontal">
                 <AppBarButton x:Name="saveButton" Icon="Save" Label="保存" Click="saveButton_Click"/>
-                <AppBarButton Icon="Delete" Label="删除" Visibility="Collapsed"/>
+                <AppBarButton x:Name="deleteButton" Icon="Delete" Label="删除" Visibility="Collapsed" Click="DeleteButton_Click"/>
             </StackPanel>
         </RelativePanel>
         <RelativePanel Margin="50,0" Grid.Row="1">

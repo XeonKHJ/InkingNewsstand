@@ -241,5 +241,22 @@ namespace InkingNewstand
         {
             ;
         }
+
+        public List<Uri> FeedUrls
+        {
+            get
+            {
+                return feedUrls;
+            }
+        }
+
+        /// <summary>
+        /// 删除一张报纸
+        /// </summary>
+        /// <param name="newsPaper">要删除的报纸</param>
+        static public void DeleteNewsPaper(NewsPaper newsPaper)
+        {
+            //To-do.
+        }
     }
 }
