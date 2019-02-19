@@ -13,18 +13,10 @@
         <NavigationView x:Name="nvSample" SelectionChanged="NvSample_SelectionChanged" IsBackButtonVisible="Collapsed" MenuItemsSource="{x:Bind newsPapers}">
             <NavigationView.MenuItemTemplate>
                 <DataTemplate x:DataType="data:NewsPaper">
-                    <NavigationViewItem Content="{x:Bind PaperTitle}" Icon="Filter"></NavigationViewItem>
+                    <NavigationViewItem Content="{x:Bind PaperTitle}" Icon="Page"></NavigationViewItem>
                 </DataTemplate>
             </NavigationView.MenuItemTemplate>
             <Frame x:Name="contentFrame">
-                <Grid Tag="SamplePage2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox x:Name="rssTextBlock" VerticalAlignment="center" Text="https://www.theverge.com/rss/full.xml" Grid.Column="0"></TextBox>
-                    <Button x:Name="feedButton" Content="获取内容" Grid.Column="1" Click="FeedButton_Click"></Button>
-                </Grid>
             </Frame>
         </NavigationView>
         <AppBarButton x:Name="addPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Add" Label="添加报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="AddPaperButton_Click"></AppBarButton>

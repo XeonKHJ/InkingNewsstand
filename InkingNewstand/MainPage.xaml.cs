@@ -29,43 +29,9 @@ namespace InkingNewstand
             GetNewsPapers();
         }
 
-        public async void FeedSync(string rssUrl)
-        {
-            //var feed = await new SyndicationClient().RetrieveFeedAsync(new Uri(rssUrl));
-            //var feedXml = feed.GetXmlDocument(feed.SourceFormat);
-            //var items = feed.Items;
-            //NewsPaper mixedFeeds = new NewsPaper("THE VERGE");
-            //mixedFeeds.AddFeed(feed);
-            //传送items到Paper页面
-            //contentFrame.Navigate(typeof(PaperPage), mixedFeeds);
-
-            //if(items != null)
-            //{
-            //    foreach(var item in items)
-            //    {
-            //        var links = item.Links;
-            //        foreach(var link in links)
-            //        {
-            //            string a = link.Uri.AbsoluteUri;
-            //        }
-            //        Invoke(() => { textBlock_msg.Text += item.Summary.Text; });
-            //    }
-            //}
-            //else
-            //{
-            //    Invoke(() => { textBlock_msg.Text = "fucked"; });
-            //}
-        }
-
-
         public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
         {
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
-        }
-
-        private void FeedButton_Click(object sender, RoutedEventArgs e)
-        {
-            FeedSync(rssTextBlock.Text);
         }
 
         /// <summary>
@@ -86,12 +52,14 @@ namespace InkingNewstand
                 {
                     AddPaperButton_Click(sender, new RoutedEventArgs());
                 }
+                contentFrame.Navigate(typeof(PaperPage), selectedItem);
             }
         }
 
         private async void GetNewsPapers()
         {
             newsPapers = await NewsPaper.ReadFromFile();
+            Bindings.Update();
             if(newsPapers.Count == 0)
             {
                 newsPapers.Add(new NewsPaper("添加第一份报纸！"));
