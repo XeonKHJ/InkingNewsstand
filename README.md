@@ -1,4 +1,4 @@
-# InkingNewstand
+# 报刊亭
 一个可以使用Windows Ink的新闻阅读软件。
 
 供测试的RSS源：
