@@ -16,7 +16,7 @@
                     <NavigationViewItem Content="{x:Bind PaperTitle}" Icon="Page"></NavigationViewItem>
                 </DataTemplate>
             </NavigationView.MenuItemTemplate>
-            <Frame >
+            <Frame>
                 <StackPanel>
                     <AppBar>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
