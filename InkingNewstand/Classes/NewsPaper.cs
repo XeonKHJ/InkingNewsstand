@@ -163,6 +163,7 @@ namespace InkingNewstand
                 paperListinFile = (SortedDictionary<int, NewsPaper>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
             }
             stream.Dispose();
+            return paperListinFile;
         }
         /// <summary>
         /// 添加订阅源
@@ -239,11 +240,16 @@ namespace InkingNewstand
         /// 删除一张报纸
         /// </summary>
         /// <param name="newsPaper">要删除的报纸</param>
-        static async public void DeleteNewsPaper(NewsPaper newsPaper)
+        static async public Task DeleteNewsPaper(NewsPaper newsPaper)
         {
             var paperListinFile = await ReadListFromFile();
             var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.PaperTitle select v);
-            paperListinFile.Remove(paperEnumer.Key);
+            int pairKeyToDelete = -1;
+            foreach(var paperPair in paperEnumer)
+            {
+                pairKeyToDelete = paperPair.Key;
+            }
+            paperListinFile.Remove(pairKeyToDelete);
             //3、将paperListinFile重新保存到文件中
             await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile)); 
         }

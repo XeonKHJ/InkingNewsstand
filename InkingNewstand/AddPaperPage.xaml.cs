@@ -66,7 +66,7 @@ namespace InkingNewstand
         {
             if(e.Parameter is NewsPaper)
             {
-                NewsPaper newsPaper = (NewsPaper)e.Parameter;
+                newsPaper = (NewsPaper)e.Parameter;
                 newspaperTitleTextBox.Text = newsPaper.PaperTitle;
                 foreach(var url in newsPaper.FeedUrls)
                 {
