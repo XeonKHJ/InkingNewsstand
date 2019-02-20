@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -68,6 +69,8 @@ namespace InkingNewstand
 
             //3、将paperListinFile重新保存到文件中
             await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
+
+            OnPaperAdded?.Invoke(); //添加完成后引发该事件
         }
 
         /// <summary>
@@ -251,7 +254,12 @@ namespace InkingNewstand
             }
             paperListinFile.Remove(pairKeyToDelete);
             //3、将paperListinFile重新保存到文件中
-            await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile)); 
+            await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
+            OnPaperDeleted?.Invoke();
         }
+
+        public delegate void OnPaperUpdatedDelegate();
+        public static event OnPaperUpdatedDelegate OnPaperAdded;
+        public static event OnPaperUpdatedDelegate OnPaperDeleted;
     }
 }

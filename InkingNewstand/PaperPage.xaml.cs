@@ -30,7 +30,7 @@ namespace InkingNewstand
         private async void layoutNews(NewsPaper feeds)
         {
             newsItems = await feeds.GetNewsListAsync();
-            titleTextBlock.Text = feeds.PaperTitle;
+            //titleTextBlock.Text = feeds.PaperTitle;
             Bindings.Update();
             int no = 0;
         }
@@ -44,6 +44,7 @@ namespace InkingNewstand
             else
             {
                 feeds = (NewsPaper)e.Parameter;
+                titleTextBlock.Text = feeds.PaperTitle;
                 layoutNews(feeds);
             }
         }

@@ -26,6 +26,7 @@ namespace InkingNewstand
         public MainPage()
         {
             this.InitializeComponent();
+            InitializePaperlistSetting();
             GetNewsPapers();
         }
 
@@ -56,6 +57,11 @@ namespace InkingNewstand
             }
         }
 
+        private void InitializePaperlistSetting()
+        {
+            NewsPaper.OnPaperAdded += NewsPaper_OnPaperAdded;
+            NewsPaper.OnPaperDeleted += NewsPaper_OnPaperAdded;
+        }
         private async void GetNewsPapers()
         {
             newsPapers = await NewsPaper.ReadFromFile();
@@ -63,6 +69,12 @@ namespace InkingNewstand
             {
                 newsPapers.Add(new NewsPaper("添加第一份报纸！"));
             }
+            Bindings.Update();
+        }
+
+        private void NewsPaper_OnPaperAdded()
+        {
+            GetNewsPapers();
             Bindings.Update();
         }
 
