@@ -77,9 +77,9 @@ namespace InkingNewstand
             }
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            ;
+            await NewsPaper.DeleteNewsPaper(newsPaper);
         }
     }
 }

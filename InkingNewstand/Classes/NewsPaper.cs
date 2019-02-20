@@ -36,32 +36,8 @@ namespace InkingNewstand
         /// <returns>要保存的报纸</returns>
         static public async Task SaveToFile(NewsPaper newsPaper)
         {
-            var storageFolder = ApplicationData.Current.LocalFolder;
-
-            //0、打开文件
-            string paperListFileName = "PaperList.dat";
-
-            try
-            {
-                paperListFile = await storageFolder.CreateFileAsync(paperListFileName, CreationCollisionOption.OpenIfExists);
-            }
-            catch(System.IO.FileLoadException exception)
-            {
-                ;
-            }
-            SortedDictionary<int, NewsPaper> paperListinFile = new SortedDictionary<int, NewsPaper>();
-
-            //1、读取报纸列表数据
-            var stream = await paperListFile.OpenAsync(FileAccessMode.ReadWrite); //获取文件随机存取流
-            using (var inputStream = stream.GetInputStreamAt(0))//获取从0开始的输入流
-            { 
-                var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
-                uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
-                byte[] bytes = new byte[(uint)stream.Size];
-                dataReader.ReadBytes(bytes);//用来存储从文件中读出的数据
-                paperListinFile = (SortedDictionary<int, NewsPaper>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
-            }
-            stream.Dispose();
+            //1、获取报纸列表
+            var paperListinFile = await ReadListFromFile();
 
             //2、获取当前报纸编号
             ////2.1、如果文件中没有保存任何东西，则新建一个paperListinFile
@@ -100,32 +76,8 @@ namespace InkingNewstand
         /// <returns></returns>
         static public async Task<List<NewsPaper>> ReadFromFile()
         {
-            var storageFolder = ApplicationData.Current.LocalFolder;
-            //0、打开文件
-            string paperListFileName = "PaperList.dat";
-
-            try
-            {
-                paperListFile = await storageFolder.CreateFileAsync(paperListFileName, CreationCollisionOption.OpenIfExists);
-            }
-            catch(System.IO.FileLoadException exception)
-            {
-                ;
-            }
-
-            SortedDictionary<int, NewsPaper> paperListinFile = new SortedDictionary<int, NewsPaper>();
-
-            //1、读取报纸列表数据
-            var stream = await paperListFile.OpenAsync(FileAccessMode.ReadWrite); //获取文件随机存取流
-            using (var inputStream = stream.GetInputStreamAt(0))//获取从0开始的输入流
-            {
-                var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
-                uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
-                byte[] bytes = new byte[(uint)stream.Size];
-                dataReader.ReadBytes(bytes);//用来存储从文件中读出的数据
-                paperListinFile = (SortedDictionary<int, NewsPaper>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
-            }
-            stream.Dispose();
+            //1、从文件中获取报纸列表。
+            var paperListinFile = await ReadListFromFile();
 
             if(paperListinFile == null)
             {
@@ -179,6 +131,7 @@ namespace InkingNewstand
             }
         }
 
+            catch(System.IO.FileLoadException exception)
         /// <summary>
         /// 添加订阅源
         /// </summary>
@@ -254,9 +207,13 @@ namespace InkingNewstand
         /// 删除一张报纸
         /// </summary>
         /// <param name="newsPaper">要删除的报纸</param>
-        static public void DeleteNewsPaper(NewsPaper newsPaper)
+        static async public void DeleteNewsPaper(NewsPaper newsPaper)
         {
-            //To-do.
+            var paperListinFile = await ReadListFromFile();
+            var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.PaperTitle select v);
+            paperListinFile.Remove(paperEnumer.Key);
+            //3、将paperListinFile重新保存到文件中
+            await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile)); 
         }
     }
 }
