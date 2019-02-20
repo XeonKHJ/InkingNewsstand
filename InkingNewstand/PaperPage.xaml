@@ -30,8 +30,11 @@
                 </LinearGradientBrush.GradientStops>
             </LinearGradientBrush>
         </Grid.Background>
+        
+        
         <RelativePanel x:Name="titlePanel" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                            Grid.Row="0" d:IsLocked="True">
+            <!--标题布局-->
             <TextBlock x:Name="titleTextBlock" Text="Title" FontSize="100" HorizontalAlignment="Center" VerticalAlignment="Center"
                            RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" FontWeight="Bold"></TextBlock>
             <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
@@ -52,35 +55,23 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <!--
-        <GridView x:Name="row2NewsItems" ItemsSource="{x:Bind feeds.Items}" 
-                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="2">
-            <GridView.ItemTemplate>
-                <DataTemplate x:DataType="data:NewsItem">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="400" Source="{x:Bind CoverUrl}"/>
-                        <RelativePanel Background="Black">
-                            <TextBlock FontSize="70" Text="{x:Bind Title}" Foreground="White"/>
-                            <TextBlock FontSize="10" Text="{x:Bind Summary}" />
-                        </RelativePanel>
-                    </StackPanel>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
-        <GridView x:Name="row3NewsItems" ItemsSource="{x:Bind feeds.Items}" 
-                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="3">
-            <GridView.ItemTemplate>
-                <DataTemplate x:DataType="data:NewsItem">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="400" Source="{x:Bind CoverUrl}"/>
-                        <RelativePanel Background="Black">
-                            <TextBlock FontSize="70" Text="{x:Bind Title}" Foreground="White"/>
-                            <TextBlock FontSize="10" Text="{x:Bind Summary}" />
-                        </RelativePanel>
-                    </StackPanel>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
-        -->
+        <RelativePanel Grid.Row="1">
+            <StackPanel>
+                <Button>
+                    <RelativePanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="300"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="newsimg" Source="http://p2.cri.cn/M00/27/81/CqgNOlalgNWAWxTcAAAAAAAAAAA962.550x378.jpg" Grid.Column="0"></Image>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
+                                <TextBlock Text="fuck off shityy busterd" FontSize="50" FontWeight="Bold" TextWrapping="WrapWholeWords" Grid.Column="1" ></TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </RelativePanel>
+                </Button>
+            </StackPanel>
+        </RelativePanel>
     </Grid>
 </Page>
