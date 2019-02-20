@@ -56,22 +56,40 @@
             </ListView.ItemTemplate>
         </ListView>
         <RelativePanel Grid.Row="1">
-            <StackPanel>
-                <Button>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Margin="10">
                     <RelativePanel>
-                        <Grid>
+                        <Grid MaxWidth="500">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="300"></ColumnDefinition>
-                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <Image x:Name="newsimg" Source="http://p2.cri.cn/M00/27/81/CqgNOlalgNWAWxTcAAAAAAAAAAA962.550x378.jpg" Grid.Column="0"></Image>
                             <StackPanel Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
-                                <TextBlock Text="fuck off shityy busterd" FontSize="50" FontWeight="Bold" TextWrapping="WrapWholeWords" Grid.Column="1" ></TextBlock>
+                                <TextBlock Text="fuck off shityy" FontSize="40" FontWeight="Bold" TextWrapping="WrapWholeWords" Grid.Column="1" ></TextBlock>
                             </StackPanel>
                         </Grid>
                     </RelativePanel>
                 </Button>
-            </StackPanel>
+                <Button Grid.Column="1" Margin="10">
+                    <RelativePanel>
+                        <Grid MaxWidth="500">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="300"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="newsimg2" Source="http://p2.cri.cn/M00/27/81/CqgNOlalgNWAWxTcAAAAAAAAAAA962.550x378.jpg" Grid.Column="0"></Image>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
+                                <TextBlock Text="fuck off shityy " FontSize="50" FontWeight="Bold" TextWrapping="WrapWholeWords" Grid.Column="1" ></TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </RelativePanel>
+                </Button>
+            </Grid>
         </RelativePanel>
     </Grid>
 </Page>
