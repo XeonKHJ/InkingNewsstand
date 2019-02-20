@@ -131,7 +131,39 @@ namespace InkingNewstand
             }
         }
 
+        /// <summary>
+        /// 从文件中获取报纸列表
+        /// </summary>
+        /// <param></param>
+        private static async Task<SortedDictionary<int, NewsPaper>> ReadListFromFile()
+        {
+            var storageFolder = ApplicationData.Current.LocalFolder;
+
+            //0、打开文件
+            string paperListFileName = "PaperList.dat";
+
+            try
+            {
+                paperListFile = await storageFolder.CreateFileAsync(paperListFileName, CreationCollisionOption.OpenIfExists);
+            }
             catch(System.IO.FileLoadException exception)
+            {
+                ;
+            }
+            SortedDictionary<int, NewsPaper> paperListinFile = new SortedDictionary<int, NewsPaper>();
+
+            //1、读取报纸列表数据
+            var stream = await paperListFile.OpenAsync(FileAccessMode.ReadWrite); //获取文件随机存取流
+            using (var inputStream = stream.GetInputStreamAt(0))//获取从0开始的输入流
+            { 
+                var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
+                uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
+                byte[] bytes = new byte[(uint)stream.Size];
+                dataReader.ReadBytes(bytes);//用来存储从文件中读出的数据
+                paperListinFile = (SortedDictionary<int, NewsPaper>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
+            }
+            stream.Dispose();
+        }
         /// <summary>
         /// 添加订阅源
         /// </summary>
