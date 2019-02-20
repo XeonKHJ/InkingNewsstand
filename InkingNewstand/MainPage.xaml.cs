@@ -59,14 +59,22 @@ namespace InkingNewstand
         private async void GetNewsPapers()
         {
             newsPapers = await NewsPaper.ReadFromFile();
-            Bindings.Update();
             if(newsPapers.Count == 0)
             {
                 newsPapers.Add(new NewsPaper("添加第一份报纸！"));
             }
+            Bindings.Update();
         }
 
         List<NewsPaper> newsPapers;
+        List<NewsPaper> newsPapersView
+        {
+            get
+            {
+                GetNewsPapers();
+                return newsPapers;
+            }
+        }
 
 
         private void AddPaperButton_Click(object sender, RoutedEventArgs e)
