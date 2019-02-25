@@ -29,7 +29,14 @@ namespace InkingNewstand
 
         private async void layoutNews(NewsPaper feeds)
         {
-            newsItems = await feeds.GetNewsListAsync();
+            try
+            {
+                newsItems = await feeds.GetNewsListAsync();
+            }
+            catch(Exception exception)
+            {
+                //同步失败信息
+            }
             //titleTextBlock.Text = feeds.PaperTitle;
             Bindings.Update();
             int no = 0;
@@ -44,9 +51,21 @@ namespace InkingNewstand
             else
             {
                 feeds = (NewsPaper)e.Parameter;
+                feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
+                feeds.OnUpdateFailed += Feeds_OnUpdateFailed;
                 titleTextBlock.Text = feeds.PaperTitle;
                 layoutNews(feeds);
             }
+        }
+
+        private void Feeds_OnUpdateFailed(string failNewsPaperTitle)
+        {
+            errorTextBlock.Text = "连接failNewsPaperTitle失败";
+        }
+
+        private void Feeds_OnNewsRefreshed()
+        {
+            refreshingProgressRing.IsActive = false;
         }
 
         static public NewsPaper feeds { get;  set; }

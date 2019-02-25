@@ -30,19 +30,23 @@
                 </LinearGradientBrush.GradientStops>
             </LinearGradientBrush>
         </Grid.Background>
-        
-        
+
+
         <RelativePanel x:Name="titlePanel" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                            Grid.Row="0" d:IsLocked="True">
             <!--标题布局-->
             <TextBlock x:Name="titleTextBlock" Text="Title" FontSize="100" HorizontalAlignment="Center" VerticalAlignment="Center"
                            RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" FontWeight="Bold"></TextBlock>
             <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
+            <ProgressRing x:Name="refreshingProgressRing" IsActive="True"></ProgressRing>
+            <TextBlock x:Name="errorTextBlock" Visibility="Collapsed" Foreground="Red"></TextBlock>
         </RelativePanel>
-        
+
         <!--报刊文章布局-->
+
+
         <ListView ItemsPanel="{StaticResource ListViewItemsHorizontalPanel}" x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
-                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="1" >
+                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
                     <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -55,13 +59,19 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <RelativePanel Grid.Row="1">
+
+        <!--实验性布局-->
+        <RelativePanel Grid.Row="1" Visibility="Collapsed">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button Grid.Column="0" Grid.Row="0" Margin="10">
                     <RelativePanel>
                         <Grid MaxWidth="500">
                             <Grid.ColumnDefinitions>
@@ -75,7 +85,7 @@
                         </Grid>
                     </RelativePanel>
                 </Button>
-                <Button Grid.Column="1" Margin="10">
+                <Button Grid.Column="1" Grid.Row="0" Margin="10">
                     <RelativePanel>
                         <Grid MaxWidth="500">
                             <Grid.ColumnDefinitions>

@@ -40,7 +40,7 @@ namespace InkingNewstand
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void NvSample_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private void PaperNavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             if (args.IsSettingsSelected)
             {
@@ -70,6 +70,11 @@ namespace InkingNewstand
                 newsPapers.Add(new NewsPaper("添加第一份报纸！"));
             }
             Bindings.Update();
+            if(newsPapers.Count != 0)
+            {
+                paperNavigationView.SelectedItem = newsPapers[0];
+                //contentFrame.Navigate(typeof(PaperPage), newsPapers[0]);
+            }
         }
 
         private void NewsPaper_OnPaperAdded()
