@@ -16,6 +16,7 @@
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition x:Name="barRow" Height="auto"></RowDefinition>
             <RowDefinition x:Name="TitleRow" Height="100" />
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -32,8 +33,19 @@
         </Grid.Background>
 
 
+        <AppBar>
+            <AppBar.Background>
+                <AcrylicBrush></AcrylicBrush>
+            </AppBar.Background>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <AppBarButton x:Name="addPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Add" Label="添加报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="AddPaperButton_Click"></AppBarButton>
+                <AppBarButton x:Name="editPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Edit" Label="编辑报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="EditPaperButton_Click"></AppBarButton>
+            </StackPanel>
+        </AppBar>
+
+
         <RelativePanel x:Name="titlePanel" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
-                           Grid.Row="0" d:IsLocked="True">
+                           Grid.Row="1" d:IsLocked="True">
             <!--标题布局-->
             <TextBlock x:Name="titleTextBlock" Text="Title" FontSize="100" HorizontalAlignment="Center" VerticalAlignment="Center"
                            RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" FontWeight="Bold"></TextBlock>
@@ -46,7 +58,7 @@
 
 
         <ListView ItemsPanel="{StaticResource ListViewItemsHorizontalPanel}" x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
-                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="1">
+                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="2">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
                     <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">

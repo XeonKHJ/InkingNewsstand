@@ -30,16 +30,18 @@ namespace InkingNewstand
         private void AddFeedButton_Click(object sender, RoutedEventArgs e)
         {
             var rssInputBox = new TextBox();
-            rssInputBox = new TextBox();
-            rssInputBox.Header = "RSS链接";
-            rssInputBox.Width = 400;
+            rssInputBox = new TextBox
+            {
+                Header = "RSS链接",
+                Width = 400
+            };
             rssInputPanel.Children.Add(rssInputBox);
             RelativePanel.SetAlignLeftWithPanel((UIElement)rssInputBox, true);
             RelativePanel.SetBelow(rssInputBox, rssInputPanel.Children[rssInputPanel.Children.Count - 2]);
         }
 
         private NewsPaper newsPaper;
-        private async void saveButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             newsPaper = new NewsPaper(newspaperTitleTextBox.Text);
             foreach(var element in rssInputPanel.Children)

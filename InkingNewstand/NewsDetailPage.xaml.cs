@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -44,13 +45,35 @@ namespace InkingNewstand
                 content = news.Item.Summary.Text;
             }
             newsWebView.NavigateToString(content);
-            
+            this.Frame.LayoutUpdated += Frame_LayoutUpdated;
             //foreach (var link1 in news.Item.Links)
             //{
             //    ;
             //}
             //var link = news.Item.Links[0];
             //newsWebView.Source = news.Item.Links[0].Uri;
+            
+        }
+
+        private void Frame_LayoutUpdated(object sender, object e)
+        {
+            Bindings.Update();
+        }
+
+        public Double WindowHeight
+        {
+            get
+            {
+                return ApplicationView.GetForCurrentView().VisibleBounds.Height;
+            }
+        }
+
+        public Double WindowsWidth
+        {
+            get
+            {
+                return ApplicationView.GetForCurrentView().VisibleBounds.Width;
+            }
         }
     }
 }

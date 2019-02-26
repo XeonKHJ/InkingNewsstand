@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Grid>
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
@@ -15,7 +15,7 @@
         <TextBlock Text="添加报纸" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" Margin="50,0,0,0"></TextBlock>
         <RelativePanel HorizontalAlignment="Right">
             <StackPanel Orientation="Horizontal">
-                <AppBarButton x:Name="saveButton" Icon="Save" Label="保存" Click="saveButton_Click"/>
+                <AppBarButton x:Name="saveButton" Icon="Save" Label="保存" Click="SaveButton_Click"/>
                 <AppBarButton x:Name="deleteButton" Icon="Delete" Label="删除" Visibility="Collapsed" Click="DeleteButton_Click"/>
             </StackPanel>
         </RelativePanel>

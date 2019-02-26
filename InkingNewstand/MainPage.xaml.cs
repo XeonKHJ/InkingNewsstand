@@ -51,7 +51,7 @@ namespace InkingNewstand
                 var selectedItem = (NewsPaper)args.SelectedItem;
                 if (selectedItem.Count == 0)
                 {
-                    AddPaperButton_Click(sender, new RoutedEventArgs());
+                    contentFrame.Navigate(typeof(AddPaperPage));
                 }
                 contentFrame.Navigate(typeof(PaperPage), selectedItem);
             }
@@ -91,18 +91,6 @@ namespace InkingNewstand
                 GetNewsPapers();
                 return newsPapers;
             }
-        }
-
-
-        private void AddPaperButton_Click(object sender, RoutedEventArgs e)
-        {
-            addPaperButton.Visibility = Visibility.Collapsed;
-            contentFrame.Navigate(typeof(AddPaperPage));
-        }
-
-        private void EditPaperButton_Click(object sender, RoutedEventArgs e)
-        {
-            contentFrame.Navigate(typeof(AddPaperPage), PaperPage.feeds);
         }
     }
 }

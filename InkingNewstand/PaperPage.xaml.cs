@@ -84,5 +84,16 @@ namespace InkingNewstand
         {
             this.Frame.Navigate(typeof(NewsDetailPage), e.ClickedItem);
         }
+
+        private void AddPaperButton_Click(object sender, RoutedEventArgs e)
+        {
+            addPaperButton.Visibility = Visibility.Collapsed;
+            this.Frame.Navigate(typeof(AddPaperPage));
+        }
+
+        private void EditPaperButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(AddPaperPage), PaperPage.feeds);
+        }
     }
 }

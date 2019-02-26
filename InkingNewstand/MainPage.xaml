@@ -12,25 +12,15 @@
     <Grid>
         <NavigationView x:Name="paperNavigationView" SelectionChanged="PaperNavigationView_SelectionChanged" IsBackButtonVisible="Collapsed" MenuItemsSource="{x:Bind newsPapers}" PaneDisplayMode="Auto">
             <NavigationView.Background>
-                <AcrylicBrush BackgroundSource="HostBackdrop"></AcrylicBrush>
+                <AcrylicBrush FallbackColor="White"></AcrylicBrush>
             </NavigationView.Background>
             <NavigationView.MenuItemTemplate>
                 <DataTemplate x:DataType="data:NewsPaper">
                     <NavigationViewItem Content="{x:Bind PaperTitle}" Icon="Page"></NavigationViewItem>
                 </DataTemplate>
             </NavigationView.MenuItemTemplate>
-            <Frame>
-                <StackPanel>
-                    <AppBar>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <AppBarButton x:Name="addPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Add" Label="添加报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="AddPaperButton_Click"></AppBarButton>
-                            <AppBarButton x:Name="editPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Edit" Label="编辑报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="EditPaperButton_Click"></AppBarButton>
-                        </StackPanel>
-                    </AppBar>
-                    <Frame x:Name="contentFrame" />
-                </StackPanel>
+            <Frame HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="contentFrame">
             </Frame>
         </NavigationView>
-
     </Grid>
 </Page>
