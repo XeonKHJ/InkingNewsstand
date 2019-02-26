@@ -39,7 +39,6 @@ namespace InkingNewstand
             }
             //titleTextBlock.Text = feeds.PaperTitle;
             Bindings.Update();
-            int no = 0;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

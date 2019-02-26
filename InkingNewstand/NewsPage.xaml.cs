@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -21,9 +20,9 @@ namespace InkingNewstand
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class NewsDetailPage : Page
+    public sealed partial class NewsPage : Page
     {
-        public NewsDetailPage()
+        public NewsPage()
         {
             this.InitializeComponent();
         }
@@ -31,12 +30,12 @@ namespace InkingNewstand
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             string content;
-            if(!(e.Parameter is NewsItem))
+            if (!(e.Parameter is NewsItem))
             {
                 throw new Exception();
             }
             NewsItem news = (NewsItem)(e.Parameter);
-            if(news.Item.Content != null)
+            if (news.Item.Content != null)
             {
                 content = news.Item.Content.Text;
             }
@@ -52,19 +51,19 @@ namespace InkingNewstand
             //}
             //var link = news.Item.Links[0];
             //newsWebView.Source = news.Item.Links[0].Uri;
-            
+
         }
 
         private void Frame_LayoutUpdated(object sender, object e)
         {
-            Bindings.Update();
+            
         }
 
         public Double WindowHeight
         {
             get
             {
-                return ApplicationView.GetForCurrentView().VisibleBounds.Height;
+                return Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds.Height;
             }
         }
 
@@ -72,7 +71,7 @@ namespace InkingNewstand
         {
             get
             {
-                return ApplicationView.GetForCurrentView().VisibleBounds.Width;
+                return Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds.Width;
             }
         }
 

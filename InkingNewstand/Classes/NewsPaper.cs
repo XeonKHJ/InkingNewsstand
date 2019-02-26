@@ -172,7 +172,7 @@ namespace InkingNewstand
         /// 添加订阅源
         /// </summary>
         /// <param name="feedUrl">订阅源链接</param>
-        public async Task AddFeedLink(Uri feedUrl)
+        public void AddFeedLink(Uri feedUrl)
         {
             //var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
             //var feedXml = feed.GetXmlDocument(feed.SourceFormat);

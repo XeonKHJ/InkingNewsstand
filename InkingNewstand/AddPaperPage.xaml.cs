@@ -48,7 +48,7 @@ namespace InkingNewstand
             {
                 try
                 {
-                    await newsPaper.AddFeedLink(new Uri((element as TextBox).Text));
+                    newsPaper.AddFeedLink(new Uri((element as TextBox).Text));
                 }
                 catch(Exception exception)
                 {
