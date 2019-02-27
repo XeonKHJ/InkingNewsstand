@@ -15,6 +15,7 @@
             <ItemsStackPanel Orientation="Vertical"/>
         </ItemsPanelTemplate>
     </Page.Resources>
+    <ScrollViewer>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition x:Name="barRow" Height="auto"></RowDefinition>
@@ -32,7 +33,6 @@
                 </LinearGradientBrush.GradientStops>
             </LinearGradientBrush>
         </Grid.Background>
-
 
         <AppBar>
             <AppBar.Background>
@@ -73,28 +73,38 @@
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>-->
-        
+
         <!--VariableSizedGrid布局-->
         <controls:VariableSizedGrid Grid.Row="2" x:Name="NewsItemsGrid" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
             <controls:VariableSizedGrid.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
-                    <RelativePanel>
+                    <Grid>
                         <Viewbox x:Name="viewBox" Stretch="UniformToFill" StretchDirection="Both">
                             <Image Source="{x:Bind CoverUrl}"></Image>
                         </Viewbox>
-                        <StackPanel HorizontalAlignment="Stretch"
-                                    RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
-                            <StackPanel.Background>
-                                <AcrylicBrush Opacity="60" BackgroundSource="Backdrop" TintColor="Black" FallbackColor="Black"></AcrylicBrush>
-                            </StackPanel.Background>
-                            <Viewbox Stretch="Fill" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <StackPanel>
-                                    <TextBlock Text="{x:Bind Title}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White" TextWrapping="WrapWholeWords"></TextBlock>
-                                    <TextBlock Text="This is the news description" FontSize="10" Foreground="White"></TextBlock>
-                                </StackPanel>
-                            </Viewbox>
-                        </StackPanel>
-                    </RelativePanel>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <StackPanel HorizontalAlignment="Stretch"
+                                    Grid.Row="2">
+                                <StackPanel.Background>
+                                    <AcrylicBrush TintColor="Black" TintOpacity="0.589999986812472"></AcrylicBrush>
+                                </StackPanel.Background>
+                                <Viewbox Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" StretchDirection="Both">
+                                    <StackPanel>
+
+                                        <TextBlock Text="{x:Bind Title}" FontSize="30"  Width="500" Margin="10"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Stretch" Foreground="White" TextWrapping="WrapWholeWords"></TextBlock>
+                                        <TextBlock Text="This is the news description" Margin="10" FontSize="10" Foreground="White"></TextBlock>
+                                        <TextBlock Text="{x:Bind PublishedDate}" Margin="10" FontSize="15" Foreground="White" HorizontalAlignment="Right"></TextBlock>
+                                    </StackPanel>
+                                </Viewbox>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
                 </DataTemplate>
             </controls:VariableSizedGrid.ItemTemplate>
         </controls:VariableSizedGrid>
@@ -159,4 +169,5 @@
             </Grid>
         </RelativePanel>-->
     </Grid>
+    </ScrollViewer>
 </Page>

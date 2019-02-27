@@ -36,6 +36,11 @@ namespace InkingNewstand
             get { return (item.Summary != null)?(item.Summary.Text):null; }
         }
 
+        public string PublishedDate
+        {
+            get { return (item.PublishedDate.ToString()); }
+        }
+
         public string CoverUrl
         {
             get
