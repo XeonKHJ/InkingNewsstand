@@ -96,5 +96,16 @@ namespace InkingNewstand
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
         }
+
+        private bool On_BackRequested()
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame.CanGoBack)
+            {
+                rootFrame.GoBack();
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -49,11 +49,21 @@
         <!--<WebView x:Name="newsWebView"  Height="{x:Bind WindowHeight}" CanBeScrollAnchor="False"></WebView>-->
         <ScrollViewer>
             <Grid>
-                <controls:HtmlBlock FontSize="20" Margin="60, 60, 60, 0" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition x:Name="titleRow" Height="*"></RowDefinition>
+                        <RowDefinition x:Name="contentRow" Height="auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel x:Name="headerPanel" Margin="60">
+                        <TextBlock Text="{x:Bind News.Title}" FontSize="40" TextWrapping="WrapWholeWords"></TextBlock>
+                        <TextBlock Text="{x:Bind News.PublishedDate}" FontSize="15"></TextBlock>
+                    </StackPanel>
+                    <controls:HtmlBlock Grid.Row="1" FontSize="20" Margin="60, 60, 60, 0" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
+                </Grid>
                 <InkCanvas x:Name="newsCanvas"></InkCanvas>
-                <InkToolbar HorizontalAlignment="Center" VerticalAlignment="Top" TargetInkCanvas="{x:Bind newsCanvas}">
-                </InkToolbar>
+                <InkToolbar HorizontalAlignment="Center" VerticalAlignment="Top" TargetInkCanvas="{x:Bind newsCanvas}" Visibility="Collapsed"></InkToolbar>
             </Grid>
         </ScrollViewer>
+
     </Grid>
 </Page>

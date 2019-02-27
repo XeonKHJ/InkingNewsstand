@@ -15,12 +15,11 @@
             <ItemsStackPanel Orientation="Vertical"/>
         </ItemsPanelTemplate>
     </Page.Resources>
-    <ScrollViewer>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition x:Name="barRow" Height="auto"></RowDefinition>
-            <RowDefinition x:Name="TitleRow" Height="100" />
-            <RowDefinition Height="*"/>
+            <RowDefinition x:Name="contentRow" Height="*" />
         </Grid.RowDefinitions>
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0"
@@ -43,20 +42,28 @@
                 <AppBarButton x:Name="editPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Edit" Label="编辑报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="EditPaperButton_Click"></AppBarButton>
             </StackPanel>
         </AppBar>
+        <ScrollViewer Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="titleRow" Height="100"></RowDefinition>
+                    <RowDefinition x:Name="newsItemRow" Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
 
+                <RelativePanel x:Name="titlePanel" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                           Grid.Row="0" d:IsLocked="True">
+                    <!--标题布局-->
+                    <Viewbox Stretch="Uniform" StretchDirection="Both" 
+                        RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True">
+                        <TextBlock x:Name="titleTextBlock" Text="Title" FontSize="100" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            FontWeight="Bold"></TextBlock>
+                    </Viewbox>
+                    <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
+                    <ProgressRing x:Name="refreshingProgressRing" IsActive="True"></ProgressRing>
+                    <TextBlock x:Name="errorTextBlock" Visibility="Collapsed" Foreground="Red"></TextBlock>
+                </RelativePanel>
 
-        <RelativePanel x:Name="titlePanel" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
-                           Grid.Row="1" d:IsLocked="True">
-            <!--标题布局-->
-            <TextBlock x:Name="titleTextBlock" Text="Title" FontSize="100" HorizontalAlignment="Center" VerticalAlignment="Center"
-                           RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" FontWeight="Bold"></TextBlock>
-            <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
-            <ProgressRing x:Name="refreshingProgressRing" IsActive="True"></ProgressRing>
-            <TextBlock x:Name="errorTextBlock" Visibility="Collapsed" Foreground="Red"></TextBlock>
-        </RelativePanel>
-
-        <!--报刊文章布局-->
-        <!--
+                <!--报刊文章布局-->
+                <!--
         <GridView x:Name="NewsItemsGridView" Grid.Row="2" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
@@ -74,44 +81,42 @@
             </GridView.ItemTemplate>
         </GridView>-->
 
-        <!--VariableSizedGrid布局-->
-        <controls:VariableSizedGrid Grid.Row="2" x:Name="NewsItemsGrid" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
-            <controls:VariableSizedGrid.ItemTemplate>
-                <DataTemplate x:DataType="data:NewsItem">
-                    <Grid>
-                        <Viewbox x:Name="viewBox" Stretch="UniformToFill" StretchDirection="Both">
-                            <Image Source="{x:Bind CoverUrl}"></Image>
-                        </Viewbox>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <StackPanel HorizontalAlignment="Stretch"
-                                    Grid.Row="2">
-                                <StackPanel.Background>
-                                    <AcrylicBrush TintColor="Black" TintOpacity="0.589999986812472"></AcrylicBrush>
-                                </StackPanel.Background>
-                                <Viewbox Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" StretchDirection="Both">
-                                    <StackPanel>
-
-                                        <TextBlock Text="{x:Bind Title}" FontSize="30"  Width="500" Margin="10"
-                                                   HorizontalAlignment="Center" VerticalAlignment="Stretch" Foreground="White" TextWrapping="WrapWholeWords"></TextBlock>
-                                        <TextBlock Text="This is the news description" Margin="10" FontSize="10" Foreground="White"></TextBlock>
-                                        <TextBlock Text="{x:Bind PublishedDate}" Margin="10" FontSize="15" Foreground="White" HorizontalAlignment="Right"></TextBlock>
-                                    </StackPanel>
+                <!--VariableSizedGrid布局-->
+                <controls:VariableSizedGrid Grid.Row="1" x:Name="NewsItemsGrid" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
+                    <controls:VariableSizedGrid.ItemTemplate>
+                        <DataTemplate x:DataType="data:NewsItem">
+                            <Grid>
+                                <Viewbox x:Name="viewBox" Stretch="UniformToFill" StretchDirection="Both">
+                                    <Image Source="{x:Bind CoverUrl}"></Image>
                                 </Viewbox>
-                            </StackPanel>
-                        </Grid>
-                    </Grid>
-                </DataTemplate>
-            </controls:VariableSizedGrid.ItemTemplate>
-        </controls:VariableSizedGrid>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel HorizontalAlignment="Stretch" Grid.Row="2">
+                                        <StackPanel.Background>
+                                            <AcrylicBrush TintColor="Black" TintOpacity="0.589999986812472"></AcrylicBrush>
+                                        </StackPanel.Background>
+                                        <Viewbox Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" StretchDirection="Both">
+                                            <StackPanel>
+                                                <TextBlock Text="{x:Bind Title}" FontSize="30"  Width="500" Margin="10"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Stretch" Foreground="White" TextWrapping="WrapWholeWords" FontWeight="Bold"></TextBlock>
+                                                <TextBlock Text="{x:Bind Authors}" Margin="10" FontSize="15" Foreground="White"></TextBlock>
+                                                <TextBlock Text="{x:Bind PublishedDate}" Margin="10" FontSize="15" Foreground="White" HorizontalAlignment="Right"></TextBlock>
+                                            </StackPanel>
+                                        </Viewbox>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </controls:VariableSizedGrid.ItemTemplate>
+                </controls:VariableSizedGrid>
 
 
-        <!--ListView布局-->
-        <!--
+                <!--ListView布局-->
+                <!--
         <ListView ItemsPanel="{StaticResource ListViewItemsHorizontalPanel}" x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
                           IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="2">
             <ListView.ItemTemplate>
@@ -127,7 +132,7 @@
             </ListView.ItemTemplate>
         </ListView>-->
 
-        <!--实验性布局
+                <!--实验性布局
         <RelativePanel Grid.Row="1" Visibility="Collapsed">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -168,6 +173,8 @@
                 </Button>
             </Grid>
         </RelativePanel>-->
+            </Grid>
+        </ScrollViewer>
     </Grid>
-    </ScrollViewer>
+
 </Page>

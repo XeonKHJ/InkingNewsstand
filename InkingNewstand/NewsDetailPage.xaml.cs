@@ -28,6 +28,8 @@ namespace InkingNewstand
             this.InitializeComponent();
         }
 
+        NewsItem News { set; get; }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             string content;
@@ -35,17 +37,17 @@ namespace InkingNewstand
             {
                 throw new Exception();
             }
-            NewsItem news = (NewsItem)(e.Parameter);
-            if(news.Item.Content != null)
+            News = (NewsItem)(e.Parameter);
+            if(News.Item.Content != null)
             {
-                content = news.Item.Content.Text;
+                content = News.Item.Content.Text;
             }
             else
             {
-                content = news.Item.Summary.Text;
+                content = News.Item.Summary.Text;
             }
             Html = content;
-            this.Frame.LayoutUpdated += Frame_LayoutUpdated;
+            //this.Frame.LayoutUpdated += Frame_LayoutUpdated;
             //foreach (var link1 in news.Item.Links)
             //{
             //    ;
@@ -53,11 +55,6 @@ namespace InkingNewstand
             //var link = news.Item.Links[0];
             //newsWebView.Source = news.Item.Links[0].Uri;
             
-        }
-
-        private void Frame_LayoutUpdated(object sender, object e)
-        {
-            Bindings.Update();
         }
 
         public Double WindowHeight

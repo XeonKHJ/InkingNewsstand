@@ -25,6 +25,7 @@ namespace InkingNewstand
         public PaperPage()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled; //开启页面缓存
         }
 
         private async void layoutNews(NewsPaper feeds)

@@ -92,5 +92,13 @@ namespace InkingNewstand
                 return newsPapers;
             }
         }
+
+        private void PaperNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        {
+            if (contentFrame.CanGoBack)
+            {
+                contentFrame.GoBack();
+            }
+        }
     }
 }

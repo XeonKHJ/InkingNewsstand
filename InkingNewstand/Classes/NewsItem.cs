@@ -41,6 +41,18 @@ namespace InkingNewstand
             get { return (item.PublishedDate.ToString()); }
         }
 
+        public string Authors
+        {
+            get
+            {
+                string authorsString = "";
+                for(int i = 0; i < item.Authors.Count; ++i)
+                {
+                    authorsString += item.Authors[i].Name;
+                }
+                return authorsString;
+            }
+        }
         public string CoverUrl
         {
             get
