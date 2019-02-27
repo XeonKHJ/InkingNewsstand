@@ -78,21 +78,27 @@
         <controls:VariableSizedGrid Grid.Row="2" x:Name="NewsItemsGrid" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
             <controls:VariableSizedGrid.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
-                    <Viewbox Stretch="UniformToFill">
-                    <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <Image x:Name="newsImage"  Source="{x:Bind CoverUrl}" RelativePanel.AlignLeftWithPanel="True" Stretch="UniformToFill"/>
-                         <TextBlock FontSize="20" Text="{x:Bind Title}" Foreground="White" TextAlignment="DetectFromContent" TextWrapping="WrapWholeWords" RelativePanel.Below="newsImage"/>
-                            <!--<StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.Below="newsImage">
+                    <RelativePanel>
+                        <Viewbox x:Name="viewBox" Stretch="UniformToFill" StretchDirection="Both">
+                            <Image Source="{x:Bind CoverUrl}"></Image>
+                        </Viewbox>
+                        <StackPanel HorizontalAlignment="Stretch"
+                                    RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
                             <StackPanel.Background>
-                                <AcrylicBrush FallbackColor="Black" TintColor="Black"></AcrylicBrush>
+                                <AcrylicBrush Opacity="60" BackgroundSource="Backdrop" TintColor="Black" FallbackColor="Black"></AcrylicBrush>
                             </StackPanel.Background>
-                            <TextBlock FontSize="20" Text="{x:Bind Title}" Foreground="White" TextAlignment="DetectFromContent" TextWrapping="WrapWholeWords"/>
-                        </StackPanel>-->
+                            <Viewbox Stretch="Fill" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <StackPanel>
+                                    <TextBlock Text="{x:Bind Title}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White" TextWrapping="WrapWholeWords"></TextBlock>
+                                    <TextBlock Text="This is the news description" FontSize="10" Foreground="White"></TextBlock>
+                                </StackPanel>
+                            </Viewbox>
+                        </StackPanel>
                     </RelativePanel>
-                    </Viewbox>
                 </DataTemplate>
             </controls:VariableSizedGrid.ItemTemplate>
         </controls:VariableSizedGrid>
+
 
         <!--ListView布局-->
         <!--
