@@ -50,8 +50,9 @@
         <ScrollViewer>
             <Grid>
                 <controls:HtmlBlock FontSize="20" Margin="60, 60, 60, 0" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
-                <InkCanvas></InkCanvas>
-                <InkToolbar HorizontalAlignment="Center" VerticalAlignment="Top"></InkToolbar>
+                <InkCanvas x:Name="newsCanvas"></InkCanvas>
+                <InkToolbar HorizontalAlignment="Center" VerticalAlignment="Top" TargetInkCanvas="{x:Bind newsCanvas}">
+                </InkToolbar>
             </Grid>
         </ScrollViewer>
     </Grid>

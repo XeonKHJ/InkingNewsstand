@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:InkingNewstand"
+    xmlns:controls="using:AppStudio.Uwp.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -55,9 +56,22 @@
         </RelativePanel>
 
         <!--报刊文章布局-->
+        <controls:VariableSizedGrid Grid.Row="2" x:Name="NewsItemsGrid" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick">
+            <controls:VariableSizedGrid.ItemTemplate>
+                <DataTemplate x:DataType="data:NewsItem">
+                    <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Image x:Name="newsImage"  Source="{x:Bind CoverUrl}" RelativePanel.AlignLeftWithPanel="True"/>
+                        <StackPanel Background="Black" RelativePanel.RightOf="newsImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="130" RelativePanel.AlignBottomWith="newsImage" RelativePanel.AlignHorizontalCenterWith="newsImage">
+                            <TextBlock FontSize="40" Text="{x:Bind Title}" Foreground="White" TextAlignment="DetectFromContent"/>
+                            <TextBlock FontSize="10" Text="{x:Bind Summary}" Foreground="White" TextAlignment="DetectFromContent"/>
+                        </StackPanel>
+                    </RelativePanel>
+                </DataTemplate>
+            </controls:VariableSizedGrid.ItemTemplate>
+        </controls:VariableSizedGrid>
+        
 
-
-        <ListView ItemsPanel="{StaticResource ListViewItemsHorizontalPanel}" x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
+        <!--传统布局<ListView ItemsPanel="{StaticResource ListViewItemsHorizontalPanel}" x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
                           IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="2">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
@@ -70,9 +84,9 @@
                     </RelativePanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>
+        </ListView>-->
 
-        <!--实验性布局-->
+        <!--实验性布局
         <RelativePanel Grid.Row="1" Visibility="Collapsed">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -112,6 +126,6 @@
                     </RelativePanel>
                 </Button>
             </Grid>
-        </RelativePanel>
+        </RelativePanel>-->
     </Grid>
 </Page>
