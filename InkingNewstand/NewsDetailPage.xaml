@@ -48,7 +48,10 @@
     <Grid>
         <!--<WebView x:Name="newsWebView"  Height="{x:Bind WindowHeight}" CanBeScrollAnchor="False"></WebView>-->
         <ScrollViewer>
-            <controls:HtmlBlock FontSize="20" Margin="60, 60, 60, 0" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
+            <Grid>
+                <controls:HtmlBlock FontSize="20" Margin="60, 60, 60, 0" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
+                <InkCanvas></InkCanvas>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </Page>

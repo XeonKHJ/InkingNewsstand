@@ -42,7 +42,7 @@ namespace InkingNewstand
             {
                 string reg = @"<img[^>]*src=([""'])?(?<src>[^'""]+)\1[^>]*>";
                 var innerImg = Regex.Match(innerHTML, reg, RegexOptions.IgnoreCase);
-                if(innerImg.Value == "")
+                if (innerImg.Value == "")
                 {
                     return "noPic.png";
                 }
