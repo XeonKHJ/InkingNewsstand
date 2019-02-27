@@ -56,25 +56,47 @@
         </RelativePanel>
 
         <!--报刊文章布局-->
-        <controls:VariableSizedGrid Grid.Row="2" x:Name="NewsItemsGrid" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
-            <controls:VariableSizedGrid.ItemTemplate>
+        <!--
+        <GridView x:Name="NewsItemsGridView" Grid.Row="2" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
+            <GridView.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
-                    <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="500">
                         <Image x:Name="newsImage"  Source="{x:Bind CoverUrl}" RelativePanel.AlignLeftWithPanel="True"/>
                         <StackPanel RelativePanel.RightOf="newsImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.Below="newsImage">
                             <StackPanel.Background>
-                                <AcrylicBrush FallbackColor="Black"></AcrylicBrush>
+                                <AcrylicBrush FallbackColor="Black" TintColor="Black"></AcrylicBrush>
                             </StackPanel.Background>
                             <TextBlock FontSize="40" Text="{x:Bind Title}" Foreground="White" TextAlignment="DetectFromContent"/>
                             <TextBlock FontSize="10" Text="{x:Bind Summary}" Foreground="White" TextAlignment="DetectFromContent"/>
                         </StackPanel>
                     </RelativePanel>
                 </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>-->
+        
+        <!--VariableSizedGrid布局-->
+        <controls:VariableSizedGrid Grid.Row="2" x:Name="NewsItemsGrid" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
+            <controls:VariableSizedGrid.ItemTemplate>
+                <DataTemplate x:DataType="data:NewsItem">
+                    <Viewbox Stretch="UniformToFill">
+                    <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Image x:Name="newsImage"  Source="{x:Bind CoverUrl}" RelativePanel.AlignLeftWithPanel="True" Stretch="UniformToFill"/>
+                         <TextBlock FontSize="20" Text="{x:Bind Title}" Foreground="White" TextAlignment="DetectFromContent" TextWrapping="WrapWholeWords" RelativePanel.Below="newsImage"/>
+                            <!--<StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.Below="newsImage">
+                            <StackPanel.Background>
+                                <AcrylicBrush FallbackColor="Black" TintColor="Black"></AcrylicBrush>
+                            </StackPanel.Background>
+                            <TextBlock FontSize="20" Text="{x:Bind Title}" Foreground="White" TextAlignment="DetectFromContent" TextWrapping="WrapWholeWords"/>
+                        </StackPanel>-->
+                    </RelativePanel>
+                    </Viewbox>
+                </DataTemplate>
             </controls:VariableSizedGrid.ItemTemplate>
         </controls:VariableSizedGrid>
-        
 
-        <!--传统布局<ListView ItemsPanel="{StaticResource ListViewItemsHorizontalPanel}" x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
+        <!--ListView布局-->
+        <!--
+        <ListView ItemsPanel="{StaticResource ListViewItemsHorizontalPanel}" x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
                           IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="2">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
