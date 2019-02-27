@@ -56,12 +56,15 @@
         </RelativePanel>
 
         <!--报刊文章布局-->
-        <controls:VariableSizedGrid Grid.Row="2" x:Name="NewsItemsGrid" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick">
+        <controls:VariableSizedGrid Grid.Row="2" x:Name="NewsItemsGrid" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
             <controls:VariableSizedGrid.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
                     <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <Image x:Name="newsImage"  Source="{x:Bind CoverUrl}" RelativePanel.AlignLeftWithPanel="True"/>
-                        <StackPanel Background="Black" RelativePanel.RightOf="newsImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="130" RelativePanel.AlignBottomWith="newsImage" RelativePanel.AlignHorizontalCenterWith="newsImage">
+                        <StackPanel RelativePanel.RightOf="newsImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.Below="newsImage">
+                            <StackPanel.Background>
+                                <AcrylicBrush FallbackColor="Black"></AcrylicBrush>
+                            </StackPanel.Background>
                             <TextBlock FontSize="40" Text="{x:Bind Title}" Foreground="White" TextAlignment="DetectFromContent"/>
                             <TextBlock FontSize="10" Text="{x:Bind Summary}" Foreground="White" TextAlignment="DetectFromContent"/>
                         </StackPanel>
