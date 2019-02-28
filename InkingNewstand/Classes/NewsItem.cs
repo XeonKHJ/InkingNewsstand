@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Web.Syndication;
+using InkingNewstand.Utilities;
 
 namespace InkingNewstand
 {
@@ -57,16 +58,7 @@ namespace InkingNewstand
         {
             get
             {
-                string reg = @"<img[^>]*src=([""'])?(?<src>[^'""]+)\1[^>]*>";
-                var innerImg = Regex.Match(innerHTML, reg, RegexOptions.IgnoreCase);
-                if (innerImg.Value == "")
-                {
-                    return "noPic.png";
-                }
-                reg = @"src=([""'])?(?<src>[^'""]+)";
-                var imgSrc = Regex.Match(innerImg.Value, reg);
-                var imgUrl = imgSrc.Value.Substring(5);
-                return imgUrl;
+                return HtmlConverter.GetFirstImages(innerHTML);
             }
         }
 

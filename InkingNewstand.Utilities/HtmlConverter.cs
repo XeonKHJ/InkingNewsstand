@@ -4,26 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
 
 namespace InkingNewstand.Utilities
 {
     public class HtmlConverter
     {
-        private readonly string htmlString;
         public static List<Uri> GetImages(string html)
         {
             List<Uri> imgUrls = new List<Uri>();
-            string reg = @"<img[^>]*src=([""'])?(?<src>[^'""]+)\1[^>]*>";
-            var innerImgs = Regex.Matches(html, reg, RegexOptions.IgnoreCase);
-            reg = @"src=([""'])?(?<src>[^'""]+)";
-            foreach (var innerImg in innerImgs)
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(html);
+            var imgNodes = htmlDocument.DocumentNode.SelectNodes("//img");
+            foreach(var imgNode in imgNodes)
             {
-                var innerImgMatch = (Match)innerImg;
-                var imgSrc = Regex.Match(innerImgMatch.Value, reg);
-                var imgUrl = imgSrc.Value.Substring(5);
-                imgUrls.Add(new Uri(imgUrl));
+                imgUrls.Add(new Uri(imgNode.Attributes["src"].Value));
             }
             return imgUrls;
+        }
+
+        public static string GetFirstImages(string html)
+        {
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(html);
+            string urlString;
+            try
+            {
+                urlString = htmlDocument.DocumentNode.SelectSingleNode("//img").Attributes["src"].Value;
+            }
+            catch(NullReferenceException exception)
+            {
+                urlString = "";
+            }
+            return urlString;
         }
     }
 }
