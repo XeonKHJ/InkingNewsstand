@@ -42,6 +42,14 @@ namespace InkingNewstand
             get { return (item.PublishedDate.ToString()); }
         }
 
+        public Uri NewsLinks
+        {
+            get
+            {
+                return Item.Links[0].Uri;
+            }
+        }
+
         public string Authors
         {
             get
