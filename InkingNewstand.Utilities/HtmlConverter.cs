@@ -38,5 +38,25 @@ namespace InkingNewstand.Utilities
             }
             return urlString;
         }
+
+        public async static void GetReadingHtml(Uri url)
+        {
+            Reader reader = new Reader();
+            Article article;
+
+            try
+            {
+                article = await reader.Read(url);
+                Html = article.Content;
+                OnReadingHtmlConvertCompleted?.Invoke();
+            }
+            catch (ReadException exc)
+            {
+                // handle exception
+            }
+        }
+
+        public delegate void OnReadingHtmlConvertCompletedDelegate(); 
+        public static event OnReadingHtmlConvertCompletedDelegate OnReadingHtmlConvertCompleted; //阅读模式转换完成
     }
 }
