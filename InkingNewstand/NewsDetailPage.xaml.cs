@@ -34,32 +34,21 @@ namespace InkingNewstand
         List<Windows.Web.Syndication.SyndicationLink> Links;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Links = new List<Windows.Web.Syndication.SyndicationLink>();
             if(!(e.Parameter is NewsItem))
             {
                 throw new Exception();
             }
             News = (NewsItem)(e.Parameter);
-            Links.AddRange(News.Item.Links);
-            //if(News.Item.Content != null)
-            //{
-            //    content = News.Item.Content.Text;
-            //}
-            //else
-            //{
-            //    content = News.Item.Summary.Text;
-            //}
-            //Html = content;
-            GetReadingHtml(News.NewsLinks);
 
-
-            //this.Frame.LayoutUpdated += Frame_LayoutUpdated;
-            //foreach (var link1 in news.Item.Links)
-            //{
-            //    ;
-            //}
-            //var link = news.Item.Links[0];
-            //newsWebView.Source = news.Item.Links[0].Uri;
+            GetReadingHtml(News.NewsLink);
+            if (News.CoverUrl == "")
+            {
+                CoverUrlforPage = "Nopic.jpg";
+            }
+            else
+            {
+                CoverUrlforPage = News.CoverUrl;
+            }
             
         }
 
@@ -97,5 +86,7 @@ namespace InkingNewstand
         }
 
         public string Html { get; set; }
+
+        string CoverUrlforPage { set; get; }
     }
 }

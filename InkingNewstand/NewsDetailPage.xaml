@@ -57,7 +57,7 @@
                     <StackPanel x:Name="headerPanel" Margin="60" Grid.Row="0">
                         <TextBlock Text="{x:Bind News.Title}" FontSize="40" TextWrapping="WrapWholeWords"></TextBlock>
                         <TextBlock Text="{x:Bind News.PublishedDate}" FontSize="15"></TextBlock>
-                        <Image x:Name="headerImg" Source="{x:Bind News.CoverUrl}" Margin="25"></Image>
+                        <Image x:Name="headerImg" Source="{x:Bind CoverUrlforPage}" Margin="25"></Image>
                     </StackPanel>
                     <controls:HtmlBlock Grid.Row="1" FontSize="20" Margin="60, 60, 60, 0" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
                 </Grid>

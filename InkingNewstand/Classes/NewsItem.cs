@@ -12,9 +12,11 @@ namespace InkingNewstand
     public class NewsItem
     {
         private SyndicationItem item;
-        public NewsItem(SyndicationItem item)
+        public NewsItem(SyndicationItem item, Uri url)
         {
             this.item = item;
+            NewsLink = url;
+            //NewsLinks = item.ItemUri ?? item.Links.Select(l => l.Uri).FirstOrDefault();
         }
 
         public override string ToString()
@@ -42,13 +44,7 @@ namespace InkingNewstand
             get { return (item.PublishedDate.ToString()); }
         }
 
-        public Uri NewsLinks
-        {
-            get
-            {
-                return Item.Links[0].Uri;
-            }
-        }
+        public Uri NewsLink { private set; get; }
 
         public string Authors
         {

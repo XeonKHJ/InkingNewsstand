@@ -37,18 +37,18 @@ namespace InkingNewstand.Utilities
             return feedUrls;
         }
 
-        private HtmlDocument GetHtmlDoc(Uri url)
+        private static HtmlDocument GetHtmlDoc(Uri url)
         {
             var htmlWeb = new HtmlWeb();
-            var htmlDoc = htmlWeb.Load(uri.AbsoluteUri);
+            var htmlDoc = htmlWeb.Load(url.AbsoluteUri);
             return htmlDoc;
         }
 
-        private HtmlDocument GetHtmlDoc(string html)
+        private static HtmlDocument GetHtmlDoc(string html)
         {
             var htmlDoc = new HtmlDocument();
-            HtmlDocument.LoadHtml(html);
-            return HtmlDocument;
+            htmlDoc.LoadHtml(html);
+            return htmlDoc;
         }
     }
 }

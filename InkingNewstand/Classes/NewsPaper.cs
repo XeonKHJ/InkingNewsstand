@@ -195,25 +195,31 @@ namespace InkingNewstand
         /// </summary>
         public async Task<List<NewsItem>> GetNewsListAsync()
         {
-            List<SyndicationItem> mixedItemList = new List<SyndicationItem>();
+            List<NewsItem> newsItems = new List<NewsItem>();
+
             foreach (var feedUrl in feedUrls)
             {
                 var syndicationClient = new SyndicationClient();
                 try
                 {
                     var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
-                    mixedItemList.AddRange(feed.Items);
+
+                    //调试用
+                    foreach(var news in feed.Items)
+                    {
+                        var newsLink = news.ItemUri ?? news.Links.Select(l => l.Uri).FirstOrDefault();
+                        newsItems.Add(new NewsItem(news, newsLink));
+                    }
+
+
                 }
                 catch(Exception exception)
                 {
                     OnUpdateFailed?.Invoke(feedUrl.AbsoluteUri);
                 }
             }
-            List<NewsItem> newsItems = new List<NewsItem>();
-            foreach (var item in mixedItemList)
-            {
-                newsItems.Add(new NewsItem(item));
-            }
+            
+
             OnNewsRefreshed?.Invoke();
             return newsItems;
         }
