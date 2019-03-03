@@ -47,7 +47,7 @@ namespace InkingNewstand
                 paperListinFile = new SortedDictionary<int, NewsPaper>();
             }
 
-            var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.PaperTitle select v);
+            var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.PaperTitle select v); //搜索结果
             ////2.2、如果文件中没有保存此添加
             if (paperEnumer.Count() == 0)
             {
@@ -56,10 +56,12 @@ namespace InkingNewstand
             ////2.3、如果有则修改
             else if (paperEnumer.Count() == 1)
             {
-                foreach (var paper in paperEnumer)
-                {
-                    paperListinFile[paper.Key] = newsPaper;
-                }
+                var paperEnumerResult = paperEnumer.First();
+                paperListinFile[paperEnumerResult.Key] = newsPaper;
+                //foreach (var paper in paperEnumer)
+                //{
+                //    paperListinFile[paper.Key] = newsPaper;
+                //}
             }
             ////2.4若查到有多张报纸有相同名字，则显示错误
             else
@@ -129,7 +131,14 @@ namespace InkingNewstand
             BinaryFormatter bf = new BinaryFormatter();
             using (var ms = new System.IO.MemoryStream())
             {
-                bf.Serialize(ms, obj);
+                try
+                {
+                    bf.Serialize(ms, obj);
+                }
+                catch(System.Runtime.Serialization.SerializationException serializationException)
+                {
+                    ;
+                }
                 return ms.ToArray();
             }
         }

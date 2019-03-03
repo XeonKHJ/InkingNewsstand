@@ -28,7 +28,7 @@ namespace InkingNewstand
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled; //开启页面缓存
         }
 
-        private async void layoutNews(NewsPaper feeds)
+        private async void LayoutNews(NewsPaper feeds)
         {
             try
             {
@@ -51,10 +51,11 @@ namespace InkingNewstand
             else
             {
                 feeds = (NewsPaper)e.Parameter;
+                LayoutNews(feeds);
                 feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
                 feeds.OnUpdateFailed += Feeds_OnUpdateFailed;
                 titleTextBlock.Text = feeds.PaperTitle;
-                layoutNews(feeds);
+                LayoutNews(feeds);
             }
         }
 
