@@ -203,15 +203,12 @@ namespace InkingNewstand
                 try
                 {
                     var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
-
-                    //调试用
+                    //将新闻添加到newsItems中
                     foreach(var news in feed.Items)
                     {
                         var newsLink = news.ItemUri ?? news.Links.Select(l => l.Uri).FirstOrDefault();
-                        newsItems.Add(new NewsItem(news, newsLink));
+                        newsItems.Add(new NewsItem(news, newsLink, PaperTitle));
                     }
-
-
                 }
                 catch(Exception exception)
                 {
@@ -231,8 +228,7 @@ namespace InkingNewstand
         /// <returns>报纸列表</returns>
         public static async Task<List<NewsPaper>> GetNewsPapers()
         {
-            var file = await ApplicationData.Current.LocalFolder.TryGetItemAsync("PaperList.dat") as StorageFile;
-            if (file == null)
+            if (!(await ApplicationData.Current.LocalFolder.TryGetItemAsync("PaperList.dat") is StorageFile file))
             {
                 return new List<NewsPaper>();
             }

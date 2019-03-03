@@ -12,10 +12,11 @@ namespace InkingNewstand
     public class NewsItem
     {
         private SyndicationItem item;
-        public NewsItem(SyndicationItem item, Uri url)
+        public NewsItem(SyndicationItem item, Uri url, string paperTitle)
         {
             this.item = item;
             NewsLink = url;
+            PaperTitle = paperTitle;
             //NewsLinks = item.ItemUri ?? item.Links.Select(l => l.Uri).FirstOrDefault();
         }
 
@@ -46,6 +47,8 @@ namespace InkingNewstand
 
         public Uri NewsLink { private set; get; }
 
+        public string PaperTitle { set; get; }
+
         public string Authors
         {
             get
@@ -62,11 +65,11 @@ namespace InkingNewstand
         {
             get
             {
-                return HtmlConverter.GetFirstImages(innerHTML);
+                return HtmlConverter.GetFirstImages(InnerHTML);
             }
         }
 
-        public string innerHTML
+        public string InnerHTML
         {
             get
             {

@@ -58,6 +58,14 @@ namespace InkingNewstand
             }
         }
 
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            if(e.Parameter is NewsPaper)
+            {
+                this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Disabled; //关闭页面缓存
+            }
+        }
+
         private void Feeds_OnUpdateFailed(string failNewsPaperTitle)
         {
             errorTextBlock.Text = "连接failNewsPaperTitle失败";
@@ -72,7 +80,7 @@ namespace InkingNewstand
 
         List<NewsItem> newsItems;
 
-        List<NewsItem> row1NewsItemList
+        List<NewsItem> Row1NewsItemList
         {
             get
             {

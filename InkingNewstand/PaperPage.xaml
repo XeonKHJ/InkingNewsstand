@@ -82,7 +82,7 @@
         </GridView>-->
 
                 <!--VariableSizedGrid布局-->
-                <controls:VariableSizedGrid Grid.Row="1" x:Name="NewsItemsGrid" ItemsSource="{x:Bind row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
+                <controls:VariableSizedGrid Grid.Row="1" x:Name="NewsItemsGrid" ItemsSource="{x:Bind Row1NewsItemList}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
                     <controls:VariableSizedGrid.ItemTemplate>
                         <DataTemplate x:DataType="data:NewsItem">
                             <Grid>

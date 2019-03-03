@@ -39,7 +39,6 @@ namespace InkingNewstand
                 throw new Exception();
             }
             News = (NewsItem)(e.Parameter);
-
             GetReadingHtml(News.NewsLink);
             if (News.CoverUrl == "")
             {
