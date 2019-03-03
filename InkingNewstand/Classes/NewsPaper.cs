@@ -195,8 +195,6 @@ namespace InkingNewstand
         /// </summary>
         public async Task<List<NewsItem>> GetNewsListAsync()
         {
-            List<NewsItem> newsItems = new List<NewsItem>();
-
             foreach (var feedUrl in feedUrls)
             {
                 var syndicationClient = new SyndicationClient();
@@ -207,7 +205,13 @@ namespace InkingNewstand
                     foreach(var news in feed.Items)
                     {
                         var newsLink = news.ItemUri ?? news.Links.Select(l => l.Uri).FirstOrDefault();
-                        newsItems.Add(new NewsItem(news, newsLink, PaperTitle));
+                        var newsItem = new NewsItem(news, newsLink, PaperTitle);
+
+                        //如果原新闻列表中不包含改新闻，则添加到新闻列表
+                        if (!newsList.Contains(newsItem))
+                        {
+                            newsList.Add(new NewsItem(news, newsLink, PaperTitle));
+                        }
                     }
                 }
                 catch(Exception exception)
@@ -218,7 +222,7 @@ namespace InkingNewstand
             
 
             OnNewsRefreshed?.Invoke();
-            return newsItems;
+            return newsList;
         }
 
         
@@ -248,6 +252,18 @@ namespace InkingNewstand
             get
             {
                 return feedUrls;
+            }
+        }
+
+        /// <summary>
+        /// 新闻列表
+        /// </summary>
+        private List<NewsItem> newsList = new List<NewsItem>();
+        public List<NewsItem> NewsList
+        {
+            get
+            {
+                return newsList;
             }
         }
 

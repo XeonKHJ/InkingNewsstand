@@ -9,6 +9,7 @@ using InkingNewstand.Utilities;
 
 namespace InkingNewstand
 {
+    [Serializable]
     public class NewsItem
     {
         private static SyndicationItem staticItem;
