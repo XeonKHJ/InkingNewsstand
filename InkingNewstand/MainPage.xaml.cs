@@ -84,14 +84,14 @@ namespace InkingNewstand
         }
 
         List<NewsPaper> newsPapers;
-        List<NewsPaper> newsPapersView
-        {
-            get
-            {
-                GetNewsPapers();
-                return newsPapers;
-            }
-        }
+        //List<NewsPaper> newsPapersView
+        //{
+        //    get
+        //    {
+        //        GetNewsPapers();
+        //        return newsPapers;
+        //    }
+        //}
 
         private void PaperNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {

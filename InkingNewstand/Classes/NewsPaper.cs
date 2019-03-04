@@ -103,8 +103,10 @@ namespace InkingNewstand
 
             //3、将paperListinFile重新保存到文件中
             await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
-
-            OnPaperAdded?.Invoke(); //添加完成后引发该事件
+            if (paperEnumer.Count() == 0)
+            {
+                OnPaperAdded?.Invoke();
+            }//添加完成后引发该事件
         }
 
         /// <summary>
