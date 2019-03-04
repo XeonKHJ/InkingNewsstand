@@ -33,6 +33,7 @@ namespace InkingNewstand
             try
             {
                 newsItems = await feeds.GetNewsListAsync();
+                Bindings.Update();
             }
             catch(Exception exception)
             {
@@ -64,7 +65,7 @@ namespace InkingNewstand
         /// </summary>
         private void Feeds_OnNewsUpdated()
         {
-            Bindings.Update();
+            //Bindings.Update();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -82,6 +83,7 @@ namespace InkingNewstand
 
         private void Feeds_OnNewsRefreshed()
         {
+            //Bindings.Update();
             refreshingProgressRing.IsActive = false;
         }
 
