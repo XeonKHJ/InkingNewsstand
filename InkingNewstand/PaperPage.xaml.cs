@@ -52,12 +52,18 @@ namespace InkingNewstand
             else
             {
                 feeds = (NewsPaper)e.Parameter;
+                feeds.OnNewsRefreshing += Feeds_OnNewsRefreshing;
                 feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
                 feeds.OnNewsUpdated += Feeds_OnNewsUpdated;
                 feeds.OnUpdateFailed += Feeds_OnUpdateFailed;
                 titleTextBlock.Text = feeds.PaperTitle;
                 LayoutNews(feeds);
             }
+        }
+
+        private void Feeds_OnNewsRefreshing()
+        {
+            refreshingProgressRing.IsActive = true;
         }
 
         /// <summary>

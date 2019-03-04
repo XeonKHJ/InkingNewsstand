@@ -107,7 +107,7 @@ namespace InkingNewstand
             await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
             if (!existFlag)
             {
-                OnPaperAdded?.Invoke();
+                OnPaperAdded?.Invoke(newsPaper);
             }//添加完成后引发该事件
         }
 
@@ -230,6 +230,7 @@ namespace InkingNewstand
         /// </summary>
         public async Task<List<NewsItem>> GetNewsListAsync()
         {
+            OnNewsRefreshing?.Invoke();
             int originalNewsCount = NewsList.Count;
             foreach (var feedUrl in FeedUrls)
             {
@@ -318,13 +319,16 @@ namespace InkingNewstand
             OnPaperDeleted?.Invoke();
         }
 
-        public delegate void OnPaperUpdatedDelegate();
+        public delegate void OnPaperUpdatedDelegate(NewsPaper updatedNewspaper);
         public static event OnPaperUpdatedDelegate OnPaperAdded;
-        public static event OnPaperUpdatedDelegate OnPaperDeleted;
+
+        public delegate void OnPaperDeletedDelegate();
+        public static event OnPaperDeletedDelegate OnPaperDeleted;
 
         public delegate void OnNewsUpdatedDelegate();
         public event OnNewsUpdatedDelegate OnNewsRefreshed;
         public event OnNewsUpdatedDelegate OnNewsUpdated; //新闻有更新时引发
+        public event OnNewsUpdatedDelegate OnNewsRefreshing;
 
         public delegate void OnUpdateFailedDelegate(string failNewsPaperTitle);
         public event OnUpdateFailedDelegate OnUpdateFailed;

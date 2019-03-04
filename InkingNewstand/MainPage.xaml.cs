@@ -60,8 +60,14 @@ namespace InkingNewstand
         private void InitializePaperlistSetting()
         {
             NewsPaper.OnPaperAdded += NewsPaper_OnPaperAdded;
-            NewsPaper.OnPaperDeleted += NewsPaper_OnPaperAdded;
+            NewsPaper.OnPaperDeleted += NewsPaper_OnPaperDeleted; ;
         }
+
+        private void NewsPaper_OnPaperDeleted()
+        {
+            GetNewsPapers();
+        }
+
         private async void GetNewsPapers()
         {
             newsPapers = await NewsPaper.ReadFromFile();
@@ -77,10 +83,38 @@ namespace InkingNewstand
             }
         }
 
-        private void NewsPaper_OnPaperAdded()
+        /// <summary>
+        /// 更新报纸列表
+        /// </summary>
+        /// <param name="newsPaper">更新完后要显示的报纸</param>
+        private async void GetNewsPapers(NewsPaper newsPaper)
         {
-            GetNewsPapers();
+            newsPapers = await NewsPaper.ReadFromFile();
+            if (newsPapers.Count == 0)
+            {
+                newsPapers.Add(new NewsPaper("添加第一份报纸！"));
+            }
             Bindings.Update();
+            if (newsPapers.Count != 0)
+            {
+                paperNavigationView.SelectedItem = newsPapers[0];
+                //contentFrame.Navigate(typeof(PaperPage), newsPapers[0]);
+            }
+        }
+
+        private async void NewsPaper_OnPaperAdded(NewsPaper updatedNewspaper)
+        {
+            newsPapers = await NewsPaper.ReadFromFile();
+            if (newsPapers.Count == 0)
+            {
+                newsPapers.Add(new NewsPaper("添加第一份报纸！"));
+            }
+            Bindings.Update();
+            if (newsPapers.Count != 0)
+            {
+                paperNavigationView.SelectedItem = updatedNewspaper;
+                //contentFrame.Navigate(typeof(PaperPage), newsPapers[0]);
+            }
         }
 
         List<NewsPaper> newsPapers;
