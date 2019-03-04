@@ -57,7 +57,7 @@ namespace InkingNewstand
             }
             await NewsPaper.SaveToFile(newsPaper);
             //!!要等上一句完成，要用同步异步操作了。
-            this.Frame.Navigate(typeof(PaperPage), newsPaper);
+            //this.Frame.Navigate(typeof(PaperPage), newsPaper);
         }
 
         /// <summary>

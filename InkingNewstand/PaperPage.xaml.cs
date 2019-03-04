@@ -33,6 +33,7 @@ namespace InkingNewstand
             try
             {
                 newsItems = await feeds.GetNewsListAsync();
+                Bindings.Update();
             }
             catch(Exception exception)
             {
@@ -51,6 +52,7 @@ namespace InkingNewstand
             else
             {
                 feeds = (NewsPaper)e.Parameter;
+                feeds.OnNewsRefreshing += Feeds_OnNewsRefreshing;
                 feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
                 feeds.OnNewsUpdated += Feeds_OnNewsUpdated;
                 feeds.OnUpdateFailed += Feeds_OnUpdateFailed;
@@ -59,12 +61,17 @@ namespace InkingNewstand
             }
         }
 
+        private void Feeds_OnNewsRefreshing()
+        {
+            refreshingProgressRing.IsActive = true;
+        }
+
         /// <summary>
         /// 新闻有更新后才更新绑定
         /// </summary>
         private void Feeds_OnNewsUpdated()
         {
-            Bindings.Update();
+            //Bindings.Update();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -82,6 +89,7 @@ namespace InkingNewstand
 
         private void Feeds_OnNewsRefreshed()
         {
+            //Bindings.Update();
             refreshingProgressRing.IsActive = false;
         }
 

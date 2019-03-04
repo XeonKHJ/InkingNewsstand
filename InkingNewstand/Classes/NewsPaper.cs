@@ -71,7 +71,7 @@ namespace InkingNewstand
         {
             //1、获取报纸列表
             var paperListinFile = await ReadListFromFile();
-
+            bool existFlag;
             //2、获取当前报纸编号
             ////2.1、如果文件中没有保存任何东西，则新建一个paperListinFile
             if (paperListinFile == null)
@@ -80,14 +80,16 @@ namespace InkingNewstand
             }
 
             var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.newsPaperModel.PaperTitle select v); //搜索结果
-            ////2.2、如果文件中没有保存此添加
+            ////2.2、如果文件中没有保存此添加（是新报纸）
             if (paperEnumer.Count() == 0)
             {
+                existFlag = false;
                 paperListinFile.Add(paperListinFile.Count, newsPaper.newsPaperModel);
             }
             ////2.3、如果有则修改
             else if (paperEnumer.Count() == 1)
             {
+                existFlag = true;
                 var paperEnumerResult = paperEnumer.First();
                 paperListinFile[paperEnumerResult.Key] = newsPaper.newsPaperModel;
                 //foreach (var paper in paperEnumer)
@@ -103,8 +105,10 @@ namespace InkingNewstand
 
             //3、将paperListinFile重新保存到文件中
             await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
-
-            OnPaperAdded?.Invoke(); //添加完成后引发该事件
+            if (!existFlag)
+            {
+                OnPaperAdded?.Invoke(newsPaper);
+            }//添加完成后引发该事件
         }
 
         /// <summary>
@@ -226,6 +230,7 @@ namespace InkingNewstand
         /// </summary>
         public async Task<List<NewsItem>> GetNewsListAsync()
         {
+            OnNewsRefreshing?.Invoke();
             int originalNewsCount = NewsList.Count;
             foreach (var feedUrl in FeedUrls)
             {
@@ -314,13 +319,16 @@ namespace InkingNewstand
             OnPaperDeleted?.Invoke();
         }
 
-        public delegate void OnPaperUpdatedDelegate();
+        public delegate void OnPaperUpdatedDelegate(NewsPaper updatedNewspaper);
         public static event OnPaperUpdatedDelegate OnPaperAdded;
-        public static event OnPaperUpdatedDelegate OnPaperDeleted;
+
+        public delegate void OnPaperDeletedDelegate();
+        public static event OnPaperDeletedDelegate OnPaperDeleted;
 
         public delegate void OnNewsUpdatedDelegate();
         public event OnNewsUpdatedDelegate OnNewsRefreshed;
         public event OnNewsUpdatedDelegate OnNewsUpdated; //新闻有更新时引发
+        public event OnNewsUpdatedDelegate OnNewsRefreshing;
 
         public delegate void OnUpdateFailedDelegate(string failNewsPaperTitle);
         public event OnUpdateFailedDelegate OnUpdateFailed;
