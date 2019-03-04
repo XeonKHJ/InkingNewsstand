@@ -137,8 +137,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="InkingNewstand.HtmlAgilityPack">
-      <HintPath>..\..\..\zzzprojects\html-agility-pack\src\HtmlAgilityPack.UAP10\bin\Release\InkingNewstand.HtmlAgilityPack.dll</HintPath>
+    <Reference Include="InkingNewstand.HtmlAgilityPack, Version=1.9.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dlls\InkingNewstand.HtmlAgilityPack\InkingNewstand.HtmlAgilityPack.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
