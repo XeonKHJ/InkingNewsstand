@@ -71,7 +71,7 @@ namespace InkingNewstand
         {
             //1、获取报纸列表
             var paperListinFile = await ReadListFromFile();
-
+            bool existFlag;
             //2、获取当前报纸编号
             ////2.1、如果文件中没有保存任何东西，则新建一个paperListinFile
             if (paperListinFile == null)
@@ -80,14 +80,16 @@ namespace InkingNewstand
             }
 
             var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.newsPaperModel.PaperTitle select v); //搜索结果
-            ////2.2、如果文件中没有保存此添加
+            ////2.2、如果文件中没有保存此添加（是新报纸）
             if (paperEnumer.Count() == 0)
             {
+                existFlag = false;
                 paperListinFile.Add(paperListinFile.Count, newsPaper.newsPaperModel);
             }
             ////2.3、如果有则修改
             else if (paperEnumer.Count() == 1)
             {
+                existFlag = true;
                 var paperEnumerResult = paperEnumer.First();
                 paperListinFile[paperEnumerResult.Key] = newsPaper.newsPaperModel;
                 //foreach (var paper in paperEnumer)
@@ -103,7 +105,7 @@ namespace InkingNewstand
 
             //3、将paperListinFile重新保存到文件中
             await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
-            if (paperEnumer.Count() == 0)
+            if (!existFlag)
             {
                 OnPaperAdded?.Invoke();
             }//添加完成后引发该事件
