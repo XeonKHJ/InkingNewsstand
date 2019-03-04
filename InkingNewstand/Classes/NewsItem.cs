@@ -6,13 +6,15 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Web.Syndication;
 using InkingNewstand.Utilities;
+using InkingNewstand.Models;
 
 namespace InkingNewstand
 {
     [Serializable]
-    public class NewsItem
+    public class NewsItem : IEquatable<NewsItem>
     {
         private static SyndicationItem staticItem;
+        NewsModel newsModel;
         public NewsItem(SyndicationItem item, Uri url, string paperTitle)
         {
             staticItem = item;
@@ -60,6 +62,19 @@ namespace InkingNewstand
                 authorsString += staticItem.Authors[i].Name;
             }
             Authors = authorsString;
+
+            //新闻模型
+            newsModel = new NewsModel
+            {
+                Authors = Authors,
+                CoverUrl = CoverUrl,
+                InnerHTML = InnerHTML,
+                NewsLink = NewsLink,
+                PaperTitle = PaperTitle,
+                PublishedDate = PublishedDate,
+                Summary = Summary,
+                Title = Title
+            };
         }
 
         public string Content { get; set; }
@@ -93,6 +108,11 @@ namespace InkingNewstand
 
         public string InnerHTML { get; private set; }
 
+        public bool Equals(NewsItem other)
+        {
+            return this == other;
+        }
+
         public override string ToString()
         {
             return staticItem.Title.Text.ToString();
@@ -106,18 +126,15 @@ namespace InkingNewstand
         /// <returns>是否等价</returns>
         public static bool operator ==(NewsItem lhs, NewsItem rhs)
         {
-            try
+            if(lhs is null || rhs is null)
             {
-                if (lhs.Title == rhs.Title && lhs.PublishedDate == rhs.PublishedDate)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
-            catch(NullReferenceException)
+            if (lhs.Title == rhs.Title && lhs.PublishedDate == rhs.PublishedDate)
+            {
+                return true;
+            }
+            else
             {
                 return false;
             }

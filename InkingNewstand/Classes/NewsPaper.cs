@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InkingNewstand.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -18,16 +19,47 @@ namespace InkingNewstand
     public class NewsPaper
     {
         static private StorageFile paperListFile;
-        private List<Uri> feedUrls = new List<Uri>();
+        //private List<Uri> feedUrls = new List<Uri>();
+        private NewsPaperModel newsPaperModel;
         public NewsPaper(string paperName)
         {
-            this.PaperTitle = paperName;
+            newsPaperModel = new NewsPaperModel{ PaperTitle = paperName};
+        }
+
+        public NewsPaper(NewsPaperModel model)
+        {
+            newsPaperModel = model;
         }
 
         /// <summary>
         /// 报纸名
         /// </summary>
-        public string PaperTitle { get; } = "未命名报纸";
+        public string PaperTitle
+        {
+            get
+            {
+                return newsPaperModel.PaperTitle;
+            }
+        }
+
+        /// <summary>
+        /// 订阅源数量
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                return newsPaperModel.Count;
+            }
+        }
+
+        public List<Uri> FeedUrls
+        {
+            get
+            {
+                return newsPaperModel.FeedUrls;
+            }
+        }
 
 
         /// <summary>
@@ -44,20 +76,20 @@ namespace InkingNewstand
             ////2.1、如果文件中没有保存任何东西，则新建一个paperListinFile
             if (paperListinFile == null)
             {
-                paperListinFile = new SortedDictionary<int, NewsPaper>();
+                paperListinFile = new SortedDictionary<int, NewsPaperModel>();
             }
 
-            var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.PaperTitle select v); //搜索结果
+            var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.newsPaperModel.PaperTitle select v); //搜索结果
             ////2.2、如果文件中没有保存此添加
             if (paperEnumer.Count() == 0)
             {
-                paperListinFile.Add(paperListinFile.Count, newsPaper);
+                paperListinFile.Add(paperListinFile.Count, newsPaper.newsPaperModel);
             }
             ////2.3、如果有则修改
             else if (paperEnumer.Count() == 1)
             {
                 var paperEnumerResult = paperEnumer.First();
-                paperListinFile[paperEnumerResult.Key] = newsPaper;
+                paperListinFile[paperEnumerResult.Key] = newsPaper.newsPaperModel;
                 //foreach (var paper in paperEnumer)
                 //{
                 //    paperListinFile[paper.Key] = newsPaper;
@@ -92,7 +124,7 @@ namespace InkingNewstand
             List<NewsPaper> newsPapers = new List<NewsPaper>();
             foreach (var paperPair in paperListinFile)
             {
-                newsPapers.Add(paperPair.Value);
+                newsPapers.Add(new NewsPaper(paperPair.Value));
             }
             return newsPapers;
         }
@@ -147,7 +179,7 @@ namespace InkingNewstand
         /// 从文件中获取报纸列表
         /// </summary>
         /// <param></param>
-        private static async Task<SortedDictionary<int, NewsPaper>> ReadListFromFile()
+        private static async Task<SortedDictionary<int, NewsPaperModel>> ReadListFromFile()
         {
             var storageFolder = ApplicationData.Current.LocalFolder;
 
@@ -162,7 +194,7 @@ namespace InkingNewstand
             {
                 ;
             }
-            SortedDictionary<int, NewsPaper> paperListinFile = new SortedDictionary<int, NewsPaper>();
+            SortedDictionary<int, NewsPaperModel> paperListinFile = new SortedDictionary<int, NewsPaperModel>();
 
             //1、读取报纸列表数据
             var stream = await paperListFile.OpenAsync(FileAccessMode.ReadWrite); //获取文件随机存取流
@@ -172,11 +204,12 @@ namespace InkingNewstand
                 uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
                 byte[] bytes = new byte[(uint)stream.Size];
                 dataReader.ReadBytes(bytes);//用来存储从文件中读出的数据
-                paperListinFile = (SortedDictionary<int, NewsPaper>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
+                paperListinFile = (SortedDictionary<int, NewsPaperModel>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
             }
             stream.Dispose();
             return paperListinFile;
         }
+
         /// <summary>
         /// 添加订阅源
         /// </summary>
@@ -185,18 +218,7 @@ namespace InkingNewstand
         {
             //var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
             //var feedXml = feed.GetXmlDocument(feed.SourceFormat);
-            feedUrls.Add(feedUrl);
-        }
-
-        /// <summary>
-        /// 订阅源数量
-        /// </summary>
-        public int Count
-        {
-            get
-            {
-                return feedUrls.Count;
-            }
+            newsPaperModel.FeedUrls.Add(feedUrl);
         }
 
         /// <summary>
@@ -204,7 +226,8 @@ namespace InkingNewstand
         /// </summary>
         public async Task<List<NewsItem>> GetNewsListAsync()
         {
-            foreach (var feedUrl in feedUrls)
+            int originalNewsCount = NewsList.Count;
+            foreach (var feedUrl in FeedUrls)
             {
                 var syndicationClient = new SyndicationClient();
                 try
@@ -217,9 +240,9 @@ namespace InkingNewstand
                         var newsItem = new NewsItem(news, newsLink, PaperTitle);
 
                         //如果原新闻列表中不包含改新闻，则添加到新闻列表
-                        if (!newsList.Contains(newsItem))
+                        if (!NewsList.Contains(newsItem))
                         {
-                            newsList.Add(new NewsItem(news, newsLink, PaperTitle));
+                            NewsList.Add(new NewsItem(news, newsLink, PaperTitle));
                         }
                     }
                 }
@@ -228,13 +251,17 @@ namespace InkingNewstand
                     OnUpdateFailed?.Invoke(feedUrl.AbsoluteUri);
                 }
             }
-            
-
+            if (NewsList.Count != originalNewsCount)
+            {
+                await SaveToFile(this);
+                OnNewsUpdated?.Invoke();
+            }
             OnNewsRefreshed?.Invoke();
-            return newsList;
-        }
 
+            return NewsList;
+        }
         
+        //好像没用
         /// <summary>
         /// 加载之前保存的报纸列表
         /// </summary>
@@ -256,23 +283,15 @@ namespace InkingNewstand
             ;
         }
 
-        public List<Uri> FeedUrls
-        {
-            get
-            {
-                return feedUrls;
-            }
-        }
-
         /// <summary>
         /// 新闻列表
         /// </summary>
-        private List<NewsItem> newsList = new List<NewsItem>();
+        //private List<NewsItem> newsList = new List<NewsItem>();
         public List<NewsItem> NewsList
         {
             get
             {
-                return newsList;
+                return newsPaperModel.NewsList;
             }
         }
 
@@ -301,6 +320,7 @@ namespace InkingNewstand
 
         public delegate void OnNewsUpdatedDelegate();
         public event OnNewsUpdatedDelegate OnNewsRefreshed;
+        public event OnNewsUpdatedDelegate OnNewsUpdated; //新闻有更新时引发
 
         public delegate void OnUpdateFailedDelegate(string failNewsPaperTitle);
         public event OnUpdateFailedDelegate OnUpdateFailed;

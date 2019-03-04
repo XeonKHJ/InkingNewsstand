@@ -39,7 +39,7 @@ namespace InkingNewstand
                 //同步失败信息
             }
             //titleTextBlock.Text = feeds.PaperTitle;
-            Bindings.Update();
+
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -51,12 +51,20 @@ namespace InkingNewstand
             else
             {
                 feeds = (NewsPaper)e.Parameter;
-                LayoutNews(feeds);
                 feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
+                feeds.OnNewsUpdated += Feeds_OnNewsUpdated;
                 feeds.OnUpdateFailed += Feeds_OnUpdateFailed;
                 titleTextBlock.Text = feeds.PaperTitle;
                 LayoutNews(feeds);
             }
+        }
+
+        /// <summary>
+        /// 新闻有更新后才更新绑定
+        /// </summary>
+        private void Feeds_OnNewsUpdated()
+        {
+            Bindings.Update();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
