@@ -23,7 +23,7 @@
         <ListView Grid.Row="1" ItemsSource="{x:Bind Feeds}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="data1:FeedViewModel">
-                    <StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <Image Source="{x:Bind Icon}" VerticalAlignment="Center"></Image>
                         <TextBlock Text="{x:Bind Title}" VerticalAlignment="Center"></TextBlock>
                         <AppBarButton Icon="Add" Content="添加" VerticalAlignment="Center"></AppBarButton>

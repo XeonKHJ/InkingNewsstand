@@ -221,11 +221,6 @@
   <ItemGroup>
     <None Include="InkingNewstand_TemporaryKey.pfx" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="FeedlySharp">
-      <HintPath>..\..\FeedlySharp\FeedlySharp\bin\Release\netstandard2.0\FeedlySharp.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

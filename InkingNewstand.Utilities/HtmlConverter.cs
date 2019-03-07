@@ -27,14 +27,16 @@ namespace InkingNewstand.Utilities
         {
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
-            string urlString;
+
+            string urlString = "";
             try
             {
-                urlString = htmlDocument.DocumentNode.SelectSingleNode("//img").Attributes["src"].Value;
+                var imgNode = htmlDocument.DocumentNode.SelectSingleNode("//img");
+                urlString = imgNode is null ? "" : imgNode.Attributes["src"].Value;
             }
-            catch(NullReferenceException exception)
+            catch(Exception exception)
             {
-                urlString = "";
+                System.Diagnostics.Debug.WriteLine("fucked:");
             }
             return urlString;
         }
