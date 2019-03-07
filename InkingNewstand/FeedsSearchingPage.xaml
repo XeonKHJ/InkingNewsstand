@@ -5,6 +5,9 @@
     xmlns:local="using:InkingNewstand"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:feeddata="using:Windows.Web.Syndication"
+    xmlns:data="using:InkingNewstand"
+    xmlns:data1="using:InkingNewstand.ViewModels"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -14,9 +17,19 @@
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Stretch">
-            <TextBox x:Name="websiteTextBox" MinWidth="200" Margin="25" Text="http://www.theverge.com"></TextBox>
-            <Button x:Name="searchButton" Content="搜索"></Button>
+            <TextBox x:Name="websiteTextBox" MinWidth="200" Margin="25" Text="https://www.theverge.com"></TextBox>
+            <Button x:Name="searchButton" Content="搜索" Click="SearchButton_Click"></Button>
         </StackPanel>
-        <GridView Grid.Row="1"></GridView>
+        <ListView Grid.Row="1" ItemsSource="{x:Bind Feeds}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="data1:FeedViewModel">
+                    <StackPanel>
+                        <Image Source="{x:Bind Icon}" VerticalAlignment="Center"></Image>
+                        <TextBlock Text="{x:Bind Title}" VerticalAlignment="Center"></TextBlock>
+                        <AppBarButton Icon="Add" Content="添加" VerticalAlignment="Center"></AppBarButton>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>

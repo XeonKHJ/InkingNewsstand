@@ -5,6 +5,7 @@
     xmlns:local="using:InkingNewstand"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:InkingNewstand"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Grid Background="Transparent">
@@ -23,6 +24,15 @@
             <TextBox x:Name="newspaperTitleTextBox" Header="标题" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" Width="400"/>
             <Button x:Name="addFeedButton" Content="+" RelativePanel.Below="newspaperTitleTextBox" HorizontalAlignment="Center" VerticalAlignment="Top" 
                     Margin="0,20,0,0" RelativePanel.AlignLeftWithPanel="True" Click="AddFeedButton_Click">
+            </Button>
+            <Button x:Name="getFromWebsiteButton" Content="从网站获取" 
+                    RelativePanel.Below="newspaperTitleTextBox" RelativePanel.AlignRightWith="newspaperTitleTextBox" Margin="0,20,0,0">
+                <Button.Flyout>
+                    <Flyout>
+                        <Frame SourcePageType="{x:Bind FeedsSearchingPageType}">
+                        </Frame>
+                    </Flyout>
+                </Button.Flyout>
             </Button>
             <Grid x:Name="rssInputGrid" RelativePanel.Below="addFeedButton" RelativePanel.AlignLeftWithPanel="True" Margin="0,5,0,0">
                 <RelativePanel x:Name="rssInputPanel">

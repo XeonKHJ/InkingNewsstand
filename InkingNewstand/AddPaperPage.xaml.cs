@@ -79,9 +79,19 @@ namespace InkingNewstand
             }
         }
 
+        public Type FeedsSearchingPageType
+        {
+            get { return typeof(FeedsSearchingPage); }
+        }
+
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             await NewsPaper.DeleteNewsPaper(newsPaper);
+        }
+
+        private void GetFromWebsiteButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

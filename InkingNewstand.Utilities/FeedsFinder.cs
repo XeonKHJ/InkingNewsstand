@@ -7,9 +7,9 @@ using HtmlAgilityPack;
 
 namespace InkingNewstand.Utilities
 {
-    class FeedsFinder
+    public class FeedsFinder
     {
-        public static List<Uri> GetFeedFromUrl(Uri websiteUrl)
+        public static List<Uri> GetFeedsFromUrl(Uri websiteUrl)
         {
             List<Uri> feedUrls = new List<Uri>();
             var htmlDoc = GetHtmlDoc(websiteUrl);
