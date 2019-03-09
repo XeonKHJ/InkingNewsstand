@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using InkingNewstand.Utilities;
 using Windows.Web.Syndication;
 using InkingNewstand.ViewModels;
+using System.Threading.Tasks;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -28,12 +29,15 @@ namespace InkingNewstand
         public FeedsSearchingPage()
         {
             Feeds.Add(new FeedViewModel("aaaaaaaaaaa", "d", "c", "d"));
+            AddPaperPage.isFeedsSearchingPageActive = true;
+            AddPaperPage.isThereFeed = false;
             this.InitializeComponent();
         }
 
         private async void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            var feedUrls = FeedsFinder.GetFeedsFromUrl(new Uri(websiteTextBox.Text));
+            List<Uri> feedUrls = new List<Uri>();
+            feedUrls = FeedsFinder.GetFeedsFromUrl(new Uri(websiteTextBox.Text));
             var client = new SyndicationClient();
             var feeds = new List<FeedViewModel>();
             foreach (var url in feedUrls)
@@ -46,5 +50,16 @@ namespace InkingNewstand
         }
 
         public List<FeedViewModel> Feeds = new List<FeedViewModel>();
+
+        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            AddPaperPage.feedViewModel = (FeedViewModel)e.ClickedItem;
+            AddPaperPage.isThereFeed = true;
+        }
+
+        public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
+        }
     }
 }

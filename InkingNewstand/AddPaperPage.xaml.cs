@@ -1,8 +1,10 @@
-﻿using System;
+﻿using InkingNewstand.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,7 +27,25 @@ namespace InkingNewstand
         public AddPaperPage()
         {
             this.InitializeComponent();
+            searchingPageFlyout.Opened += SearchingPageFlyout_Opened;
+            searchingPageFlyout.Closed += SearchingPageFlyout_Closed;
         }
+
+        private void SearchingPageFlyout_Closed(object sender, object e)
+        {
+            isFeedsSearchingPageActive = false;
+        }
+
+        private void SearchingPageFlyout_Opened(object sender, object e)
+        {
+            isFeedsSearchingPageActive = true;
+        }
+
+        public static bool isFeedsSearchingPageActive = false;
+        public static bool isThereFeed = false;
+        public static FeedViewModel feedViewModel;
+
+
 
         private void AddFeedButton_Click(object sender, RoutedEventArgs e)
         {
@@ -35,6 +55,10 @@ namespace InkingNewstand
                 Header = "RSS链接",
                 Width = 400
             };
+            if(sender is FeedViewModel)
+            {
+                rssInputBox.Text = ((FeedViewModel)sender).Url;
+            }
             rssInputPanel.Children.Add(rssInputBox);
             RelativePanel.SetAlignLeftWithPanel((UIElement)rssInputBox, true);
             RelativePanel.SetBelow(rssInputBox, rssInputPanel.Children[rssInputPanel.Children.Count - 2]);
@@ -79,6 +103,11 @@ namespace InkingNewstand
             }
         }
 
+        public void AddFeedLink(FeedViewModel feedViewModel)
+        {
+            AddFeedButton_Click(feedViewModel, null);
+        }
+
         public Type FeedsSearchingPageType
         {
             get { return typeof(FeedsSearchingPage); }
@@ -91,7 +120,28 @@ namespace InkingNewstand
 
         private void GetFromWebsiteButton_Click(object sender, RoutedEventArgs e)
         {
+            AddingFeedsProcedure();
+        }
 
+        private async void AddingFeedsProcedure()
+        {
+            //isFeedsSearchingPageActive = true;
+            await Task.Run(() =>
+            {
+                while (isFeedsSearchingPageActive)
+                {
+                    if (isThereFeed)
+                    {
+                        Invoke(()=> { AddFeedButton_Click(feedViewModel, null); }) ;
+                        isThereFeed = false;
+                    }
+                }
+            });
+        }
+
+        public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
         }
     }
 }

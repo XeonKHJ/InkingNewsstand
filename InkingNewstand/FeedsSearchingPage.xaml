@@ -20,7 +20,7 @@
             <TextBox x:Name="websiteTextBox" MinWidth="200" Margin="25" Text="https://www.theverge.com"></TextBox>
             <Button x:Name="searchButton" Content="搜索" Click="SearchButton_Click"></Button>
         </StackPanel>
-        <ListView Grid.Row="1" ItemsSource="{x:Bind Feeds}">
+        <ListView Grid.Row="1" ItemsSource="{x:Bind Feeds}" IsItemClickEnabled="True" ItemClick="ListView_ItemClick">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="data1:FeedViewModel">
                     <StackPanel Orientation="Horizontal">
