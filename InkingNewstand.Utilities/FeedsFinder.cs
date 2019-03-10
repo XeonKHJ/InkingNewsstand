@@ -14,24 +14,27 @@ namespace InkingNewstand.Utilities
             List<Uri> feedUrls = new List<Uri>();
             var htmlDoc = GetHtmlDoc(websiteUrl);
             var selectedNodes = htmlDoc.DocumentNode.SelectNodes("//link");
-            foreach(var node in selectedNodes)
+            if (selectedNodes != null)
             {
-                try
+                foreach (var node in selectedNodes)
                 {
-                    var feedUrl = node.Attributes["href"].Value;
-                    if(node.Attributes["type"].Value == "application/rss+xml")
+                    try
                     {
-                        if(feedUrl[0] == '/')
+                        var feedUrl = node.Attributes["href"].Value;
+                        if (node.Attributes["type"].Value == "application/rss+xml")
                         {
-                            string stringUrl = websiteUrl.AbsoluteUri.Remove(websiteUrl.AbsoluteUri.Length - 1);
-                            feedUrl = stringUrl + feedUrl;
+                            if (feedUrl[0] == '/')
+                            {
+                                string stringUrl = websiteUrl.AbsoluteUri.Remove(websiteUrl.AbsoluteUri.Length - 1);
+                                feedUrl = stringUrl + feedUrl;
+                            }
+                            feedUrls.Add(new Uri(feedUrl));
                         }
-                        feedUrls.Add(new Uri(feedUrl));
                     }
-                }
-                catch(NullReferenceException)
-                {
-                    continue;
+                    catch (NullReferenceException)
+                    {
+                        continue;
+                    }
                 }
             }
             return feedUrls;
@@ -40,7 +43,15 @@ namespace InkingNewstand.Utilities
         private static HtmlDocument GetHtmlDoc(Uri url)
         {
             var htmlWeb = new HtmlWeb();
-            var htmlDoc = htmlWeb.Load(url.AbsoluteUri);
+            HtmlDocument htmlDoc = new HtmlDocument();
+            try
+            {
+                htmlDoc = htmlWeb.Load(url.AbsoluteUri);
+            }
+            catch (Exception exception)
+            {
+                //to-do
+            }
             return htmlDoc;
         }
 

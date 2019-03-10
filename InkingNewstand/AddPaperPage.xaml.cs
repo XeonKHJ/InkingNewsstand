@@ -126,6 +126,7 @@ namespace InkingNewstand
 
         private void GetFromWebsiteButton_Click(object sender, RoutedEventArgs e)
         {
+            isFeedsSearchingPageActive = true;
             AddFeedWatcher();
         }
 
