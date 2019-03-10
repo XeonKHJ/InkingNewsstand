@@ -28,7 +28,7 @@ namespace InkingNewstand
     {
         public FeedsSearchingPage()
         {
-            Feeds.Add(new FeedViewModel("aaaaaaaaaaa", "d", "c", "d"));
+            Feeds.Add(new FeedViewModel("请输入要你需要订阅的网站", "", "", "NoPic"));
             AddPaperPage.isFeedsSearchingPageActive = true;
             AddPaperPage.isThereFeed = false;
             this.InitializeComponent();
@@ -43,7 +43,7 @@ namespace InkingNewstand
             foreach (var url in feedUrls)
             {
                 var feed = await client.RetrieveFeedAsync(url);
-                feeds.Add(new FeedViewModel(feed));
+                feeds.Add(new FeedViewModel(feed, url.AbsoluteUri));
             }
             Feeds = feeds;
             Bindings.Update();

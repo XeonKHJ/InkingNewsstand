@@ -9,10 +9,10 @@ namespace InkingNewstand.ViewModels
 {
     public class FeedViewModel
     {
-        public FeedViewModel(SyndicationFeed feed)
+        public FeedViewModel(SyndicationFeed feed, string url)
         {
             Title = feed.Title.Text;
-            Url = feed.Id;
+            Url = feed.Id == "" ? url : feed.Id;
             //Description = feed.Subtitle.Text;
             Icon = feed.IconUri is null ? "Nopic": feed.IconUri.AbsoluteUri;
         }

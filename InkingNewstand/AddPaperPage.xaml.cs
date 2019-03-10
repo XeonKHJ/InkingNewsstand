@@ -49,6 +49,7 @@ namespace InkingNewstand
 
         private void AddFeedButton_Click(object sender, RoutedEventArgs e)
         {
+            bool isEmpty = false;
             var rssInputBox = new TextBox();
             rssInputBox = new TextBox
             {
@@ -58,6 +59,10 @@ namespace InkingNewstand
             if(sender is FeedViewModel)
             {
                 rssInputBox.Text = ((FeedViewModel)sender).Url;
+                if(rssInputBox.Text == "")
+                {
+                    return;
+                }
             }
             rssInputPanel.Children.Add(rssInputBox);
             RelativePanel.SetAlignLeftWithPanel((UIElement)rssInputBox, true);
