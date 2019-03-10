@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -26,21 +27,20 @@ namespace InkingNewstand
         {
             this.InitializeComponent();
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled; //开启页面缓存
+            if(feeds != null)
+            {
+                feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
+            }
         }
 
-        private async void LayoutNews(NewsPaper feeds)
+        private async void LayoutNews()
         {
-            try
-            {
-                newsItems = await feeds.GetNewsListAsync();
-                Bindings.Update();
-            }
-            catch(Exception exception)
-            {
-                //同步失败信息
-            }
-            //titleTextBlock.Text = feeds.PaperTitle;
+            Feeds_OnNewsRefreshed(feeds.NewsList);
+        }
 
+        private async void RefreshNews()
+        {
+            await feeds.GetNewsListAsync();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -54,24 +54,27 @@ namespace InkingNewstand
                 feeds = (NewsPaper)e.Parameter;
                 feeds.OnNewsRefreshing += Feeds_OnNewsRefreshing;
                 feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
-                feeds.OnNewsUpdated += Feeds_OnNewsUpdated;
                 feeds.OnUpdateFailed += Feeds_OnUpdateFailed;
                 titleTextBlock.Text = feeds.PaperTitle;
-                LayoutNews(feeds);
+                LayoutNews();
             }
+        }
+
+        private void Feeds_OnNewsRefreshed(IList<NewsItem> newsItem)
+        {
+            foreach(var item in newsItem)
+            {
+                if(!newsItems.Contains(item))
+                {
+                    newsItems.Insert(0, item);
+                }
+            }
+            refreshingProgressRing.IsActive = false;
         }
 
         private void Feeds_OnNewsRefreshing()
         {
             refreshingProgressRing.IsActive = true;
-        }
-
-        /// <summary>
-        /// 新闻有更新后才更新绑定
-        /// </summary>
-        private void Feeds_OnNewsUpdated()
-        {
-            //Bindings.Update();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -87,23 +90,9 @@ namespace InkingNewstand
             errorTextBlock.Text = "连接failNewsPaperTitle失败";
         }
 
-        private void Feeds_OnNewsRefreshed()
-        {
-            //Bindings.Update();
-            refreshingProgressRing.IsActive = false;
-        }
-
         static public NewsPaper feeds { get;  set; }
 
-        List<NewsItem> newsItems;
-
-        List<NewsItem> Row1NewsItemList
-        {
-            get
-            {
-                return newsItems;
-            }
-        }
+        ObservableCollection<NewsItem> newsItems { get; set; } = new ObservableCollection<NewsItem>();
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -123,7 +112,7 @@ namespace InkingNewstand
 
         private void RefreshPaperButton_Click(object sender, RoutedEventArgs e)
         {
-
+            RefreshNews();
         }
     }
 }

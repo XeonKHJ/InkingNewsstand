@@ -232,11 +232,12 @@ namespace InkingNewstand
         }
 
         /// <summary>
-        /// 文章列表
+        /// 获取文章列表
         /// </summary>
         public async Task<List<NewsItem>> GetNewsListAsync()
         {
             OnNewsRefreshing?.Invoke();
+            List<NewsItem> newNewsitems = new List<NewsItem>();
             int originalNewsCount = NewsList.Count;
             foreach (var feedUrl in FeedUrls)
             {
@@ -253,7 +254,9 @@ namespace InkingNewstand
                         //如果原新闻列表中不包含改新闻，则添加到新闻列表
                         if (!NewsList.Contains(newsItem))
                         {
-                            NewsList.Add(new NewsItem(news, newsLink, PaperTitle));
+                            var newNewsItem = new NewsItem(news, newsLink, PaperTitle);
+                            newNewsitems.Add(newNewsItem);
+                            NewsList.Add(newNewsItem);
                         }
                     }
                 }
@@ -262,11 +265,11 @@ namespace InkingNewstand
                     OnUpdateFailed?.Invoke(feedUrl.AbsoluteUri);
                 }
             }
-            OnNewsRefreshed?.Invoke();
+            OnNewsRefreshed?.Invoke(NewsList);
             if (NewsList.Count != originalNewsCount)
             {
                 await SaveToFile(this);
-                OnNewsUpdated?.Invoke();
+                OnNewsUpdatedToFile?.Invoke();
             }
             return NewsList;
         }
@@ -342,9 +345,12 @@ namespace InkingNewstand
         public static event OnPaperFileUpdated OnPaperSaved;
 
         public delegate void OnNewsUpdatedDelegate();
-        public event OnNewsUpdatedDelegate OnNewsRefreshed; //报纸刷新后
-        public event OnNewsUpdatedDelegate OnNewsUpdated; //新闻有更新时引发
+
+        public event OnNewsUpdatedDelegate OnNewsUpdatedToFile; //新闻有更新时引发
         public event OnNewsUpdatedDelegate OnNewsRefreshing; //报纸刷新前
+
+        public delegate void OnNewsRefreshedDelegate(IList<NewsItem> newsItem);
+        public event OnNewsRefreshedDelegate OnNewsRefreshed; //报纸刷新后
 
         public delegate void OnUpdateFailedDelegate(string failNewsPaperTitle);
         public event OnUpdateFailedDelegate OnUpdateFailed; //报纸更新失败后
