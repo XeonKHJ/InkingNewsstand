@@ -11,7 +11,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <NavigationView x:Name="paperNavigationView" SelectionChanged="PaperNavigationView_SelectionChanged" IsBackEnabled="True" IsBackButtonVisible="Auto"  
+        <NavigationView x:Name="paperNavigationView" SelectionChanged="PaperNavigationView_SelectionChanged"
+                        IsBackEnabled="True" IsBackButtonVisible="Auto"  
                         BackRequested="PaperNavigationView_BackRequested"  MenuItemsSource="{x:Bind newsPapers}"
                         Windows10version1809:SelectionFollowsFocus="Enabled">
             <NavigationView.Background>

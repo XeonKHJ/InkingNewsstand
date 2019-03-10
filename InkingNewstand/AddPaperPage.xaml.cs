@@ -49,7 +49,6 @@ namespace InkingNewstand
 
         private void AddFeedButton_Click(object sender, RoutedEventArgs e)
         {
-            bool isEmpty = false;
             var rssInputBox = new TextBox();
             rssInputBox = new TextBox
             {
@@ -84,7 +83,9 @@ namespace InkingNewstand
                     continue;
                 }
             }
+            NewsPaper.AddNewsPaper(newsPaper);
             await NewsPaper.SaveToFile(newsPaper);
+            //System.Diagnostics.Debug.WriteLine("Just for testing");
             //!!要等上一句完成，要用同步异步操作了。
             //this.Frame.Navigate(typeof(PaperPage), newsPaper);
         }
@@ -125,10 +126,13 @@ namespace InkingNewstand
 
         private void GetFromWebsiteButton_Click(object sender, RoutedEventArgs e)
         {
-            AddingFeedsProcedure();
+            AddFeedWatcher();
         }
 
-        private async void AddingFeedsProcedure()
+        /// <summary>
+        /// 异步实现从搜索中提娜佳订阅源
+        /// </summary>
+        private async void AddFeedWatcher()
         {
             //isFeedsSearchingPageActive = true;
             await Task.Run(() =>

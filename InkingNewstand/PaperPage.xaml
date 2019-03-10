@@ -40,6 +40,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <AppBarButton x:Name="addPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Add" Label="添加报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="AddPaperButton_Click"></AppBarButton>
                 <AppBarButton x:Name="editPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Edit" Label="编辑报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="EditPaperButton_Click"></AppBarButton>
+                <AppBarButton x:Name="refreshPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Refresh" Label="刷新" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="RefreshPaperButton_Click"></AppBarButton>
             </StackPanel>
         </AppBar>
         <ScrollViewer Grid.Row="1">

@@ -121,6 +121,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="FeedsFinder.cs" />
+    <Compile Include="FileOperation.cs" />
     <Compile Include="HtmlConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\InkingNewstand.Utilities.rd.xml" />

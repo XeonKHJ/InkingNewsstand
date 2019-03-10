@@ -61,6 +61,12 @@ namespace InkingNewstand
             }
         }
 
+        static public void AddNewsPaper(NewsPaper newsPaper)
+        {
+            OnPaperAdding?.Invoke(newsPaper);
+            NewsPapers.Add(newsPaper);
+            OnPaperAdded?.Invoke(newsPaper); //报纸添加后引发
+        }
 
         /// <summary>
         /// 保存到文件
@@ -107,7 +113,7 @@ namespace InkingNewstand
             await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
             if (!existFlag)
             {
-                OnPaperAdded?.Invoke(newsPaper);
+                OnPaperSaved?.Invoke();
             }//添加完成后引发该事件
         }
 
@@ -125,12 +131,12 @@ namespace InkingNewstand
                 return new List<NewsPaper>();
             }
 
-            List<NewsPaper> newsPapers = new List<NewsPaper>();
+            //List<NewsPaper> newsPapers = new List<NewsPaper>();
             foreach (var paperPair in paperListinFile)
             {
-                newsPapers.Add(new NewsPaper(paperPair.Value));
+                NewsPapers.Add(new NewsPaper(paperPair.Value));
             }
-            return newsPapers;
+            return NewsPapers;
         }
 
         /// <summary>
@@ -256,13 +262,12 @@ namespace InkingNewstand
                     OnUpdateFailed?.Invoke(feedUrl.AbsoluteUri);
                 }
             }
+            OnNewsRefreshed?.Invoke();
             if (NewsList.Count != originalNewsCount)
             {
                 await SaveToFile(this);
                 OnNewsUpdated?.Invoke();
             }
-            OnNewsRefreshed?.Invoke();
-
             return NewsList;
         }
         
@@ -289,6 +294,11 @@ namespace InkingNewstand
         }
 
         /// <summary>
+        /// 打开的报纸列表
+        /// </summary>
+        public static List<NewsPaper> NewsPapers { get; private set; } = new List<NewsPaper>();
+
+        /// <summary>
         /// 新闻列表
         /// </summary>
         //private List<NewsItem> newsList = new List<NewsItem>();
@@ -306,6 +316,7 @@ namespace InkingNewstand
         /// <param name="newsPaper">要删除的报纸</param>
         static async public Task DeleteNewsPaper(NewsPaper newsPaper)
         {
+            OnPaperDeleting?.Invoke(newsPaper);
             var paperListinFile = await ReadListFromFile();
             var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.PaperTitle select v);
             int pairKeyToDelete = -1;
@@ -314,23 +325,28 @@ namespace InkingNewstand
                 pairKeyToDelete = paperPair.Key;
             }
             paperListinFile.Remove(pairKeyToDelete);
+            NewsPapers.Remove(newsPaper);
             //3、将paperListinFile重新保存到文件中
             await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
-            OnPaperDeleted?.Invoke();
+            OnPaperDeleted?.Invoke(newsPaper);
         }
 
         public delegate void OnPaperUpdatedDelegate(NewsPaper updatedNewspaper);
-        public static event OnPaperUpdatedDelegate OnPaperAdded;
+        public static event OnPaperUpdatedDelegate OnPaperAdding;
+        public static event OnPaperUpdatedDelegate OnPaperAdded; //报纸添加后
+        public static event OnPaperUpdatedDelegate OnPaperDeleted;
+        public static event OnPaperUpdatedDelegate OnPaperDeleting;
 
-        public delegate void OnPaperDeletedDelegate();
-        public static event OnPaperDeletedDelegate OnPaperDeleted;
+        public delegate void OnPaperFileUpdated();
+         //报纸删除后
+        public static event OnPaperFileUpdated OnPaperSaved;
 
         public delegate void OnNewsUpdatedDelegate();
-        public event OnNewsUpdatedDelegate OnNewsRefreshed;
+        public event OnNewsUpdatedDelegate OnNewsRefreshed; //报纸刷新后
         public event OnNewsUpdatedDelegate OnNewsUpdated; //新闻有更新时引发
-        public event OnNewsUpdatedDelegate OnNewsRefreshing;
+        public event OnNewsUpdatedDelegate OnNewsRefreshing; //报纸刷新前
 
         public delegate void OnUpdateFailedDelegate(string failNewsPaperTitle);
-        public event OnUpdateFailedDelegate OnUpdateFailed;
+        public event OnUpdateFailedDelegate OnUpdateFailed; //报纸更新失败后
     }
 }

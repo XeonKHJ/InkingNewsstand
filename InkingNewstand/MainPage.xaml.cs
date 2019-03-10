@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,7 +28,7 @@ namespace InkingNewstand
         {
             this.InitializeComponent();
             InitializePaperlistSetting();
-            GetNewsPapers();
+            GetNewsPapersAtBeginning();
         }
 
         public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
@@ -44,7 +45,7 @@ namespace InkingNewstand
         {
             if (args.IsSettingsSelected)
             {
-                //跳转到设置页面
+                contentFrame.Navigate(typeof(SettingPage));//跳转到设置页面
             }
             else
             {
@@ -59,73 +60,75 @@ namespace InkingNewstand
 
         private void InitializePaperlistSetting()
         {
+            //NewsPaper.OnPaperAdding += NewsPaper_OnPaperAdding;
             NewsPaper.OnPaperAdded += NewsPaper_OnPaperAdded;
-            NewsPaper.OnPaperDeleted += NewsPaper_OnPaperDeleted; ;
+            NewsPaper.OnPaperDeleted += NewsPaper_OnPaperDeleted;
+            NewsPaper.OnPaperDeleting += NewsPaper_OnPaperDeleting;
         }
 
-        private void NewsPaper_OnPaperDeleted()
+        private void NewsPaper_OnPaperDeleting(NewsPaper updatedNewspaper)
         {
-            GetNewsPapers();
+            if(newsPapers.Count == 1)
+            {
+                newsPapers.Add(new NewsPaper("创建你的第一份报纸！"));
+            }
         }
 
-        private async void GetNewsPapers()
+        private void NewsPaper_OnPaperDeleted(NewsPaper newsPaper)
         {
-            newsPapers = await NewsPaper.ReadFromFile();
-            if(newsPapers.Count == 0)
+            newsPapers.Remove(newsPaper);
+            paperNavigationView.SelectedItem = newsPapers.First();
+        }
+
+        private async void GetNewsPapersAtBeginning()
+        {
+            await NewsPaper.ReadFromFile();
+            if(NewsPaper.NewsPapers.Count == 0)
             {
-                newsPapers.Add(new NewsPaper("添加第一份报纸！"));
+                newsPapers.Add(new NewsPaper("创建你的第一份报纸！"));
             }
-            Bindings.Update();
-            if(newsPapers.Count != 0)
+            //Bindings.Update();
+            //if(NewsPaper.NewsPapers.Add)
+            foreach(var paper in NewsPaper.NewsPapers)
             {
-                paperNavigationView.SelectedItem = newsPapers[0];
-                //contentFrame.Navigate(typeof(PaperPage), newsPapers[0]);
+                newsPapers.Add(paper);
             }
+            paperNavigationView.SelectedItem = newsPapers.First();
         }
 
         /// <summary>
         /// 更新报纸列表
         /// </summary>
         /// <param name="newsPaper">更新完后要显示的报纸</param>
-        private async void GetNewsPapers(NewsPaper newsPaper)
-        {
-            newsPapers = await NewsPaper.ReadFromFile();
-            if (newsPapers.Count == 0)
-            {
-                newsPapers.Add(new NewsPaper("添加第一份报纸！"));
-            }
-            Bindings.Update();
-            if (newsPapers.Count != 0)
-            {
-                paperNavigationView.SelectedItem = newsPapers[0];
-                //contentFrame.Navigate(typeof(PaperPage), newsPapers[0]);
-            }
-        }
-
-        private async void NewsPaper_OnPaperAdded(NewsPaper updatedNewspaper)
-        {
-            newsPapers = await NewsPaper.ReadFromFile();
-            if (newsPapers.Count == 0)
-            {
-                newsPapers.Add(new NewsPaper("添加第一份报纸！"));
-            }
-            Bindings.Update();
-            if (newsPapers.Count != 0)
-            {
-                paperNavigationView.SelectedItem = updatedNewspaper;
-                //contentFrame.Navigate(typeof(PaperPage), newsPapers[0]);
-            }
-        }
-
-        List<NewsPaper> newsPapers;
-        //List<NewsPaper> newsPapersView
+        //private async void GetNewsPapers(NewsPaper newsPaper)
         //{
-        //    get
+        //    newsPapers = await NewsPaper.ReadFromFile();
+        //    if (newsPapers.Count == 0)
         //    {
-        //        GetNewsPapers();
-        //        return newsPapers;
+        //        newsPapers.Add(new NewsPaper("添加第一份报纸！"));
+        //    }
+        //    Bindings.Update();
+        //    if (newsPapers.Count != 0)
+        //    {
+        //        paperNavigationView.SelectedItem = newsPapers[0];
+        //        //contentFrame.Navigate(typeof(PaperPage), newsPapers[0]);
         //    }
         //}
+
+        private void NewsPaper_OnPaperAdded(NewsPaper updatedNewspaper)
+        {
+            if(newsPapers.Count == 1 && newsPapers.First().PaperTitle == "创建你的第一份报纸！")
+            {
+                newsPapers.Clear();
+            }
+            newsPapers.Add(updatedNewspaper);
+            if (NewsPaper.NewsPapers.Count != 0)
+            {
+                paperNavigationView.SelectedItem = updatedNewspaper;
+            }
+        }
+
+        ObservableCollection<NewsPaper> newsPapers { get; set; } = new ObservableCollection<NewsPaper>();
 
         private void PaperNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {

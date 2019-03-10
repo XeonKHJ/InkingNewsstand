@@ -120,5 +120,10 @@ namespace InkingNewstand
         {
             this.Frame.Navigate(typeof(AddPaperPage), PaperPage.feeds);
         }
+
+        private void RefreshPaperButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
