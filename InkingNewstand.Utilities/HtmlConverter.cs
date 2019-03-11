@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using SmartReader;
 
 namespace InkingNewstand.Utilities
 {
@@ -41,7 +42,18 @@ namespace InkingNewstand.Utilities
             return urlString;
         }
 
-        public delegate void OnReadingHtmlConvertCompletedDelegate(); 
+        public async static Task ExtractReadableContent(Uri url)
+        {
+            Reader sr = new SmartReader.Reader(url.AbsoluteUri);
+            Article article = null;
+            await Task.Run(() =>
+            {
+                article = sr.GetArticle();
+            });
+            OnReadingHtmlConvertCompleted?.Invoke(article.Content);
+        }
+
+        public delegate void OnReadingHtmlConvertCompletedDelegate(string html); 
         public static event OnReadingHtmlConvertCompletedDelegate OnReadingHtmlConvertCompleted; //阅读模式转换完成
     }
 }

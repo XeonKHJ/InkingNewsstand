@@ -14,7 +14,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using InkingNewstand.Utilities;
-using ReadSharp;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -34,6 +33,7 @@ namespace InkingNewstand
         List<Windows.Web.Syndication.SyndicationLink> Links;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            HtmlConverter.OnReadingHtmlConvertCompleted += HtmlConverter_OnReadingHtmlConvertCompleted;
             if(!(e.Parameter is NewsItem))
             {
                 throw new Exception();
@@ -51,21 +51,15 @@ namespace InkingNewstand
             
         }
 
+        private void HtmlConverter_OnReadingHtmlConvertCompleted(string html)
+        {
+            Html = html;
+            Bindings.Update();
+        }
+
         private async void GetReadingHtml(Uri url)
         {
-            Reader reader = new Reader();
-            Article article;
-
-            try
-            {
-                article = await reader.Read(url);
-                Html = article.Content;
-                Bindings.Update();
-            }
-            catch (ReadException exc)
-            {
-                // handle exception
-            }
+            await HtmlConverter.ExtractReadableContent(url);
         }
 
         public Double WindowHeight
