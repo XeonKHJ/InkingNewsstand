@@ -39,13 +39,20 @@ namespace InkingNewstand
         {
             Feeds.Clear();
             List<Uri> feedUrls = new List<Uri>();
-            feedUrls = FeedsFinder.GetFeedsFromUrl(new Uri(websiteTextBox.Text));
-            var client = new SyndicationClient();
-            var feeds = new List<FeedViewModel>();
-            foreach (var url in feedUrls)
+            try
             {
-                var feed = await client.RetrieveFeedAsync(url);
-                Feeds.Add(new FeedViewModel(feed, url.AbsoluteUri));
+                feedUrls = FeedsFinder.GetFeedsFromUrl(new Uri(websiteTextBox.Text));
+                var client = new SyndicationClient();
+                var feeds = new List<FeedViewModel>();
+                foreach (var url in feedUrls)
+                {
+                    var feed = await client.RetrieveFeedAsync(url);
+                    Feeds.Add(new FeedViewModel(feed, url.AbsoluteUri));
+                }
+            }
+            catch(Exception)
+            {
+                Feeds.Add(new FeedViewModel("无结果或链接错误",  "",  "", "Nopic"));
             }
             //Feeds = feeds;
             //Bindings.Update();

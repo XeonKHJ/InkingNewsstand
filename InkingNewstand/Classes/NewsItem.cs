@@ -102,7 +102,12 @@ namespace InkingNewstand
         {
             get
             {
-                return HtmlConverter.GetFirstImages(InnerHTML);
+                var coverUrl = HtmlConverter.GetFirstImages(InnerHTML);
+                if(coverUrl == "")
+                {
+                    coverUrl = "NoPic";
+                }
+                return coverUrl;
             }
         }
 

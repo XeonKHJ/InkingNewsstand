@@ -21,6 +21,7 @@
             <RowDefinition x:Name="barRow" Height="auto"></RowDefinition>
             <RowDefinition x:Name="contentRow" Height="*" />
         </Grid.RowDefinitions>
+
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0"
                                                      EndPoint="1,0">
@@ -82,7 +83,7 @@
             </GridView.ItemTemplate>
         </GridView>-->
 
-                <!--VariableSizedGrid布局-->
+                <!--VariableSizedGrid布局
                 <controls:VariableSizedGrid Grid.Row="1" x:Name="NewsItemsGrid" ItemsSource="{x:Bind newsItems}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True">
                     <controls:VariableSizedGrid.ItemTemplate>
                         <DataTemplate x:DataType="data:NewsItem">
@@ -113,67 +114,31 @@
                             </Grid>
                         </DataTemplate>
                     </controls:VariableSizedGrid.ItemTemplate>
-                </controls:VariableSizedGrid>
+                </controls:VariableSizedGrid>-->
 
-
-                <!--ListView布局-->
-                <!--
-        <ListView ItemsPanel="{StaticResource ListViewItemsHorizontalPanel}" x:Name="row1NewsItems" ItemsSource="{x:Bind row1NewsItemList}" 
-                          IsItemClickEnabled="True" ItemClick="GridView_ItemClick" Grid.Row="2">
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="data:NewsItem">
-                    <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <Image x:Name="newsImage" Height="130" Source="{x:Bind CoverUrl}" RelativePanel.AlignLeftWithPanel="True"/>
-                        <StackPanel Background="Black" RelativePanel.RightOf="newsImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="130" >
-                            <TextBlock FontSize="40" Text="{x:Bind Title}" Foreground="White" TextAlignment="DetectFromContent"/>
-                            <TextBlock FontSize="10" Text="{x:Bind Summary}" Foreground="White" TextAlignment="DetectFromContent"/>
-                        </StackPanel>
-                    </RelativePanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>-->
-
-                <!--实验性布局
-        <RelativePanel Grid.Row="1" Visibility="Collapsed">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Button Grid.Column="0" Grid.Row="0" Margin="10">
-                    <RelativePanel>
-                        <Grid MaxWidth="500">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="300"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Image x:Name="newsimg" Source="http://p2.cri.cn/M00/27/81/CqgNOlalgNWAWxTcAAAAAAAAAAA962.550x378.jpg" Grid.Column="0"></Image>
-                            <StackPanel Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
-                                <TextBlock Text="fuck off shityy" FontSize="40" FontWeight="Bold" TextWrapping="WrapWholeWords" Grid.Column="1" ></TextBlock>
-                            </StackPanel>
-                        </Grid>
-                    </RelativePanel>
-                </Button>
-                <Button Grid.Column="1" Grid.Row="0" Margin="10">
-                    <RelativePanel>
-                        <Grid MaxWidth="500">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="300"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Image x:Name="newsimg2" Source="http://p2.cri.cn/M00/27/81/CqgNOlalgNWAWxTcAAAAAAAAAAA962.550x378.jpg" Grid.Column="0"></Image>
-                            <StackPanel Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
-                                <TextBlock Text="fuck off shityy " FontSize="50" FontWeight="Bold" TextWrapping="WrapWholeWords" Grid.Column="1" ></TextBlock>
-                            </StackPanel>
-                        </Grid>
-                    </RelativePanel>
-                </Button>
-            </Grid>
-        </RelativePanel>-->
+                <GridView x:Name="NewsItemsGrid" ItemsSource="{x:Bind newsItems}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True" Grid.Row="1" HorizontalAlignment="Center">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="data:NewsItem">
+                            <Grid Width="320" Height="320">
+                                <Grid.Background>
+                                    <AcrylicBrush TintColor="Black" TintOpacity="0.8"></AcrylicBrush>
+                                </Grid.Background>
+                                <Viewbox x:Name="viewBox" Stretch="UniformToFill" StretchDirection="Both" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <Image Source="{x:Bind CoverUrl}" VerticalAlignment="Top" Opacity="0.8"></Image>
+                                </Viewbox>
+                                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                                    <StackPanel.Background>
+                                        <AcrylicBrush TintColor="Black" TintOpacity="0.5"></AcrylicBrush>
+                                    </StackPanel.Background>
+                                    <TextBlock Text="{x:Bind Title}" FontSize="25" Margin="5"
+                                                   HorizontalAlignment="Left" VerticalAlignment="Stretch" TextWrapping="WrapWholeWords"  Foreground="White"></TextBlock>
+                                    <TextBlock Text="{x:Bind Authors}" Margin="5" FontSize="15" Foreground="White"></TextBlock>
+                                    <TextBlock Text="{x:Bind PublishedDate}" Margin="5" FontSize="15"  HorizontalAlignment="Right" Foreground="White"></TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
             </Grid>
         </ScrollViewer>
     </Grid>
