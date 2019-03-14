@@ -84,6 +84,9 @@ namespace InkingNewstand
                 }
             }
             NewsPaper.AddNewsPaper(newsPaper);
+
+            //页面跳转由PaperAdded事件发生，在MainPage中实现
+
             await NewsPaper.SaveToFile(newsPaper);
             //System.Diagnostics.Debug.WriteLine("Just for testing");
             //!!要等上一句完成，要用同步异步操作了。

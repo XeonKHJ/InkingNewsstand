@@ -50,17 +50,15 @@ namespace InkingNewstand
             else
             {
                 var selectedItem = (NewsPaper)args.SelectedItem;
-                if (selectedItem.Count == 0)
-                {
-                    contentFrame.Navigate(typeof(AddPaperPage));
-                }
                 contentFrame.Navigate(typeof(PaperPage), selectedItem);
             }
         }
 
+        /// <summary>
+        /// 初始化设置
+        /// </summary>
         private void InitializePaperlistSetting()
         {
-            //NewsPaper.OnPaperAdding += NewsPaper_OnPaperAdding;
             NewsPaper.OnPaperAdded += NewsPaper_OnPaperAdded;
             NewsPaper.OnPaperDeleted += NewsPaper_OnPaperDeleted;
             NewsPaper.OnPaperDeleting += NewsPaper_OnPaperDeleting;
@@ -96,27 +94,9 @@ namespace InkingNewstand
             paperNavigationView.SelectedItem = newsPapers.First();
         }
 
-        /// <summary>
-        /// 更新报纸列表
-        /// </summary>
-        /// <param name="newsPaper">更新完后要显示的报纸</param>
-        //private async void GetNewsPapers(NewsPaper newsPaper)
-        //{
-        //    newsPapers = await NewsPaper.ReadFromFile();
-        //    if (newsPapers.Count == 0)
-        //    {
-        //        newsPapers.Add(new NewsPaper("添加第一份报纸！"));
-        //    }
-        //    Bindings.Update();
-        //    if (newsPapers.Count != 0)
-        //    {
-        //        paperNavigationView.SelectedItem = newsPapers[0];
-        //        //contentFrame.Navigate(typeof(PaperPage), newsPapers[0]);
-        //    }
-        //}
-
         private void NewsPaper_OnPaperAdded(NewsPaper updatedNewspaper)
         {
+            CleanPaperPage?.Invoke();
             if(newsPapers.Count == 1 && newsPapers.First().PaperTitle == "创建你的第一份报纸！")
             {
                 newsPapers.Clear();
@@ -137,5 +117,8 @@ namespace InkingNewstand
                 contentFrame.GoBack();
             }
         }
+
+        public delegate void CleanPaperPageEventHandler();
+        public static event CleanPaperPageEventHandler CleanPaperPage;
     }
 }
