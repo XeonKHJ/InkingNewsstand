@@ -82,26 +82,24 @@ namespace InkingNewstand
             ////2.1、如果文件中没有保存任何东西，则新建一个paperListinFile
             if (paperListinFile == null)
             {
-                paperListinFile = new SortedDictionary<int, NewsPaperModel>();
+                paperListinFile = new List<NewsPaperModel>();
             }
 
-            var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.newsPaperModel.PaperTitle select v); //搜索结果
+            var paperEnumer = (from v in paperListinFile where v.PaperTitle == newsPaper.newsPaperModel.PaperTitle select v); //搜索结果
             ////2.2、如果文件中没有保存此添加（是新报纸）
             if (paperEnumer.Count() == 0)
             {
                 existFlag = false;
-                paperListinFile.Add(paperListinFile.Count, newsPaper.newsPaperModel);
+                paperListinFile.Add(newsPaper.newsPaperModel);
             }
             ////2.3、如果有则修改
             else if (paperEnumer.Count() == 1)
             {
                 existFlag = true;
                 var paperEnumerResult = paperEnumer.First();
-                paperListinFile[paperEnumerResult.Key] = newsPaper.newsPaperModel;
-                //foreach (var paper in paperEnumer)
-                //{
-                //    paperListinFile[paper.Key] = newsPaper;
-                //}
+
+                //找到该报纸位置并替换掉 //to-do
+                paperListinFile[paperEnumerResult.Key] = newsPaper.newsPaperModel; //to-replace
             }
             ////2.4若查到有多张报纸有相同名字，则显示错误
             else
@@ -132,9 +130,9 @@ namespace InkingNewstand
             }
 
             //List<NewsPaper> newsPapers = new List<NewsPaper>();
-            foreach (var paperPair in paperListinFile)
+            foreach (var paper in paperListinFile)
             {
-                NewsPapers.Add(new NewsPaper(paperPair.Value));
+                NewsPapers.Add(new NewsPaper(paper));
             }
             return NewsPapers;
         }
