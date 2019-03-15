@@ -189,7 +189,7 @@ namespace InkingNewstand
         /// 从文件中获取报纸列表
         /// </summary>
         /// <param></param>
-        private static async Task<SortedDictionary<int, NewsPaperModel>> ReadListFromFile()
+        private static async Task<List< NewsPaperModel>> ReadListFromFile()
         {
             var storageFolder = ApplicationData.Current.LocalFolder;
 
@@ -204,7 +204,7 @@ namespace InkingNewstand
             {
                 ;
             }
-            SortedDictionary<int, NewsPaperModel> paperListinFile = new SortedDictionary<int, NewsPaperModel>();
+            List<NewsPaperModel> paperListinFile = new List<NewsPaperModel>();
 
             //1、读取报纸列表数据
             var stream = await paperListFile.OpenAsync(FileAccessMode.ReadWrite); //获取文件随机存取流
@@ -214,7 +214,7 @@ namespace InkingNewstand
                 uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
                 byte[] bytes = new byte[(uint)stream.Size];
                 dataReader.ReadBytes(bytes);//用来存储从文件中读出的数据
-                paperListinFile = (SortedDictionary<int, NewsPaperModel>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
+                paperListinFile = (List<NewsPaperModel>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
             }
             stream.Dispose();
             return paperListinFile;
@@ -321,7 +321,7 @@ namespace InkingNewstand
         {
             OnPaperDeleting?.Invoke(newsPaper);
             var paperListinFile = await ReadListFromFile();
-            var paperEnumer = (from v in paperListinFile where v.Value.PaperTitle == newsPaper.PaperTitle select v);
+            var paperEnumer = (from v in paperListinFile where v.PaperTitle == newsPaper.PaperTitle select v);
             int pairKeyToDelete = -1;
             foreach (var paperPair in paperEnumer)
             {
