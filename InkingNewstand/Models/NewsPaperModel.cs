@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace InkingNewstand.Models
 {
     [Serializable]
-    public class NewsPaperModel
+    public class NewsPaperModel : IEquatable<NewsPaperModel>
     {
         public List<Uri> FeedUrls { get; set; } = new List<Uri>();
         public string PaperTitle { get; set; } = "未命名报纸";
@@ -19,5 +19,10 @@ namespace InkingNewstand.Models
             }
         }
         public List<NewsItem> NewsList { get; set; } = new List<NewsItem>();
+
+        public bool Equals(NewsPaperModel other)
+        {
+            return this.PaperTitle == other.PaperTitle;
+        }
     }
 }

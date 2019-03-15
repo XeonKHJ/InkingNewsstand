@@ -85,27 +85,22 @@ namespace InkingNewstand
                 paperListinFile = new List<NewsPaperModel>();
             }
 
-            var paperEnumer = (from v in paperListinFile where v.PaperTitle == newsPaper.newsPaperModel.PaperTitle select v); //搜索结果
+            var index = paperListinFile.IndexOf(newsPaper.newsPaperModel);
+
             ////2.2、如果文件中没有保存此添加（是新报纸）
-            if (paperEnumer.Count() == 0)
+            if (index == -1)
             {
                 existFlag = false;
                 paperListinFile.Add(newsPaper.newsPaperModel);
             }
             ////2.3、如果有则修改
-            else if (paperEnumer.Count() == 1)
-            {
-                existFlag = true;
-                var paperEnumerResult = paperEnumer.First();
-
-                //找到该报纸位置并替换掉 //to-do
-                paperListinFile[paperEnumerResult.Key] = newsPaper.newsPaperModel; //to-replace
-            }
-            ////2.4若查到有多张报纸有相同名字，则显示错误
             else
             {
-                throw new Exception("文件错误");
+                existFlag = true;
+                //找到该报纸位置并替换掉 //to-do
+                paperListinFile[index] = newsPaper.newsPaperModel; //to-replace
             }
+            ////2.4若查到有多张报纸有相同名字，则显示错误
 
             //3、将paperListinFile重新保存到文件中
             await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
@@ -319,13 +314,8 @@ namespace InkingNewstand
         {
             OnPaperDeleting?.Invoke(newsPaper);
             var paperListinFile = await ReadListFromFile();
-            var paperEnumer = (from v in paperListinFile where v.PaperTitle == newsPaper.PaperTitle select v);
-            int pairKeyToDelete = -1;
-            foreach (var paperPair in paperEnumer)
-            {
-                pairKeyToDelete = paperPair.Key;
-            }
-            paperListinFile.Remove(pairKeyToDelete);
+            //var index = paperListinFile.IndexOf(newsPaper.newsPaperModel);
+            paperListinFile.Remove(newsPaper.newsPaperModel);
             NewsPapers.Remove(newsPaper);
             //3、将paperListinFile重新保存到文件中
             await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
