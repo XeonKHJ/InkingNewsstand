@@ -145,6 +145,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dlls\InkingNewstand.HtmlAgilityPack\InkingNewstand.HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters">
+      <HintPath>C:\Users\redal\.nuget\packages\microsoft.netcore.universalwindowsplatform\6.1.9\ref\uap10.0.15138\System.Runtime.Serialization.Formatters.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

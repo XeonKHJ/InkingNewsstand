@@ -59,10 +59,13 @@
                         <TextBlock Text="{x:Bind News.PublishedDate}" FontSize="15"></TextBlock>
                         <Image x:Name="headerImg" Source="{x:Bind CoverUrlforPage}" Margin="25"></Image>
                     </StackPanel>
-                    <controls:HtmlBlock Grid.Row="1" FontSize="20" Margin="60, 60, 60, 0" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
+                    <controls:HtmlBlock x:Name="htmlBlock" Grid.Row="1" FontSize="20" Margin="60, 60, 60, 0" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
                 </Grid>
-                <InkCanvas x:Name="newsCanvas"></InkCanvas>
-                <InkToolbar HorizontalAlignment="Center" VerticalAlignment="Top" TargetInkCanvas="{x:Bind newsCanvas}" Visibility="Collapsed"></InkToolbar>
+                <InkCanvas x:Name="newsCanvas" 
+                           AllowFocusOnInteraction="False" IsTapEnabled="False" IsRightTapEnabled="False" IsHoldingEnabled="False" IsHitTestVisible="False" IsDoubleTapEnabled="False">
+                </InkCanvas>
+                <InkToolbar HorizontalAlignment="Center" VerticalAlignment="Top" TargetInkCanvas="{x:Bind newsCanvas}" Visibility="Collapsed" >
+                </InkToolbar>
             </Grid>
         </ScrollViewer>
 
