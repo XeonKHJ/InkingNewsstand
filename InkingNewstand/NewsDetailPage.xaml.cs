@@ -17,6 +17,10 @@ using InkingNewstand.Utilities;
 using Windows.UI.Input.Inking.Core;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Windows.Storage.Pickers;
+using System.IO.MemoryMappedFiles;
+using System.Runtime.InteropServices;
+using Windows.UI.Input.Inking;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -34,41 +38,6 @@ namespace InkingNewstand
             //inkSouce.PointerEntering += InkSouce_PointerEntering;
             //inkSouce.PointerLost += InkSouce_PointerReleasing;
         }
-
-
-
-        //public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
-        //{
-        //    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
-        //}
-
-
-        ///// <summary>
-        ///// 检测到笔靠近时
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="args"></param>
-        //private void InkSouce_PointerEntering(CoreInkIndependentInputSource sender, Windows.UI.Core.PointerEventArgs args)
-        //{
-        //    Task.Run(()=>
-        //    {
-        //        Invoke(() => { newsInkToolbar.Visibility = Visibility.Visible; });
-        //    });
-        //}
-
-        ///// <summary>
-        ///// 检测到笔离开时
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="args"></param>
-        //private void InkSouce_PointerReleasing(CoreInkIndependentInputSource sender, Windows.UI.Core.PointerEventArgs args)
-        //{
-        //    Task.Run(() =>
-        //    {
-        //        Invoke(() => { newsInkToolbar.Visibility = Visibility.Collapsed; });
-        //    });
-        //}
-
 
         NewsItem News { set; get; }
         List<Windows.Web.Syndication.SyndicationLink> Links;
@@ -89,6 +58,7 @@ namespace InkingNewstand
             {
                 CoverUrlforPage = News.CoverUrl;
             }
+            LoadInkStrokes(News.InkStrokes);
         }
 
         private void HtmlConverter_OnReadingHtmlConvertCompleted(string html)
@@ -126,14 +96,66 @@ namespace InkingNewstand
         NewsPaper newsPaper = null;
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            var newsPaper = NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == News.PaperTitle);
-            newsPaper.OnNewsListUpdated += NewsPaper_OnNewsListUpdated;
+            newsPaper = NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == News.PaperTitle);
+
             //to-do
+            //保存笔迹
+            var currentStrokes = newsCanvas.InkPresenter.StrokeContainer.GetStrokes();
+
+            byte[] serializedStrokes = await SerializeStrokes(currentStrokes);
+            News.InkStrokes = serializedStrokes;
+            newsPaper.UpdateNewsList(News);
+            await NewsPaper.SaveToFile(newsPaper);
         }
 
-        private async void NewsPaper_OnNewsListUpdated(NewsItem newsItem)
+        /// <summary>
+        /// 序列化笔迹
+        /// </summary>
+        /// <param name="strokes">笔迹列表</param>
+        /// <returns>序列化后的字节数组</returns>
+        private async Task<byte[]> SerializeStrokes(IReadOnlyCollection<InkStroke> strokes)
         {
-            await NewsPaper.SaveToFile(newsPaper);
+            byte[] bytes = null;
+            
+            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+            {
+                using (var outputStream = stream.GetOutputStreamAt(0))
+                {
+                    await newsCanvas.InkPresenter.StrokeContainer.SaveAsync(outputStream);
+                }
+                using (var inputStream = stream.GetInputStreamAt(0))
+                {
+                    var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
+                    uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
+                    bytes = new byte[stream.Size];
+                    dataReader.ReadBytes(bytes);
+                }
+                return bytes;
+            }
+        }
+
+        /// <summary>
+        /// 加载笔迹
+        /// </summary>
+        /// <param name="serializedStrokes">序列化后的笔迹的字节数组</param>
+        private async void LoadInkStrokes(byte[] serializedStrokes)
+        {
+            if (serializedStrokes.Count() > 0)
+            {
+                using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+                {
+                    using (var outputStream = stream.GetOutputStreamAt(0))
+                    {
+                        DataWriter writer = new DataWriter(outputStream);
+                        writer.WriteBytes(serializedStrokes);
+                        await writer.StoreAsync();
+                    }
+                    using (var inputStream = stream.GetInputStreamAt(0))
+                    {
+                        await newsCanvas.InkPresenter.StrokeContainer.LoadAsync(inputStream);
+                    }
+                }
+            }
         }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)

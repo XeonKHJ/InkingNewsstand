@@ -103,11 +103,12 @@ namespace InkingNewstand
             ////2.4若查到有多张报纸有相同名字，则显示错误
 
             //3、将paperListinFile重新保存到文件中
-            await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
+
+                await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
             if (!existFlag)
-            {
-                OnPaperSaved?.Invoke();
-            }//添加完成后引发该事件
+                {
+                    OnPaperSaved?.Invoke();
+                }//添加完成后引发该事件
         }
 
         /// <summary>

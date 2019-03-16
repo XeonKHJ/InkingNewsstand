@@ -99,6 +99,8 @@ namespace InkingNewstand
 
         public string InnerHTML { get; private set; }
 
+        public byte[] InkStrokes { get; set; } = new byte[0];
+
         public bool Equals(NewsItem other)
         {
             return this == other;
