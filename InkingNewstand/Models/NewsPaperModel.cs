@@ -24,5 +24,15 @@ namespace InkingNewstand.Models
         {
             return this.PaperTitle == other.PaperTitle;
         }
+
+        public override int GetHashCode()
+        {
+            int hash = 0;
+            foreach(var character in PaperTitle)
+            {
+                hash += character;
+            }
+            return hash;
+        }
     }
 }

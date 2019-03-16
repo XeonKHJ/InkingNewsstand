@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Input.Inking;
 
 namespace InkingNewstand.Models
 {
@@ -13,7 +14,7 @@ namespace InkingNewstand.Models
 
         public string Summary { get;  set; }
 
-        public string PublishedDate { get; set; }
+        public DateTimeOffset PublishedDate { get; set; }
 
         public Uri NewsLink { set; get; }
 
@@ -48,5 +49,7 @@ namespace InkingNewstand.Models
         {
             return !(lhs == rhs);
         }
+
+        public IReadOnlyList<InkStroke> currentStrokes { get; set; }
     }
 }

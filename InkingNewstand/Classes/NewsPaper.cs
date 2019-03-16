@@ -322,6 +322,13 @@ namespace InkingNewstand
             OnPaperDeleted?.Invoke(newsPaper);
         }
 
+        public void UpdateNewsList(NewsItem newsItem)
+        {
+            NewsList[this.NewsList.IndexOf(newsItem)] = newsItem;
+            OnNewsListUpdated?.Invoke(newsItem);
+        }
+
+
         public delegate void OnPaperUpdatedDelegate(NewsPaper updatedNewspaper);
         public static event OnPaperUpdatedDelegate OnPaperAdding;
         public static event OnPaperUpdatedDelegate OnPaperAdded; //报纸添加后
@@ -342,5 +349,8 @@ namespace InkingNewstand
 
         public delegate void OnUpdateFailedDelegate(string failNewsPaperTitle);
         public event OnUpdateFailedDelegate OnUpdateFailed; //报纸更新失败后
+
+        public delegate void OnNewsListUpdatedEventHandler(NewsItem newsItem);
+        public event OnNewsListUpdatedEventHandler OnNewsListUpdated;
     }
 }

@@ -14,7 +14,6 @@ namespace InkingNewstand
     public class NewsItem : IEquatable<NewsItem>
     {
         private static SyndicationItem staticItem;
-        NewsModel newsModel;
         public NewsItem(SyndicationItem item, Uri url, string paperTitle)
         {
             staticItem = item;
@@ -43,7 +42,7 @@ namespace InkingNewstand
             Summary = (staticItem.Summary != null) ? (staticItem.Summary.Text) : null;
 
             //设置出版日期
-            PublishedDate = staticItem.PublishedDate.ToString();
+            PublishedDate = staticItem.PublishedDate;
 
             //设置Content
             if (staticItem.Content != null)
@@ -62,19 +61,6 @@ namespace InkingNewstand
                 authorsString += staticItem.Authors[i].Name;
             }
             Authors = authorsString;
-
-            //新闻模型
-            newsModel = new NewsModel
-            {
-                Authors = Authors,
-                CoverUrl = CoverUrl,
-                InnerHTML = InnerHTML,
-                NewsLink = NewsLink,
-                PaperTitle = PaperTitle,
-                PublishedDate = PublishedDate,
-                Summary = Summary,
-                Title = Title
-            };
         }
 
         public string Content { get; set; }
@@ -90,7 +76,7 @@ namespace InkingNewstand
 
         public string Summary { get; private set; }
 
-        public string PublishedDate { get; private set; }
+        public DateTimeOffset PublishedDate { get; private set; }
 
         public Uri NewsLink { private set; get; }
 
@@ -154,6 +140,29 @@ namespace InkingNewstand
         public static bool operator !=(NewsItem lhs, NewsItem rhs)
         {
             return !(lhs == rhs);
+        }
+
+        public override int GetHashCode()
+        {
+            var hash = 0;
+            foreach(var character in Title)
+            {
+                hash += character;
+            }
+            hash += PublishedDate.Year + PublishedDate.Month + PublishedDate.Day + PublishedDate.DateTime.Hour + PublishedDate.Minute + PublishedDate.Second;
+            return hash;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is NewsItem)
+            {
+                return this.GetHashCode() == ((NewsItem)obj).GetHashCode();
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -64,10 +64,18 @@
                 <InkCanvas x:Name="newsCanvas" 
                            AllowFocusOnInteraction="False" IsTapEnabled="False" IsRightTapEnabled="False" IsHoldingEnabled="False" IsHitTestVisible="False" IsDoubleTapEnabled="False">
                 </InkCanvas>
-                <InkToolbar HorizontalAlignment="Center" VerticalAlignment="Top" TargetInkCanvas="{x:Bind newsCanvas}" Visibility="Collapsed" >
-                </InkToolbar>
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
+                    <AppBarButton x:Name="saveButton" Icon="Save" Click="SaveButton_Click" Label="保存" ></AppBarButton>
+                    <AppBarButton x:Name="exportButton" Icon="Print" Click="ExportButton_Click" Label="导出"></AppBarButton>
+                </StackPanel>
             </Grid>
         </ScrollViewer>
-
+        <AppBar HorizontalAlignment="Center" IsHoldingEnabled="True">
+            <AppBar.Background>
+                <AcrylicBrush TintOpacity="0.2"></AcrylicBrush>
+            </AppBar.Background>
+            <InkToolbar x:Name="newsInkToolbar" HorizontalAlignment="Center" VerticalAlignment="Top" TargetInkCanvas="{x:Bind newsCanvas}" />
+        </AppBar>
+        
     </Grid>
 </Page>
