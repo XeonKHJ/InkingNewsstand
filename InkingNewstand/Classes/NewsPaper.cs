@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -23,7 +22,7 @@ namespace InkingNewstand
         private NewsPaperModel newsPaperModel;
         public NewsPaper(string paperName)
         {
-            newsPaperModel = new NewsPaperModel{ PaperTitle = paperName};
+            newsPaperModel = new NewsPaperModel(paperName);
         }
 
         public NewsPaper(NewsPaperModel model)
@@ -104,7 +103,7 @@ namespace InkingNewstand
 
             //3、将paperListinFile重新保存到文件中
 
-                await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
+                await FileIO.WriteBytesAsync(paperListFile, App.ObjectToByteArray(paperListinFile));
             if (!existFlag)
                 {
                     OnPaperSaved?.Invoke();
@@ -133,51 +132,7 @@ namespace InkingNewstand
             return NewsPapers;
         }
 
-        /// <summary>
-        ///  ///byte数组转换成object
-        /// </summary>
-        /// <param name="arrBytes"></param>
-        /// <returns>字节数组</returns>
-        private static Object ByteArrayToObject(byte[] arrBytes)
-        {
-            using (var memStream = new System.IO.MemoryStream())
-            {
-                var binForm = new BinaryFormatter();
-                memStream.Write(arrBytes, 0, arrBytes.Length);
-                memStream.Seek(0, System.IO.SeekOrigin.Begin);
-                Object obj;
-                try
-                {
-                    obj = binForm.Deserialize(memStream);
-                }
-                catch (System.Runtime.Serialization.SerializationException exception)
-                {
-                    obj = null;
-                }
-                return obj;
-            }
-        }
-        /// <summary>
-        /// object转换成byte数组
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns>Object</returns>
-        private static byte[] ObjectToByteArray(Object obj)
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            using (var ms = new System.IO.MemoryStream())
-            {
-                try
-                {
-                    bf.Serialize(ms, obj);
-                }
-                catch(System.Runtime.Serialization.SerializationException serializationException)
-                {
-                    ;
-                }
-                return ms.ToArray();
-            }
-        }
+
 
         /// <summary>
         /// 从文件中获取报纸列表
@@ -208,10 +163,23 @@ namespace InkingNewstand
                 uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
                 byte[] bytes = new byte[(uint)stream.Size];
                 dataReader.ReadBytes(bytes);//用来存储从文件中读出的数据
-                paperListinFile = (List<NewsPaperModel>)ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
+                paperListinFile = (List<NewsPaperModel>)App.ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
             }
             stream.Dispose();
             return paperListinFile;
+        }
+
+        /// <summary>
+        /// 保存全包报纸
+        /// </summary>
+        public static async void SaveAll()
+        {
+            List<NewsPaperModel> newsPaperModels = new List<NewsPaperModel>();
+            foreach (var paper  in NewsPapers)
+            {
+                newsPaperModels.Add(new NewsPaperModel(paper));
+            }
+            await FileIO.WriteBytesAsync(paperListFile, App.ObjectToByteArray(newsPaperModels));
         }
 
         /// <summary>
@@ -319,7 +287,7 @@ namespace InkingNewstand
             paperListinFile.Remove(newsPaper.newsPaperModel);
             NewsPapers.Remove(newsPaper);
             //3、将paperListinFile重新保存到文件中
-            await FileIO.WriteBytesAsync(paperListFile, ObjectToByteArray(paperListinFile));
+            await FileIO.WriteBytesAsync(paperListFile, App.ObjectToByteArray(paperListinFile));
             OnPaperDeleted?.Invoke(newsPaper);
         }
 
@@ -328,6 +296,7 @@ namespace InkingNewstand
             NewsList[this.NewsList.IndexOf(newsItem)] = newsItem;
             OnNewsListUpdated?.Invoke(newsItem);
         }
+
 
 
         public delegate void OnPaperUpdatedDelegate(NewsPaper updatedNewspaper);

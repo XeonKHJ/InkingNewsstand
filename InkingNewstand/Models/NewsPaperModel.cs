@@ -9,6 +9,18 @@ namespace InkingNewstand.Models
     [Serializable]
     public class NewsPaperModel : IEquatable<NewsPaperModel>
     {
+        public NewsPaperModel(NewsPaper newsPaper)
+        {
+            FeedUrls = newsPaper.FeedUrls;
+            PaperTitle = newsPaper.PaperTitle;
+            NewsList = newsPaper.NewsList;
+        }
+
+        public NewsPaperModel(string paperTitle)
+        {
+            PaperTitle = paperTitle;
+        }
+
         public List<Uri> FeedUrls { get; set; } = new List<Uri>();
         public string PaperTitle { get; set; } = "未命名报纸";
         public int Count

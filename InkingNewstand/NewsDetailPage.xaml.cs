@@ -49,6 +49,17 @@ namespace InkingNewstand
                 throw new Exception();
             }
             News = (NewsItem)(e.Parameter);
+
+            //修改收藏图标
+            if (News.IsFavorite)
+            {
+                favoriteButton.Icon = new SymbolIcon(Symbol.UnFavorite);
+            }
+            else
+            {
+                favoriteButton.Icon = new SymbolIcon(Symbol.Favorite);
+            }
+
             GetReadingHtml(News.NewsLink);
             if (News.CoverUrl == "")
             {
@@ -119,10 +130,13 @@ namespace InkingNewstand
             
             using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
             {
+                //先把笔迹输出到输出流
                 using (var outputStream = stream.GetOutputStreamAt(0))
                 {
                     await newsCanvas.InkPresenter.StrokeContainer.SaveAsync(outputStream);
                 }
+
+                //从输入流中读出序列化结果
                 using (var inputStream = stream.GetInputStreamAt(0))
                 {
                     var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
@@ -130,8 +144,8 @@ namespace InkingNewstand
                     bytes = new byte[stream.Size];
                     dataReader.ReadBytes(bytes);
                 }
-                return bytes;
             }
+            return bytes;
         }
 
         /// <summary>
@@ -161,6 +175,22 @@ namespace InkingNewstand
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void FavoriteButton_Click(object sender, RoutedEventArgs e)
+        {
+            News.IsFavorite = !News.IsFavorite; 
+            if(News.IsFavorite)
+            {
+                favoriteButton.Icon = new SymbolIcon(Symbol.UnFavorite);
+                App.Favorites.Add(new Models.FavoriteModel(News));
+            }
+            else
+            {
+                App.Favorites.Remove(new Models.FavoriteModel(News));
+                favoriteButton.Icon = new SymbolIcon(Symbol.Favorite);
+            }
+            //newsPaper = NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == News.PaperTitle);
         }
     }
 }

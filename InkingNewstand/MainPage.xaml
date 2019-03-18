@@ -12,17 +12,22 @@
 
     <Grid>
         <NavigationView x:Name="paperNavigationView" SelectionChanged="PaperNavigationView_SelectionChanged"
-                        IsBackEnabled="True" IsBackButtonVisible="Auto"  
-                        BackRequested="PaperNavigationView_BackRequested"  MenuItemsSource="{x:Bind newsPapers}"
-                        Windows10version1809:SelectionFollowsFocus="Enabled">
+                        IsBackEnabled="True" IsBackButtonVisible="Auto"
+                        BackRequested="PaperNavigationView_BackRequested"  MenuItemsSource="{x:Bind newsPapers}">
             <NavigationView.Background>
                 <AcrylicBrush FallbackColor="White"></AcrylicBrush>
             </NavigationView.Background>
+
             <NavigationView.MenuItemTemplate>
                 <DataTemplate x:DataType="data:NewsPaper">
                     <NavigationViewItem Content="{x:Bind PaperTitle}" Icon="Page"></NavigationViewItem>
                 </DataTemplate>
             </NavigationView.MenuItemTemplate>
+
+            <NavigationView.PaneFooter>
+                <NavigationViewItem x:Name="FavoritesButton" Icon="Favorite" Content="收藏" Tapped="FavoritesButton_Tapped"></NavigationViewItem>
+            </NavigationView.PaneFooter>
+            
             <Frame HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="contentFrame">
             </Frame>
         </NavigationView>

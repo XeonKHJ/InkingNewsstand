@@ -14,6 +14,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Runtime.Serialization.Formatters.Binary;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using InkingNewstand.Models;
 
 namespace InkingNewstand
 {
@@ -39,6 +43,9 @@ namespace InkingNewstand
         /// <param name="e">有关启动请求和过程的详细信息。</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            //自定义开始
+            GetFavoritesFromFile();
+            
             Frame rootFrame = Window.Current.Content as Frame;
 
             // 不要在窗口已包含内容时重复应用程序初始化，
@@ -92,6 +99,9 @@ namespace InkingNewstand
         /// <param name="e">有关挂起请求的详细信息。</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            SaveFavoritesToFile();
+            NewsPaper.SaveAll();
+
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
@@ -107,5 +117,96 @@ namespace InkingNewstand
             }
             return false;
         }
+
+        /// <summary>
+        ///  ///byte数组转换成object
+        /// </summary>
+        /// <param name="arrBytes"></param>
+        /// <returns>字节数组</returns>
+        public static Object ByteArrayToObject(byte[] arrBytes)
+        {
+            using (var memStream = new MemoryStream())
+            {
+                var binForm = new BinaryFormatter();
+                memStream.Write(arrBytes, 0, arrBytes.Length);
+                memStream.Seek(0, System.IO.SeekOrigin.Begin);
+                Object obj;
+                try
+                {
+                    obj = binForm.Deserialize(memStream);
+                }
+                catch (System.Runtime.Serialization.SerializationException exception)
+                {
+                    obj = null;
+                }
+                return obj;
+            }
+        }
+        /// <summary>
+        /// object转换成byte数组
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>Object</returns>
+        public static byte[] ObjectToByteArray(Object obj)
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                try
+                {
+                    bf.Serialize(ms, obj);
+                }
+                catch (System.Runtime.Serialization.SerializationException serializationException)
+                {
+                    ;
+                }
+                return ms.ToArray();
+            }
+        }
+
+        static private StorageFile favoriteListFile;
+        /// <summary>
+        /// 从文件获取收藏项
+        /// </summary>
+        public async void GetFavoritesFromFile()
+        {
+            var storageFolder = ApplicationData.Current.LocalFolder;
+
+            //0、打开文件
+            string favoirtesFileName = "Favorites.dat";
+
+            try
+            {
+                favoriteListFile = await storageFolder.CreateFileAsync(favoirtesFileName, CreationCollisionOption.OpenIfExists);
+            }
+            catch (System.IO.FileLoadException exception)
+            {
+                ;
+            }
+
+            var stream = await favoriteListFile.OpenAsync(FileAccessMode.ReadWrite); //获取文件随机存取流
+            using (var inputStream = stream.GetInputStreamAt(0))//获取从0开始的输入流
+            {
+                var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
+                uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
+                byte[] bytes = new byte[(uint)stream.Size];
+                dataReader.ReadBytes(bytes);//用来存储从文件中读出的数据
+                Favorites = (List<FavoriteModel>)App.ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
+            }
+            stream.Dispose();
+            if (Favorites == null)
+            {
+                Favorites = new List<FavoriteModel>();
+            }
+        }
+
+        public async static void SaveFavoritesToFile()
+        {
+            await FileIO.WriteBytesAsync(favoriteListFile, App.ObjectToByteArray(Favorites));
+        }
+
+
+
+        static public List<FavoriteModel> Favorites { get; set; } = new List<FavoriteModel>(); //收藏报纸列表
     }
 }

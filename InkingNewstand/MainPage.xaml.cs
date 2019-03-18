@@ -47,9 +47,8 @@ namespace InkingNewstand
             {
                 contentFrame.Navigate(typeof(SettingPage));//跳转到设置页面
             }
-            else
+            else if (args.SelectedItem is NewsPaper selectedItem)
             {
-                var selectedItem = (NewsPaper)args.SelectedItem;
                 contentFrame.Navigate(typeof(PaperPage), selectedItem);
             }
         }
@@ -91,6 +90,7 @@ namespace InkingNewstand
             {
                 newsPapers.Add(paper);
             }
+
             paperNavigationView.SelectedItem = newsPapers.First();
         }
 
@@ -120,5 +120,11 @@ namespace InkingNewstand
 
         public delegate void CleanPaperPageEventHandler();
         public static event CleanPaperPageEventHandler CleanPaperPage;
+
+        private void FavoritesButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            paperNavigationView.SelectedItem = null;
+            contentFrame.Navigate(typeof(FavoritesPage));
+        }
     }
 }

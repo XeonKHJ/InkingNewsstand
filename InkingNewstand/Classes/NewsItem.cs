@@ -101,6 +101,8 @@ namespace InkingNewstand
 
         public byte[] InkStrokes { get; set; } = new byte[0];
 
+        public bool IsFavorite { get; set; } //收藏属性
+
         public bool Equals(NewsItem other)
         {
             return this == other;

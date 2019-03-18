@@ -48,23 +48,24 @@
     <Grid>
         <!--<WebView x:Name="newsWebView"  Height="{x:Bind WindowHeight}" CanBeScrollAnchor="False"></WebView>-->
         <ScrollViewer>
-            <Grid>
-                <Grid>
+            <Grid >
+                <Grid Padding="40">
                     <Grid.RowDefinitions>
                         <RowDefinition x:Name="titleRow" Height="*"></RowDefinition>
                         <RowDefinition x:Name="contentRow" Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <StackPanel x:Name="headerPanel" Margin="60" Grid.Row="0">
+                    <StackPanel x:Name="headerPanel" Grid.Row="0">
                         <TextBlock Text="{x:Bind News.Title}" FontSize="40" TextWrapping="WrapWholeWords"></TextBlock>
                         <TextBlock Text="{x:Bind News.PublishedDate}" FontSize="15"></TextBlock>
-                        <Image x:Name="headerImg" Source="{x:Bind CoverUrlforPage}" Margin="25"></Image>
+                        <Image x:Name="headerImg" Source="{x:Bind CoverUrlforPage}"></Image>
                     </StackPanel>
-                    <controls:HtmlBlock x:Name="htmlBlock" Grid.Row="1" FontSize="20" Margin="60, 60, 60, 0" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
+                    <controls:HtmlBlock x:Name="htmlBlock" Grid.Row="1" FontSize="20" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
                 </Grid>
                 <InkCanvas x:Name="newsCanvas" 
                            AllowFocusOnInteraction="False" IsTapEnabled="False" IsRightTapEnabled="False" IsHoldingEnabled="False" IsHitTestVisible="False" IsDoubleTapEnabled="False">
                 </InkCanvas>
                 <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
+                    <AppBarButton x:Name="favoriteButton" Icon="Favorite" Label="收藏" Click="FavoriteButton_Click"></AppBarButton>
                     <AppBarButton x:Name="saveButton" Icon="Save" Click="SaveButton_Click" Label="保存" ></AppBarButton>
                     <AppBarButton x:Name="exportButton" Icon="Print" Click="ExportButton_Click" Label="导出"></AppBarButton>
                 </StackPanel>
@@ -76,6 +77,5 @@
             </AppBar.Background>
             <InkToolbar x:Name="newsInkToolbar" HorizontalAlignment="Center" VerticalAlignment="Top" TargetInkCanvas="{x:Bind newsCanvas}" />
         </AppBar>
-        
     </Grid>
 </Page>

@@ -129,6 +129,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FavoritesPage.xaml.cs">
+      <DependentUpon>FavoritesPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FeedsSearchingPage.xaml.cs">
       <DependentUpon>FeedsSearchingPage.xaml</DependentUpon>
     </Compile>
@@ -136,6 +139,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\NewsPaper.cs" />
+    <Compile Include="Models\FavoriteModel.cs" />
     <Compile Include="Models\NewsModel.cs" />
     <Compile Include="Models\NewsPaperModel.cs" />
     <Compile Include="NewsDetailPage.xaml.cs">
@@ -177,6 +181,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="AddPaperPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FavoritesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
