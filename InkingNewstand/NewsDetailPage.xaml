@@ -68,6 +68,15 @@
                     <AppBarButton x:Name="favoriteButton" Icon="Favorite" Label="收藏" Click="FavoriteButton_Click"></AppBarButton>
                     <AppBarButton x:Name="saveButton" Icon="Save" Click="SaveButton_Click" Label="保存" ></AppBarButton>
                     <AppBarButton x:Name="exportButton" Icon="Print" Click="ExportButton_Click" Label="导出"></AppBarButton>
+                    <AppBarButton x:Name="shareButton" Icon="Share" Label="分享" Click="ShareButton_Click"></AppBarButton>
+                    <AppBarButton x:Name="moreButton" Icon="More" Label="更多">
+                        <AppBarButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem x:Name="openInBroswerButton" Text="在浏览器中打开" Click="OpenInBroswerButton_Click"></MenuFlyoutItem>
+                                <MenuFlyoutItem x:Name="openInEdgeReadingModeButton" Text="在Edge浏览器中的阅读模式打开" Click="OpenInEdgeReadingModeButton_Click"></MenuFlyoutItem>
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

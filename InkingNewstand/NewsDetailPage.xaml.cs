@@ -21,6 +21,9 @@ using Windows.Storage.Pickers;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 using Windows.UI.Input.Inking;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.UI.Xaml.Printing;
+using Windows.Graphics.Printing;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -172,9 +175,43 @@ namespace InkingNewstand
             }
         }
 
-        private void ExportButton_Click(object sender, RoutedEventArgs e)
+        private async void ExportButton_Click(object sender, RoutedEventArgs e)
         {
+            //注册打印
+            var printDocument = new PrintDocument();
+            var printDocumentSouce = printDocument.DocumentSource;
+            PrintManager printMan = PrintManager.GetForCurrentView();
+            printMan.PrintTaskRequested += PrintMan_PrintTaskRequested;
 
+            if (PrintManager.IsSupported())
+            {
+                try
+                {
+                    await PrintManager.ShowPrintUIAsync();
+                }
+                catch
+                {
+                    ContentDialog noPrintingDialog = new ContentDialog()
+                    {
+                        Title = "打印错误",
+                        Content = "错了就是错了"
+                    };
+                }
+            }
+            else
+            {
+                ContentDialog noPrintingDialog = new ContentDialog()
+                {
+                    Title = "不支持打印",
+                    Content = "错了就是错了"
+                };
+            }
+        }
+
+        private void PrintMan_PrintTaskRequested(PrintManager sender, PrintTaskRequestedEventArgs args)
+        {
+            PrintTask printTask = null;
+            //printTask = args.Request.CreatePrintTask(News.NewsLink); //to-do
         }
 
         private void FavoriteButton_Click(object sender, RoutedEventArgs e)
@@ -191,6 +228,40 @@ namespace InkingNewstand
                 favoriteButton.Icon = new SymbolIcon(Symbol.Favorite);
             }
             //newsPaper = NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == News.PaperTitle);
+        }
+
+        private async void OpenInBroswerButton_Click(object sender, RoutedEventArgs e)
+        {
+            var success = await Windows.System.Launcher.LaunchUriAsync(News.NewsLink);
+        }
+
+        private async void OpenInEdgeReadingModeButton_Click(object sender, RoutedEventArgs e)
+        {
+            var options = new Windows.System.LauncherOptions
+            {
+                TargetApplicationPackageFamilyName = "Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
+            };
+
+            var readingModeUriString = "read:" + News.NewsLink.AbsoluteUri;
+
+            // Launch the URI
+            var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(readingModeUriString), options);
+        }
+
+        private void ShareButton_Click(object sender, RoutedEventArgs e)
+        {
+            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+
+            DataTransferManager.ShowShareUI();
+        }
+
+        private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            DataRequest request = args.Request;
+            request.Data.SetWebLink(News.NewsLink);
+            request.Data.Properties.Title = News.Title;
+            request.Data.Properties.Description = "该新闻的链接";
         }
     }
 }
