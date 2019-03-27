@@ -175,37 +175,14 @@ namespace InkingNewstand
             }
         }
 
-        private async void ExportButton_Click(object sender, RoutedEventArgs e)
+        private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            //注册打印
-            var printDocument = new PrintDocument();
-            var printDocumentSouce = printDocument.DocumentSource;
-            PrintManager printMan = PrintManager.GetForCurrentView();
-            printMan.PrintTaskRequested += PrintMan_PrintTaskRequested;
+            //// Initalize common helper class and register for printing
+            //var printHelper = new PrintHelper(this);
+            //printHelper.RegisterForPrinting();
 
-            if (PrintManager.IsSupported())
-            {
-                try
-                {
-                    await PrintManager.ShowPrintUIAsync();
-                }
-                catch
-                {
-                    ContentDialog noPrintingDialog = new ContentDialog()
-                    {
-                        Title = "打印错误",
-                        Content = "错了就是错了"
-                    };
-                }
-            }
-            else
-            {
-                ContentDialog noPrintingDialog = new ContentDialog()
-                {
-                    Title = "不支持打印",
-                    Content = "错了就是错了"
-                };
-            }
+            //// Initialize print content for this scenario
+            //printHelper.PreparePrintContent(new NewsDetailPage());
         }
 
         private void PrintMan_PrintTaskRequested(PrintManager sender, PrintTaskRequestedEventArgs args)
