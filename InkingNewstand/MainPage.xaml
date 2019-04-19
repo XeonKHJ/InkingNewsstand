@@ -13,7 +13,7 @@
     <Grid>
         <NavigationView x:Name="paperNavigationView" SelectionChanged="PaperNavigationView_SelectionChanged"
                         IsBackEnabled="True" IsBackButtonVisible="Auto"
-                        BackRequested="PaperNavigationView_BackRequested"  MenuItemsSource="{x:Bind newsPapers}">
+                        BackRequested="PaperNavigationView_BackRequested" MenuItemsSource="{x:Bind newsPapers}">
             <NavigationView.Background>
                 <AcrylicBrush FallbackColor="White"></AcrylicBrush>
             </NavigationView.Background>

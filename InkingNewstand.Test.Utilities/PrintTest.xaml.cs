@@ -50,10 +50,9 @@ namespace InkingNewstand.Test.Utilities
             printManager.PrintTaskRequested += PrintManager_PrintTaskRequested;
             await PrintManager.ShowPrintUIAsync();     
         }
-
+        
         private void PrintDocument_AddPages(object sender, AddPagesEventArgs e)
         {
-
             printDocument.AddPage(printContent);
             printDocument.AddPagesComplete();
         }

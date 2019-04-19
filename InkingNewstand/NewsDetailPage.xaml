@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:AppStudio.Uwp.Controls"
+    xmlns:htmltoxaml="using:RichTextControls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -59,7 +60,9 @@
                         <TextBlock Text="{x:Bind News.PublishedDate}" FontSize="15"></TextBlock>
                         <Image x:Name="headerImg" Source="{x:Bind CoverUrlforPage}"></Image>
                     </StackPanel>
-                    <controls:HtmlBlock x:Name="htmlBlock" Grid.Row="1" FontSize="20" Source="{x:Bind Html}" Style="{StaticResource sampleStyle}"></controls:HtmlBlock>
+                    <RichTextBlock x:Name="htmlBlock" 
+                                   FontSize="{x:Bind local:Settings.FontSize}" FontFamily="{x:Bind local:Settings.Font}"
+                                   Grid.Row="1" htmltoxaml:Properties.Html="{x:Bind Html}" x:DefaultBindMode="TwoWay"></RichTextBlock>
                 </Grid>
                 <InkCanvas x:Name="newsCanvas" 
                            AllowFocusOnInteraction="False" IsTapEnabled="False" IsRightTapEnabled="False" IsHoldingEnabled="False" IsHitTestVisible="False" IsDoubleTapEnabled="False">

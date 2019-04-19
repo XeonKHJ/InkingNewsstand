@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using HtmlAgilityPack;
-using SmartReader;
+using HtmlAgilityPackForInkingNewstand;
+//using SmartReader;
+using ReadSharp;
 
 namespace InkingNewstand.Utilities
 {
@@ -44,13 +45,11 @@ namespace InkingNewstand.Utilities
 
         public async static Task ExtractReadableContent(Uri url)
         {
-            Reader sr = new SmartReader.Reader(url.AbsoluteUri);
-            Article article = null;
-            await Task.Run(() =>
-            {
-                article = sr.GetArticle();
-            });
-            OnReadingHtmlConvertCompleted?.Invoke(article.Content);
+            Reader reader = new ReadSharp.Reader();
+            var readerSharpArticle = await reader.Read(url);
+            var Html = readerSharpArticle.Content;
+
+            OnReadingHtmlConvertCompleted?.Invoke(Html);
         }
 
         public delegate void OnReadingHtmlConvertCompletedDelegate(string html); 
