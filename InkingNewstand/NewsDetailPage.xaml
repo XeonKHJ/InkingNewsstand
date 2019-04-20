@@ -50,7 +50,7 @@
         <!--<WebView x:Name="newsWebView"  Height="{x:Bind WindowHeight}" CanBeScrollAnchor="False"></WebView>-->
         <ScrollViewer>
             <Grid >
-                <Grid Padding="40">
+                <Grid Padding="40" Width="{x:Bind local:Settings.NewsWidth}">
                     <Grid.RowDefinitions>
                         <RowDefinition x:Name="titleRow" Height="*"></RowDefinition>
                         <RowDefinition x:Name="contentRow" Height="auto"></RowDefinition>
@@ -61,7 +61,7 @@
                         <Image x:Name="headerImg" Source="{x:Bind CoverUrlforPage}"></Image>
                     </StackPanel>
                     <RichTextBlock x:Name="htmlBlock" 
-                                   FontSize="{x:Bind local:Settings.FontSize}" FontFamily="{x:Bind local:Settings.Font}"
+                                   FontSize="{x:Bind local:Settings.FontSize}" FontFamily="{x:Bind local:Settings.Font}" LineHeight="{x:Bind local:Settings.LineSpacing}"
                                    Grid.Row="1" htmltoxaml:Properties.Html="{x:Bind Html}" x:DefaultBindMode="TwoWay"></RichTextBlock>
                 </Grid>
                 <InkCanvas x:Name="newsCanvas" 

@@ -25,6 +25,9 @@ namespace InkingNewstand
         public SettingPage()
         {
             this.InitializeComponent();
+            FontSizeSlider.Value = Settings.FontSize;
+            LineSpacingSlider.Value = Settings.LineSpacing;
+            PageWidthSlider.Value = Settings.NewsWidth;
             foreach (var font in fontNames)
             {
                 var menuFlyoutItem = new MenuFlyoutItem() { Text = font };
@@ -46,8 +49,28 @@ namespace InkingNewstand
 
         private void FontSizeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            Settings.FontSize = (FontSizeSlider.Value + 10) / 2;
+            Settings.FontSize = FontSizeSlider.Value;
             Bindings.Update();
+        }
+
+        private void LineSpacingSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            Settings.LineSpacing = (LineSpacingSlider.Value);
+            Bindings.Update();
+        }
+
+        private void PageWidthSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            Settings.NewsWidth = (PageWidthSlider.Value);
+            if(previewBlock != null)
+            {
+                Bindings.Update();
+            }
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            Settings.SaveSettings();
         }
     }
 }

@@ -45,7 +45,10 @@ namespace InkingNewstand
         {
             //自定义开始
             GetFavoritesFromFile();
-            
+
+            //加载设置
+            Settings.LoadSettings();
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // 不要在窗口已包含内容时重复应用程序初始化，
