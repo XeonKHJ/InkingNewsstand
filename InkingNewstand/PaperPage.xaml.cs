@@ -66,11 +66,15 @@ namespace InkingNewstand
             }
         }
 
+        /// <summary>
+        /// 刷新报纸后
+        /// </summary>
+        /// <param name="newsItem"></param>
         private void Feeds_OnNewsRefreshed(IList<NewsItem> newsItem)
         {
-            foreach(var item in newsItem)
+            foreach (var item in newsItem)
             {
-                if(!newsItems.Contains(item))
+                if (!newsItems.Contains(item))
                 {
                     newsItems.Insert(0, item);
                 }

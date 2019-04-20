@@ -30,6 +30,7 @@ namespace InkingNewstand.Models
                 return NewsList.Count;
             }
         }
+        public bool ExtendMode = false; //扩展模式
         public List<NewsItem> NewsList { get; set; } = new List<NewsItem>();
 
         public bool Equals(NewsPaperModel other)
