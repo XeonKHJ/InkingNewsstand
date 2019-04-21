@@ -62,7 +62,7 @@
                     </StackPanel>
                     <RichTextBlock x:Name="htmlBlock" 
                                    FontSize="{x:Bind local:Settings.FontSize}" FontFamily="{x:Bind local:Settings.Font}" LineHeight="{x:Bind local:Settings.LineSpacing}"
-                                   Grid.Row="1" htmltoxaml:Properties.Html="{x:Bind Html}" x:DefaultBindMode="TwoWay"></RichTextBlock>
+                                   Grid.Row="1" x:DefaultBindMode="TwoWay"></RichTextBlock>
                 </Grid>
                 <InkCanvas x:Name="newsCanvas" 
                            AllowFocusOnInteraction="False" IsTapEnabled="False" IsRightTapEnabled="False" IsHoldingEnabled="False" IsHitTestVisible="False" IsDoubleTapEnabled="False">
@@ -72,6 +72,7 @@
                     <AppBarButton x:Name="saveButton" Icon="Save" Click="SaveButton_Click" Label="保存" ></AppBarButton>
                     <AppBarButton x:Name="exportButton" Icon="Print" Click="ExportButton_Click" Label="导出"></AppBarButton>
                     <AppBarButton x:Name="shareButton" Icon="Share" Label="分享" Click="ShareButton_Click"></AppBarButton>
+                    <AppBarButton x:Name="extendButton" Icon="DockLeft" Label="扩展" Click="ExtendButton_Click"></AppBarButton>
                     <AppBarButton x:Name="moreButton" Icon="More" Label="更多">
                         <AppBarButton.Flyout>
                             <MenuFlyout>

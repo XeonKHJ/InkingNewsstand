@@ -14,7 +14,7 @@ namespace InkingNewstand
     public class NewsItem : IEquatable<NewsItem>
     {
         private static SyndicationItem staticItem;
-        public NewsItem(SyndicationItem item, Uri url, string paperTitle)
+        public NewsItem(SyndicationItem item, Uri url, string paperTitle, SyndicationFeed syndicationFeed)
         {
             staticItem = item;
 
@@ -54,6 +54,9 @@ namespace InkingNewstand
                 Content = staticItem.Summary.Text;
             }
 
+            //设置订阅源
+            Feed = new FeedModel(syndicationFeed);
+
             //设置新闻作者
             string authorsString = "";
             for (int i = 0; i < staticItem.Authors.Count; ++i)
@@ -65,7 +68,7 @@ namespace InkingNewstand
 
         public string Content { get; set; }
 
-
+        public FeedModel Feed { get; private set; }
 
         public SyndicationItem Item
         {

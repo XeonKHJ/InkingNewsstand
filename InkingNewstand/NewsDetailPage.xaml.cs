@@ -24,6 +24,7 @@ using Windows.UI.Input.Inking;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml.Printing;
 using Windows.Graphics.Printing;
+using RichTextControls;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -46,6 +47,7 @@ namespace InkingNewstand
         List<Windows.Web.Syndication.SyndicationLink> Links;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            HtmlConverter.OnReadingHtmlConvertCompleted -= HtmlConverter_OnReadingHtmlConvertCompleted;
             HtmlConverter.OnReadingHtmlConvertCompleted += HtmlConverter_OnReadingHtmlConvertCompleted;
             if(!(e.Parameter is NewsItem))
             {
@@ -63,6 +65,18 @@ namespace InkingNewstand
                 favoriteButton.Icon = new SymbolIcon(Symbol.Favorite);
             }
 
+            //修改扩展模式图标
+            if(Settings.ExtendedFeeds.Contains(News.Feed.Id))
+            {
+                extendButton.Icon = new SymbolIcon(Symbol.DockRight);
+                isExtend = true;   
+            }
+            else
+            {
+                isExtend = false;   
+                extendButton.Icon = new SymbolIcon(Symbol.DockLeft);
+            }
+            
             GetReadingHtml(News.NewsLink);
             if (News.CoverUrl == "")
             {
@@ -77,13 +91,25 @@ namespace InkingNewstand
 
         private void HtmlConverter_OnReadingHtmlConvertCompleted(string html)
         {
-            Html = html;
-            Bindings.Update();
+            RichTextControls.Properties.SetHtml(htmlBlock, html);
         }
 
+        private bool isExtend = false;
+
+        /// <summary>
+        /// 获取文章HTML
+        /// </summary>
+        /// <param name="url"></param>
         private async void GetReadingHtml(Uri url)
         {
-            await HtmlConverter.ExtractReadableContent(url);
+            if(isExtend)
+            {
+                await HtmlConverter.ExtractReadableContent(url);
+            }
+            else
+            {
+                HtmlConverter_OnReadingHtmlConvertCompleted(News.Content);
+            }
         }
 
         public Double WindowHeight
@@ -105,7 +131,6 @@ namespace InkingNewstand
         public string Html { get; set; }
 
         string CoverUrlforPage { set; get; }
-
 
         NewsPaper newsPaper = null;
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -239,6 +264,24 @@ namespace InkingNewstand
             request.Data.SetWebLink(News.NewsLink);
             request.Data.Properties.Title = News.Title;
             request.Data.Properties.Description = "该新闻的链接";
+        }
+
+        private void ExtendButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(isExtend)
+            {
+                extendButton.Icon = new SymbolIcon(Symbol.DockLeft);
+                Settings.ExtendedFeeds.Remove(News.Feed.Id);
+                isExtend = false;
+            }
+            else
+            {
+                Settings.ExtendedFeeds.Add(News.Feed.Id);
+                extendButton.Icon = new SymbolIcon(Symbol.DockRight);
+                isExtend = true; 
+            }
+            Settings.SaveSettings();
+            GetReadingHtml(News.NewsLink);
         }
     }
 }

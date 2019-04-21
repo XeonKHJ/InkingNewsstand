@@ -16,7 +16,7 @@ namespace InkingNewstand
         public static double FontSize { set; get; } = 20;
         public static double LineSpacing { set; get; } = 10;
         public static double NewsWidth { set; get; } = 700;
-
+        public static List<string> ExtendedFeeds { set; get; } = new List<string>();
         /// <summary>
         /// 保存设置
         /// </summary>
@@ -75,6 +75,7 @@ namespace InkingNewstand
         public string Font { set; get; } = "微软雅黑";
         public double FontSize { set; get; } = 20;
         public double LineSpacing { set; get; } = 10;
-        public double NewsWidth { set; get; } = 20;
+        public double NewsWidth { set; get; } = 700;
+        public static List<string> ExtendedFeeds { set; get; } = new List<string>();
     }
 }

@@ -140,6 +140,7 @@
     </Compile>
     <Compile Include="Classes\NewsPaper.cs" />
     <Compile Include="Models\FavoriteModel.cs" />
+    <Compile Include="Models\FeedModel.cs" />
     <Compile Include="Models\NewsModel.cs" />
     <Compile Include="Models\NewsPaperModel.cs" />
     <Compile Include="NewsDetailPage.xaml.cs">

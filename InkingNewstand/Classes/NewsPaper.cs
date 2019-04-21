@@ -60,6 +60,10 @@ namespace InkingNewstand
             }
         }
 
+        /// <summary>
+        /// 添加报纸
+        /// </summary>
+        /// <param name="newsPaper"></param>
         static public void AddNewsPaper(NewsPaper newsPaper)
         {
             OnPaperAdding?.Invoke(newsPaper);
@@ -211,12 +215,12 @@ namespace InkingNewstand
                     foreach(var news in feed.Items)
                     {
                         var newsLink = news.ItemUri ?? news.Links.Select(l => l.Uri).FirstOrDefault();
-                        var newsItem = new NewsItem(news, newsLink, PaperTitle);
+                        var newsItem = new NewsItem(news, newsLink, PaperTitle, feed);
 
                         //如果原新闻列表中不包含改新闻，则添加到新闻列表
                         if (!NewsList.Contains(newsItem))
                         {
-                            var newNewsItem = new NewsItem(news, newsLink, PaperTitle);
+                            var newNewsItem = new NewsItem(news, newsLink, PaperTitle, feed);
                             newNewsitems.Add(newNewsItem);
                             NewsList.Add(newNewsItem);
                         }
@@ -227,35 +231,13 @@ namespace InkingNewstand
                     OnUpdateFailed?.Invoke(feedUrl.AbsoluteUri);
                 }
             }
-            OnNewsRefreshed?.Invoke(NewsList);
+            OnNewsRefreshed?.Invoke(newNewsitems);
             if (NewsList.Count != originalNewsCount)
             {
                 await SaveToFile(this);
                 OnNewsUpdatedToFile?.Invoke();
             }
             return NewsList;
-        }
-        
-        //好像没用
-        /// <summary>
-        /// 加载之前保存的报纸列表
-        /// </summary>
-        /// <returns>报纸列表</returns>
-        public static async Task<List<NewsPaper>> GetNewsPapers()
-        {
-            if (!(await ApplicationData.Current.LocalFolder.TryGetItemAsync("PaperList.dat") is StorageFile file))
-            {
-                return new List<NewsPaper>();
-            }
-            return new List<NewsPaper>();
-        }
-
-        /// <summary>
-        /// 更新文章
-        /// </summary>
-        public void Refresh()
-        {
-            ;
         }
 
         /// <summary>
