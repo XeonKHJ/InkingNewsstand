@@ -39,6 +39,8 @@ namespace InkingNewstand
                 XmlSerializer mySerializer = new XmlSerializer(typeof(SerializedSetting));
                 mySerializer.Serialize(stream.AsStream(), serializingSettings);
             }
+
+            var roamingSettings = ApplicationData.Current.RoamingSettings;
         }
 
         /// <summary>

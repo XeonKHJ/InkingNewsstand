@@ -198,7 +198,7 @@ namespace InkingNewstand
         }
 
         /// <summary>
-        /// 获取文章列表
+        /// 刷新报纸，获取文章列表
         /// </summary>
         public async Task<List<NewsItem>> GetNewsListAsync()
         {

@@ -104,7 +104,15 @@ namespace InkingNewstand
         {
             if(isExtend)
             {
-                await HtmlConverter.ExtractReadableContent(url);
+                try
+                {
+                    await HtmlConverter.ExtractReadableContent(url);
+                }
+                catch(ReadSharp.ReadException readException)
+                {
+                    System.Diagnostics.Debug.WriteLine(readException.Message);
+                }
+                
             }
             else
             {
