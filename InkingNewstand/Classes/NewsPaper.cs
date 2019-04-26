@@ -212,26 +212,29 @@ namespace InkingNewstand
                 {
                     var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
                     //将新闻添加到newsItems中
-                    foreach(var news in feed.Items)
+                    for (int retrievedNewsIndex = feed.Items.Count - 1; retrievedNewsIndex >= 0; --retrievedNewsIndex)
                     {
-                        var newsLink = news.ItemUri ?? news.Links.Select(l => l.Uri).FirstOrDefault();
-                        var newsItem = new NewsItem(news, newsLink, PaperTitle, feed);
+                        var newsLink = feed.Items[retrievedNewsIndex].ItemUri ?? feed.Items[retrievedNewsIndex].Links.Select(l => l.Uri).FirstOrDefault();
+                        var newsItem = new NewsItem(feed.Items[retrievedNewsIndex], newsLink, PaperTitle, feed);
 
                         //如果原新闻列表中不包含改新闻，则添加到新闻列表
                         if (!NewsList.Contains(newsItem))
                         {
-                            var newNewsItem = new NewsItem(news, newsLink, PaperTitle, feed);
-                            newNewsitems.Add(newNewsItem);
-                            NewsList.Add(newNewsItem);
+                            newNewsitems.Add(newsItem);
+                            NewsList.Add(newsItem);
                         }
                     }
                 }
                 catch(Exception exception)
                 {
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
                     OnUpdateFailed?.Invoke(feedUrl.AbsoluteUri);
                 }
             }
-            OnNewsRefreshed?.Invoke(newNewsitems);
+            if(NewsList.Count > originalNewsCount)
+            {
+                OnNewsRefreshed?.Invoke(NewsList.GetRange(originalNewsCount, NewsList.Count - originalNewsCount));
+            }
             if (NewsList.Count != originalNewsCount)
             {
                 await SaveToFile(this);

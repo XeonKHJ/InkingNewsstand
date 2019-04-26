@@ -72,11 +72,11 @@ namespace InkingNewstand
         /// <param name="newsItem"></param>
         private void Feeds_OnNewsRefreshed(IList<NewsItem> newsItem)
         {
-            for(int i = 0; i < newsItem.Count; ++i)
-            {
-                if (!newsItems.Contains(newsItem[i]))
+            foreach(var newNews in newsItem)
+            { 
+                if (!newsItems.Contains(newNews))
                 {
-                    newsItems.Insert(0, newsItem[i]);
+                    newsItems.Insert(0, newNews);
                 }
             }
             refreshingProgressRing.IsActive = false;
