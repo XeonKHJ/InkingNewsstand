@@ -120,6 +120,9 @@
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="data:NewsItem">
                             <Grid Width="320" Height="320">
+                                <StackPanel VerticalAlignment="Top">
+                                    <TextBlock Text=""></TextBlock>
+                                </StackPanel>
                                 <Viewbox x:Name="viewBox" Stretch="UniformToFill" StretchDirection="Both" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                     <Image Source="{x:Bind CoverUrl}" VerticalAlignment="Top"></Image>
                                 </Viewbox>

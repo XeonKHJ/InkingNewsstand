@@ -49,6 +49,10 @@ namespace InkingNewstand
             }
             else if (args.SelectedItem is NewsPaper selectedItem)
             {
+                if(PaperPage.thisPaperpage != null)
+                {
+                    PaperPage.thisPaperpage.NavigationCacheMode = NavigationCacheMode.Disabled;
+                }
                 contentFrame.Navigate(typeof(PaperPage), selectedItem);
             }
         }
@@ -96,8 +100,11 @@ namespace InkingNewstand
 
         private void NewsPaper_OnPaperAdded(NewsPaper updatedNewspaper)
         {
-            CleanPaperPage?.Invoke();
-            if(newsPapers.Count == 1 && newsPapers.First().PaperTitle == "创建你的第一份报纸！")
+            if (PaperPage.thisPaperpage != null)
+            {
+                PaperPage.thisPaperpage.NavigationCacheMode = NavigationCacheMode.Disabled;
+            }
+            if (newsPapers.Count == 1 && newsPapers.First().PaperTitle == "创建你的第一份报纸！")
             {
                 newsPapers.Clear();
             }
@@ -110,6 +117,7 @@ namespace InkingNewstand
 
         ObservableCollection<NewsPaper> newsPapers { get; set; } = new ObservableCollection<NewsPaper>();
 
+        public bool IsNavigatedByBackButton = false;
         private void PaperNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             if (contentFrame.CanGoBack)

@@ -233,7 +233,7 @@ namespace InkingNewstand
             }
             if(NewsList.Count > originalNewsCount)
             {
-                OnNewsRefreshed?.Invoke(NewsList.GetRange(originalNewsCount, NewsList.Count - originalNewsCount));
+                OnNewsRefreshed?.Invoke(NewsList);
             }
             if (NewsList.Count != originalNewsCount)
             {

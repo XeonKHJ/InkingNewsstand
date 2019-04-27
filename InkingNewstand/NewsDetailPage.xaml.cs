@@ -412,10 +412,5 @@ namespace InkingNewstand
         {
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
         }
-
-        private void HtmlBlock_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("Tapped");
-        }
     }
 }

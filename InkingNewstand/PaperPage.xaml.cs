@@ -27,13 +27,13 @@ namespace InkingNewstand
         {
             this.InitializeComponent();
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled; //开启页面缓存
+            thisPaperpage = this;
             if(feeds != null)
             {
                 feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
             }
-            MainPage.CleanPaperPage -= MainPage_CleanPaperPage;
         }
-
+        public static PaperPage thisPaperpage;
         private void MainPage_CleanPaperPage()
         {
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Disabled;
@@ -92,14 +92,6 @@ namespace InkingNewstand
             if(e.Parameter is NewsPaper)
             {
                 this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Disabled; //关闭页面缓存
-            }
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            if(e.SourcePageType == typeof(AddPaperPage))
-            {
-                MainPage.CleanPaperPage += MainPage_CleanPaperPage;
             }
         }
 
