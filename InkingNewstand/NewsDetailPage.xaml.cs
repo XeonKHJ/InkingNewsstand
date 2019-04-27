@@ -40,11 +40,8 @@ namespace InkingNewstand
         public NewsDetailPage()
         {
             this.InitializeComponent();
-            //var inkSouce = CoreInkIndependentInputSource.Create(newsCanvas.InkPresenter);
-            //inkSouce.PointerEntering += InkSouce_PointerEntering;
-            //inkSouce.PointerLost += InkSouce_PointerReleasing;
+            
         }
-
         NewsItem News { set; get; }
         List<Windows.Web.Syndication.SyndicationLink> Links;
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -297,6 +294,7 @@ namespace InkingNewstand
         private int selectionCount = 0;
         private TextPointer selectionEnd;
         bool translationFlyoutIsNullorClosed = false;
+        
         private void HtmlBlock_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if(selectionCount == 0)
@@ -314,6 +312,7 @@ namespace InkingNewstand
         }
 
         private Flyout translationFlyout;
+        WordPicker wordPicker = new WordPicker();
         private async void DetectSelectionFinished()
         {
             await Task.Run(async () =>
@@ -338,15 +337,24 @@ namespace InkingNewstand
 
                                 Invoke(() =>
                                 {
-                                    System.Diagnostics.Debug.WriteLine("OldSelectionEnd: " + oldSelectionEnd.Offset.ToString() + ", newSelectionEnd:" + newSelectionEnd.Offset.ToString());
-
                                     var selectedText = htmlBlock.SelectedText;
                                     if (selectedText != "" && selectedText != null)
                                     {
-                                        translationFlyout = new Flyout
+                                        try
                                         {
-                                            Content = new TextBlock() { Text = selectedText, IsTextSelectionEnabled = true },
-                                        };
+                                            var translatedResult = wordPicker.Lookfor(selectedText, Language_t.en);
+                                            translationFlyout = new Flyout
+                                            {
+                                                Content = new TextBlock() { Text = translatedResult.GetResult(Language_t.zh), IsTextSelectionEnabled = true },
+                                            };
+                                        }
+                                        catch(Exception exception)
+                                        {
+                                            translationFlyout = new Flyout
+                                            {
+                                                Content = new TextBlock() { Text = "翻译出错", IsTextSelectionEnabled = true },
+                                            };
+                                        }
                                         FlyoutShowOptions flyoutShowOptions = new FlyoutShowOptions
                                         {
                                             Position = new Point(newSelectionEnd.GetCharacterRect(LogicalDirection.Forward).X, newSelectionEnd.GetCharacterRect(LogicalDirection.Forward).Y),
