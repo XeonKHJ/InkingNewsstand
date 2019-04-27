@@ -295,6 +295,8 @@ namespace InkingNewstand
         }
 
         private int selectionCount = 0;
+        private TextPointer selectionEnd;
+        bool translationFlyoutIsNullorClosed = false;
         private void HtmlBlock_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if(selectionCount == 0)
@@ -302,6 +304,10 @@ namespace InkingNewstand
                 DetectSelectionFinished();
             }
             ++selectionCount;
+
+            selectionEnd = htmlBlock.SelectionEnd;
+            translationFlyoutIsNullorClosed = (translationFlyout == null) ? true : !translationFlyout.IsOpen;
+
             System.Diagnostics.Debug.WriteLine(selectionCount.ToString());
             WordPicker wordPicker = new WordPicker();
             var result = wordPicker.Lookfor(htmlBlock.SelectedText, Language_t.en);
@@ -310,25 +316,16 @@ namespace InkingNewstand
         private Flyout translationFlyout;
         private async void DetectSelectionFinished()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 bool flyoutShowed = false;
                 while (true)
                 {
                     var oldSelectionCount = selectionCount;
-                    TextPointer oldSelectionEnd = null, newSelectionEnd = null;
-                    Invoke(() => { oldSelectionEnd = htmlBlock.SelectionEnd; });
-                    System.Threading.Thread.Sleep(100);
-                    bool translationFlyoutIsNullorClosed = false;
-                    Invoke(() => 
-                    {
-                        newSelectionEnd = htmlBlock.SelectionEnd;
-                        translationFlyoutIsNullorClosed = (translationFlyout == null) ? true : !translationFlyout.IsOpen;
-                        //if (translationFlyout != null)
-                        //{
-                        //    System.Diagnostics.Debug.WriteLine("Flyout is opened: " + translationFlyout.IsOpen.ToString());
-                        //}
-                    });
+                    var oldSelectionEnd = selectionEnd;
+                    await Task.Delay(100);
+                    //bool translationFlyoutIsNullorClosed = false;
+                    var newSelectionEnd = selectionEnd;
                     System.Diagnostics.Debug.WriteLine(translationFlyoutIsNullorClosed.ToString());
                     if (translationFlyoutIsNullorClosed) //如果translationFlyout被初始化了但没有开着
                     {
@@ -352,10 +349,17 @@ namespace InkingNewstand
                                         };
                                         FlyoutShowOptions flyoutShowOptions = new FlyoutShowOptions
                                         {
-                                            Position = GetPointerPosition(),
+                                            Position = new Point(newSelectionEnd.GetCharacterRect(LogicalDirection.Forward).X, newSelectionEnd.GetCharacterRect(LogicalDirection.Forward).Y),
                                             ShowMode = FlyoutShowMode.Transient
                                         };
-                                        translationFlyout.ShowAt(newsDetailPageGrid, flyoutShowOptions);
+                                        try
+                                        {
+                                            translationFlyout.ShowAt(htmlBlock, flyoutShowOptions);
+                                        }
+                                        catch(ArgumentException exception)
+                                        {
+                                            System.Diagnostics.Debug.WriteLine(exception.Message);
+                                        }
                                         flyoutShowed = true;
                                     }
                                 });
