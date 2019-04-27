@@ -25,6 +25,8 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml.Printing;
 using Windows.Graphics.Printing;
 using RichTextControls;
+using InkingNewstand.Translate;
+using Windows.UI.Xaml.Documents;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -49,7 +51,7 @@ namespace InkingNewstand
         {
             HtmlConverter.OnReadingHtmlConvertCompleted -= HtmlConverter_OnReadingHtmlConvertCompleted;
             HtmlConverter.OnReadingHtmlConvertCompleted += HtmlConverter_OnReadingHtmlConvertCompleted;
-            if(!(e.Parameter is NewsItem))
+            if (!(e.Parameter is NewsItem))
             {
                 throw new Exception();
             }
@@ -66,17 +68,17 @@ namespace InkingNewstand
             }
 
             //修改扩展模式图标
-            if(Settings.ExtendedFeeds.Contains(News.Feed.Id))
+            if (Settings.ExtendedFeeds.Contains(News.Feed.Id))
             {
                 extendButton.Icon = new SymbolIcon(Symbol.DockRight);
-                isExtend = true;   
+                isExtend = true;
             }
             else
             {
-                isExtend = false;   
+                isExtend = false;
                 extendButton.Icon = new SymbolIcon(Symbol.DockLeft);
             }
-            
+
             GetReadingHtml(News.NewsLink);
             if (News.CoverUrl == "")
             {
@@ -102,17 +104,17 @@ namespace InkingNewstand
         /// <param name="url"></param>
         private async void GetReadingHtml(Uri url)
         {
-            if(isExtend)
+            if (isExtend)
             {
                 try
                 {
                     await HtmlConverter.ExtractReadableContent(url);
                 }
-                catch(ReadSharp.ReadException readException)
+                catch (ReadSharp.ReadException readException)
                 {
                     System.Diagnostics.Debug.WriteLine(readException.Message);
                 }
-                
+
             }
             else
             {
@@ -163,7 +165,7 @@ namespace InkingNewstand
         private async Task<byte[]> SerializeStrokes(IReadOnlyCollection<InkStroke> strokes)
         {
             byte[] bytes = null;
-            
+
             using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
             {
                 //先把笔迹输出到输出流
@@ -226,8 +228,8 @@ namespace InkingNewstand
 
         private void FavoriteButton_Click(object sender, RoutedEventArgs e)
         {
-            News.IsFavorite = !News.IsFavorite; 
-            if(News.IsFavorite)
+            News.IsFavorite = !News.IsFavorite;
+            if (News.IsFavorite)
             {
                 favoriteButton.Icon = new SymbolIcon(Symbol.UnFavorite);
                 App.Favorites.Add(new Models.FavoriteModel(News));
@@ -276,7 +278,7 @@ namespace InkingNewstand
 
         private void ExtendButton_Click(object sender, RoutedEventArgs e)
         {
-            if(isExtend)
+            if (isExtend)
             {
                 extendButton.Icon = new SymbolIcon(Symbol.DockLeft);
                 Settings.ExtendedFeeds.Remove(News.Feed.Id);
@@ -286,10 +288,130 @@ namespace InkingNewstand
             {
                 Settings.ExtendedFeeds.Add(News.Feed.Id);
                 extendButton.Icon = new SymbolIcon(Symbol.DockRight);
-                isExtend = true; 
+                isExtend = true;
             }
             Settings.SaveSettings();
             GetReadingHtml(News.NewsLink);
+        }
+
+        private int selectionCount = 0;
+        private void HtmlBlock_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            if(selectionCount == 0)
+            {
+                DetectSelectionFinished();
+            }
+            ++selectionCount;
+            System.Diagnostics.Debug.WriteLine(selectionCount.ToString());
+            WordPicker wordPicker = new WordPicker();
+            var result = wordPicker.Lookfor(htmlBlock.SelectedText, Language_t.en);
+        }
+
+        private Flyout translationFlyout;
+        private async void DetectSelectionFinished()
+        {
+            await Task.Run(() =>
+            {
+                bool flyoutShowed = false;
+                while (true)
+                {
+                    var oldSelectionCount = selectionCount;
+                    TextPointer oldSelectionEnd = null, newSelectionEnd = null;
+                    Invoke(() => { oldSelectionEnd = htmlBlock.SelectionEnd; });
+                    System.Threading.Thread.Sleep(100);
+                    bool translationFlyoutIsNullorClosed = false;
+                    Invoke(() => 
+                    {
+                        newSelectionEnd = htmlBlock.SelectionEnd;
+                        translationFlyoutIsNullorClosed = (translationFlyout == null) ? true : !translationFlyout.IsOpen;
+                        //if (translationFlyout != null)
+                        //{
+                        //    System.Diagnostics.Debug.WriteLine("Flyout is opened: " + translationFlyout.IsOpen.ToString());
+                        //}
+                    });
+                    System.Diagnostics.Debug.WriteLine(translationFlyoutIsNullorClosed.ToString());
+                    if (translationFlyoutIsNullorClosed) //如果translationFlyout被初始化了但没有开着
+                    {
+                        if (selectionCount == oldSelectionCount)
+                        {
+                            selectionCount = 0;
+                            if (!flyoutShowed //是否已经显示了Flyout
+                                || ((oldSelectionEnd != null && newSelectionEnd != null) && oldSelectionEnd != newSelectionEnd)) //是否是重复选择
+                            {
+
+                                Invoke(() =>
+                                {
+                                    System.Diagnostics.Debug.WriteLine("OldSelectionEnd: " + oldSelectionEnd.Offset.ToString() + ", newSelectionEnd:" + newSelectionEnd.Offset.ToString());
+
+                                    var selectedText = htmlBlock.SelectedText;
+                                    if (selectedText != "" && selectedText != null)
+                                    {
+                                        translationFlyout = new Flyout
+                                        {
+                                            Content = new TextBlock() { Text = selectedText, IsTextSelectionEnabled = true },
+                                        };
+                                        FlyoutShowOptions flyoutShowOptions = new FlyoutShowOptions
+                                        {
+                                            Position = GetPointerPosition(),
+                                            ShowMode = FlyoutShowMode.Transient
+                                        };
+                                        translationFlyout.ShowAt(newsDetailPageGrid, flyoutShowOptions);
+                                        flyoutShowed = true;
+                                    }
+                                });
+                            }
+                            System.Diagnostics.Debug.WriteLine("break!");
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+
+        private Point GetPointerPosition()
+        {
+            var pointerPosition = Windows.UI.Core.CoreWindow.GetForCurrentThread().PointerPosition;
+
+            if(pointerPosition.X > Window.Current.Bounds.Right)
+            {
+                pointerPosition.X = Window.Current.Bounds.Right;
+            }
+            else if(pointerPosition.X < Window.Current.Bounds.Left)
+            {
+                pointerPosition.X = Window.Current.Bounds.Left;
+            }
+
+            if(pointerPosition.Y > Window.Current.Bounds.Bottom)
+            {
+                pointerPosition.Y = Window.Current.Bounds.Bottom;
+            }
+            else if(pointerPosition.Y < Window.Current.Bounds.Top)
+            {
+                pointerPosition.Y = Window.Current.Bounds.Top;
+            }
+
+
+            var x = pointerPosition.X - Window.Current.Bounds.X;
+            var y = pointerPosition.Y - Window.Current.Bounds.Y;
+
+
+            var ttv = newsDetailPageGrid.TransformToVisual(Window.Current.Content);
+            Point screenCoords = ttv.TransformPoint(new Point(0, 0));
+
+            x -= screenCoords.X;
+            y -= screenCoords.Y + 10;
+
+            return new Point(x, y);
+        }
+
+        public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
+        }
+
+        private void HtmlBlock_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Tapped");
         }
     }
 }

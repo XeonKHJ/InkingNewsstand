@@ -46,10 +46,10 @@
         </Style>
     </Page.Resources>
 
-    <Grid>
+    <Grid x:Name="newsDetailPageGrid">
         <!--<WebView x:Name="newsWebView"  Height="{x:Bind WindowHeight}" CanBeScrollAnchor="False"></WebView>-->
         <ScrollViewer>
-            <Grid >
+            <Grid>
                 <Grid Padding="40" Width="{x:Bind local:Settings.NewsWidth}">
                     <Grid.RowDefinitions>
                         <RowDefinition x:Name="titleRow" Height="*"></RowDefinition>
@@ -62,7 +62,8 @@
                     </StackPanel>
                     <RichTextBlock x:Name="htmlBlock" 
                                    FontSize="{x:Bind local:Settings.FontSize}" FontFamily="{x:Bind local:Settings.Font}" LineHeight="{x:Bind local:Settings.LineSpacing}"
-                                   Grid.Row="1" x:DefaultBindMode="TwoWay"></RichTextBlock>
+                                   Grid.Row="1" x:DefaultBindMode="TwoWay" SelectionChanged="HtmlBlock_SelectionChanged">
+                    </RichTextBlock>
                 </Grid>
                 <InkCanvas x:Name="newsCanvas" 
                            AllowFocusOnInteraction="False" IsTapEnabled="False" IsRightTapEnabled="False" IsHoldingEnabled="False" IsHitTestVisible="False" IsDoubleTapEnabled="False">

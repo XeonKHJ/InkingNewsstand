@@ -242,6 +242,11 @@
   <ItemGroup>
     <None Include="InkingNewstand_TemporaryKey.pfx" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Translate">
+      <HintPath>Dlls\Translate\Translate.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
