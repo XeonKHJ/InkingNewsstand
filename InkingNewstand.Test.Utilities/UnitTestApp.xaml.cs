@@ -75,7 +75,7 @@ namespace InkingNewstand.Test.Utilities
             Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.Run(e.Arguments);
 
             //自己加的
-            rootFrame.Navigate(typeof(PrintTest));
+            rootFrame.Navigate(typeof(PaperPageTest));
         }
 
         /// <summary>

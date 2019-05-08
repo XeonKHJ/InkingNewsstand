@@ -119,6 +119,9 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PaperPageTest.xaml.cs">
+      <DependentUpon>PaperPageTest.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PrintTest.xaml.cs">
       <DependentUpon>PrintTest.xaml</DependentUpon>
     </Compile>
@@ -165,6 +168,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="PaperPageTest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PrintTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
