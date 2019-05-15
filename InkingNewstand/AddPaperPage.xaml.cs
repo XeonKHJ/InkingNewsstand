@@ -76,19 +76,45 @@ namespace InkingNewstand
         /// <param name="e"></param>
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            newsPaper = new NewsPaper(newspaperTitleTextBox.Text);
-            foreach(var element in rssInputPanel.Children)
+            if(isEditMode)
             {
-                try
+
+            }
+            else
+            {
+                bool hasSameTitle = false;
+                foreach(var paper in NewsPaper.NewsPapers)
                 {
-                    newsPaper.AddFeedLink(new Uri((element as TextBox).Text));
+                    if(paper.PaperTitle == newspaperTitleTextBox.Text)
+                    {
+                        hasSameTitle = true;
+                        break;
+                    }
                 }
-                catch(Exception exception)
+                if (!hasSameTitle //如果没有同名的报纸
+                    && newspaperTitleTextBox.Text != "") //并且如果名字不等与""
                 {
-                    continue;
+                    newsPaper = new NewsPaper(newspaperTitleTextBox.Text);
+                    foreach (var element in rssInputPanel.Children)
+                    {
+                        try
+                        {
+                            newsPaper.AddFeedLink(new Uri((element as TextBox).Text));
+                        }
+                        catch (Exception exception)
+                        {
+                            continue;
+                        }
+                    }
+                    NewsPaper.AddNewsPaper(newsPaper);
+                }
+                else
+                {
+                    var dialog = new Windows.UI.Popups.MessageDialog("名字重复或为空");
+                    await dialog.ShowAsync();
+                    return;
                 }
             }
-            NewsPaper.AddNewsPaper(newsPaper);
             PaperPage.thisPaperpage.RefreshNews();
             //页面跳转由PaperAdded事件发生，在MainPage中实现
 
@@ -116,9 +142,14 @@ namespace InkingNewstand
                     AddFeedButton_Click(null, null);
                 }
                 deleteButton.Visibility = Visibility.Visible;
+                isEditMode = true;
+            }
+            else
+            {
+                isEditMode = false;
             }
         }
-
+        private bool isEditMode = false;
         public void AddFeedLink(FeedViewModel feedViewModel)
         {
             AddFeedButton_Click(feedViewModel, null);
