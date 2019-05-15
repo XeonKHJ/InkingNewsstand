@@ -9,10 +9,14 @@ namespace InkingNewstand.Utilities
 {
     public class FeedsFinder
     {
-        public static List<Uri> GetFeedsFromUrl(Uri websiteUrl)
+        public static async Task<List<Uri>> GetFeedsFromUrl(Uri websiteUrl)
         {
             List<Uri> feedUrls = new List<Uri>();
-            var htmlDoc = GetHtmlDoc(websiteUrl);
+            HtmlDocument htmlDoc = null;
+            await Task.Run(() =>
+                {
+                    htmlDoc = GetHtmlDoc(websiteUrl);
+                });
             var selectedNodes = htmlDoc.DocumentNode.SelectNodes("//link");
             if (selectedNodes != null)
             {

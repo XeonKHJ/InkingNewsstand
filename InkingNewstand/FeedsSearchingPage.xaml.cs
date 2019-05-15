@@ -37,11 +37,12 @@ namespace InkingNewstand
 
         private async void SearchButton_Click(object sender, RoutedEventArgs e)
         {
+            searchingProgressRing.IsActive = true;
             Feeds.Clear();
             List<Uri> feedUrls = new List<Uri>();
             try
             {
-                feedUrls = FeedsFinder.GetFeedsFromUrl(new Uri(websiteTextBox.Text));
+                feedUrls = await FeedsFinder.GetFeedsFromUrl(new Uri(websiteTextBox.Text));
                 var client = new SyndicationClient();
                 var feeds = new List<FeedViewModel>();
                 foreach (var url in feedUrls)
@@ -54,8 +55,7 @@ namespace InkingNewstand
             {
                 Feeds.Add(new FeedViewModel("无结果或链接错误",  "",  "", "Nopic"));
             }
-            //Feeds = feeds;
-            //Bindings.Update();
+            Invoke(()=>searchingProgressRing.IsActive = false);
         }
 
         ObservableCollection<FeedViewModel> Feeds { set; get; } = new ObservableCollection<FeedViewModel>();
