@@ -78,7 +78,38 @@ namespace InkingNewstand
         {
             if(isEditMode)
             {
+                List<Uri> editedUris = new List<Uri>();
+                newsPaper.PaperTitle = newspaperTitleTextBox.Text;
 
+                //修改导航栏的标题
+                foreach (var element in rssInputPanel.Children)
+                {
+                    try
+                    {
+                        var editedFeedUri = new Uri((element as TextBox).Text);
+                        editedUris.Add(editedFeedUri);
+                    }
+                    catch (Exception exception)
+                    {
+                        continue;
+                    }
+                }
+                var editedUrisEnumerables = newsPaper.FeedUrls.Union(editedUris).Intersect(editedUris);
+                var deletedUrisEnumerables = newsPaper.FeedUrls.Except(editedUrisEnumerables);
+                List<NewsItem> deletedNews = new List<NewsItem>();
+                foreach(var news in newsPaper.NewsList)
+                {
+                    if(deletedUrisEnumerables.Contains(new Uri(news.Feed.Id)))
+                    {
+                        deletedNews.Add(news);
+                    }
+                }
+                var remainedNewsEnumerables = newsPaper.NewsList.Except(deletedNews);
+                newsPaper.NewsList = new List<NewsItem>(remainedNewsEnumerables);
+                newsPaper.FeedUrls = new List<Uri>(editedUrisEnumerables);
+                this.Frame.Navigate(typeof(PaperPage), newsPaper);
+                OnPaperEdited?.Invoke();
+                NewsPaper.SaveAll();
             }
             else
             {
@@ -107,6 +138,7 @@ namespace InkingNewstand
                         }
                     }
                     NewsPaper.AddNewsPaper(newsPaper);
+                    await NewsPaper.SaveToFile(newsPaper);
                 }
                 else
                 {
@@ -115,16 +147,14 @@ namespace InkingNewstand
                     return;
                 }
             }
-            PaperPage.thisPaperpage.RefreshNews();
-            //页面跳转由PaperAdded事件发生，在MainPage中实现
 
-            await NewsPaper.SaveToFile(newsPaper);
-            //System.Diagnostics.Debug.WriteLine("Just for testing");
-            //!!要等上一句完成，要用同步异步操作了。
-            //this.Frame.Navigate(typeof(PaperPage), newsPaper);
+            Invoke(() =>
+            {
+                PaperPage.thisPaperpage.RefreshNews();
+            });
         }
         public delegate void OnPaperAddedHander();
-        public static event OnPaperAddedHander OnPaperAdded;
+        public static event OnPaperAddedHander OnPaperEdited;
 
         /// <summary>
         /// 跳转到该页面时发生的方法

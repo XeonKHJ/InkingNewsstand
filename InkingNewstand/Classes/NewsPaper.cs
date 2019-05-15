@@ -39,6 +39,10 @@ namespace InkingNewstand
             {
                 return newsPaperModel.PaperTitle;
             }
+            set
+            {
+                newsPaperModel.PaperTitle = value;
+            }
         }
 
         /// <summary>
@@ -57,6 +61,10 @@ namespace InkingNewstand
             get
             {
                 return newsPaperModel.FeedUrls;
+            }
+            set
+            {
+                newsPaperModel.FeedUrls = value;
             }
         }
 
@@ -160,16 +168,17 @@ namespace InkingNewstand
             List<NewsPaperModel> paperListinFile = new List<NewsPaperModel>();
 
             //1、读取报纸列表数据
-            var stream = await paperListFile.OpenAsync(FileAccessMode.ReadWrite); //获取文件随机存取流
-            using (var inputStream = stream.GetInputStreamAt(0))//获取从0开始的输入流
+            using (var stream = await paperListFile.OpenAsync(FileAccessMode.ReadWrite)) //获取文件随机存取流
             {
-                var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
-                uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
-                byte[] bytes = new byte[(uint)stream.Size];
-                dataReader.ReadBytes(bytes);//用来存储从文件中读出的数据
-                paperListinFile = (List<NewsPaperModel>)App.ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
+                using (var inputStream = stream.GetInputStreamAt(0))//获取从0开始的输入流
+                {
+                    var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
+                    uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
+                    byte[] bytes = new byte[(uint)stream.Size];
+                    dataReader.ReadBytes(bytes);//用来存储从文件中读出的数据
+                    paperListinFile = (List<NewsPaperModel>)App.ByteArrayToObject(bytes); //将读出的数据转换成SortedDictionary<int, NewsPaper>
+                }
             }
-            stream.Dispose();
             return paperListinFile;
         }
 
@@ -211,6 +220,7 @@ namespace InkingNewstand
                 try
                 {
                     var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
+                    feed.Id = feedUrl.AbsoluteUri;
                     //将新闻添加到newsItems中
                     for (int retrievedNewsIndex = feed.Items.Count - 1; retrievedNewsIndex >= 0; --retrievedNewsIndex)
                     {
@@ -261,6 +271,10 @@ namespace InkingNewstand
             get
             {
                 return newsPaperModel.NewsList;
+            }
+            set
+            {
+                newsPaperModel.NewsList = value;
             }
         }
 

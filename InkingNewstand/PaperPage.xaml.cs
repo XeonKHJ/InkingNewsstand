@@ -102,16 +102,16 @@ namespace InkingNewstand
             refreshingProgressRing.IsActive = true;
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            if(e.Parameter is NewsPaper)
+            if (e.SourcePageType == typeof(PaperPage))
             {
                 this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Disabled; //关闭页面缓存
             }
             else
             {
                 MainPage.MainPageNavigationView.SelectedItem = null;
-            } 
+            }
         }
 
         private void Feeds_OnUpdateFailed(string failNewsPaperTitle)

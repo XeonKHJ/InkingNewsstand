@@ -24,12 +24,21 @@ namespace InkingNewstand
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public static MainPage ThisPage;
         public MainPage()
         {
             this.InitializeComponent();
+            ThisPage = this;
             MainPageNavigationView = paperNavigationView;
+            AddPaperPage.OnPaperEdited += AddPaperPage_OnPaperEdited;
             InitializePaperlistSetting();
             GetNewsPapersAtBeginning();
+        }
+
+        private void AddPaperPage_OnPaperEdited()
+        {
+            paperNavigationView.MenuItemsSource = null;
+            Bindings.Update();
         }
 
         public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
@@ -98,16 +107,16 @@ namespace InkingNewstand
 
         private void NewsPaper_OnPaperDeleting(NewsPaper updatedNewspaper)
         {
-            if(newsPapers.Count == 1)
+            if(NewsPapers.Count == 1)
             {
-                newsPapers.Add(new NewsPaper("创建你的第一份报纸！"));
+                NewsPapers.Add(new NewsPaper("创建你的第一份报纸！"));
             }
         }
 
         private void NewsPaper_OnPaperDeleted(NewsPaper newsPaper)
         {
-            newsPapers.Remove(newsPaper);
-            paperNavigationView.SelectedItem = newsPapers.First();
+            NewsPapers.Remove(newsPaper);
+            paperNavigationView.SelectedItem = NewsPapers.First();
         }
 
         private async void GetNewsPapersAtBeginning()
@@ -115,16 +124,16 @@ namespace InkingNewstand
             await NewsPaper.ReadFromFile();
             if(NewsPaper.NewsPapers.Count == 0)
             {
-                newsPapers.Add(new NewsPaper("创建你的第一份报纸！"));
+                NewsPapers.Add(new NewsPaper("创建你的第一份报纸！"));
             }
             //Bindings.Update();
             //if(NewsPaper.NewsPapers.Add)
             foreach(var paper in NewsPaper.NewsPapers)
             {
-                newsPapers.Add(paper);
+                NewsPapers.Add(paper);
             }
 
-            paperNavigationView.SelectedItem = newsPapers.First();
+            paperNavigationView.SelectedItem = NewsPapers.First();
         }
 
         private void NewsPaper_OnPaperAdded(NewsPaper updatedNewspaper)
@@ -133,18 +142,18 @@ namespace InkingNewstand
             {
                 PaperPage.thisPaperpage.NavigationCacheMode = NavigationCacheMode.Disabled;
             }
-            if (newsPapers.Count == 1 && newsPapers.First().PaperTitle == "创建你的第一份报纸！")
+            if (NewsPapers.Count == 1 && NewsPapers.First().PaperTitle == "创建你的第一份报纸！")
             {
-                newsPapers.Clear();
+                NewsPapers.Clear();
             }
-            newsPapers.Add(updatedNewspaper);
+            NewsPapers.Add(updatedNewspaper);
             if (NewsPaper.NewsPapers.Count != 0)
             {
                 paperNavigationView.SelectedItem = updatedNewspaper;
             }
         }
 
-        ObservableCollection<NewsPaper> newsPapers { get; set; } = new ObservableCollection<NewsPaper>();
+        public ObservableCollection<NewsPaper> NewsPapers { get; set; } = new ObservableCollection<NewsPaper>();
 
         public bool IsNavigatedByBackButton = false;
         private void PaperNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
