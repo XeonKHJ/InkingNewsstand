@@ -64,12 +64,18 @@
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
                     <Grid Width="320" Height="320">
-                        <StackPanel VerticalAlignment="Top">
-                            <TextBlock Text=""></TextBlock>
-                        </StackPanel>
                         <Viewbox x:Name="viewBox" Stretch="UniformToFill" StretchDirection="Both" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <Image Source="{x:Bind CoverUrl}" VerticalAlignment="Top"></Image>
                         </Viewbox>
+                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch" Orientation="Horizontal" MaxHeight="30">
+                            <StackPanel.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.6"></SolidColorBrush>
+                            </StackPanel.Background>
+                            <Viewbox>
+                                <Image Source="{x:Bind Feed.Icon}"></Image>
+                            </Viewbox>
+                            <TextBlock Text="{x:Bind Feed.Title}" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                        </StackPanel>
                         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" >
                             <StackPanel.Background>
                                 <SolidColorBrush Color="Black" Opacity="0.6"></SolidColorBrush>

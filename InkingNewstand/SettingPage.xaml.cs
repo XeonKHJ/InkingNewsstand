@@ -45,7 +45,7 @@ namespace InkingNewstand
         {
             Settings.Font = new FontFamily(((MenuFlyoutItem)sender).Text);
             FontButton.Content = ((MenuFlyoutItem)sender).Text;
-            Bindings.Update();
+            //Bindings.Update();
         }
 
         private string[] fontNames = Microsoft.Graphics.Canvas.Text.CanvasTextFormat.GetSystemFontFamilies();
@@ -53,13 +53,13 @@ namespace InkingNewstand
         private void FontSizeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             Settings.FontSize = e.NewValue;
-            Bindings.Update();
+            //Bindings.Update();
         }
 
         private void LineSpacingSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             Settings.LineSpacing = e.NewValue;
-            Bindings.Update();
+            //Bindings.Update();
         }
 
         private void PageWidthSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -67,10 +67,10 @@ namespace InkingNewstand
             if (!isInitializing)
             {
                 Settings.NewsWidth = e.NewValue;
-                if (previewBlock != null)
-                {
-                    Bindings.Update();
-                }
+                //if (previewBlock != null)
+                //{
+                //    Bindings.Update();
+                //}
             }
         }
 

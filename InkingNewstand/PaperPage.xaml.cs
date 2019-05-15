@@ -58,6 +58,9 @@ namespace InkingNewstand
             }
             else
             {
+                //设置导航栏
+                //to-do
+
                 feeds = (NewsPaper)e.Parameter;
                 feeds.OnNewsRefreshing += Feeds_OnNewsRefreshing;
                 feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;

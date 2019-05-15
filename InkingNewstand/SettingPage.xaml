@@ -40,11 +40,11 @@
             </StackPanel>
         </StackPanel>
         </Viewbox>
-        <ScrollViewer x:Name="previewBox" Grid.Row="1" Width="{x:Bind local:Settings.NewsWidth}">
+        <!--<ScrollViewer x:Name="previewBox" Grid.Row="1" Width="{x:Bind local:Settings.NewsWidth}">
             <RichTextBlock x:Name="previewBlock" htmltoxaml:Properties.Html="{x:Bind Html}" 
                            FontSize="{x:Bind local:Settings.FontSize}" FontFamily="{x:Bind local:Settings.Font}" 
                            LineHeight="{x:Bind local:Settings.LineSpacing}"></RichTextBlock>
-        </ScrollViewer>
+        </ScrollViewer>-->
         <StackPanel x:Name="devTeamInfoPanel" Grid.Row="2" VerticalAlignment="Bottom">
             <TextBlock Text="产品名称：报刊亭"></TextBlock>
             <TextBlock Text="开发团队：十氏经纬"></TextBlock>
