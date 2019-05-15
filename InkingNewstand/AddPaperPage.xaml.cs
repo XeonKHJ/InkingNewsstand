@@ -69,6 +69,11 @@ namespace InkingNewstand
         }
 
         private NewsPaper newsPaper;
+        /// <summary>
+        /// 保存按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             newsPaper = new NewsPaper(newspaperTitleTextBox.Text);
@@ -84,7 +89,7 @@ namespace InkingNewstand
                 }
             }
             NewsPaper.AddNewsPaper(newsPaper);
-
+            OnPaperAdded?.Invoke();
             //页面跳转由PaperAdded事件发生，在MainPage中实现
 
             await NewsPaper.SaveToFile(newsPaper);
@@ -92,6 +97,8 @@ namespace InkingNewstand
             //!!要等上一句完成，要用同步异步操作了。
             //this.Frame.Navigate(typeof(PaperPage), newsPaper);
         }
+        public delegate void OnPaperAddedHander();
+        public static event OnPaperAddedHander OnPaperAdded;
 
         /// <summary>
         /// 跳转到该页面时发生的方法

@@ -102,13 +102,20 @@ namespace InkingNewstand
         private void HtmlConverter_OnReadingHtmlConvertCompleted(string html)
         {
             Properties.SetHtml(htmlBlock, html);
-            if(new Uri(News.CoverUrl) == new Uri(HtmlConverter.GetFirstImages(html)))
+            try
             {
-                headerImg.Visibility = Visibility.Collapsed;
+                if (new Uri(News.CoverUrl) == new Uri(HtmlConverter.GetFirstImages(html)))
+                {
+                    headerImg.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    headerImg.Visibility = Visibility.Visible;
+                }
             }
-            else
+            catch(UriFormatException exception)
             {
-                headerImg.Visibility = Visibility.Visible;
+                System.Diagnostics.Debug.WriteLine(exception.Message);
             }
         }
 
