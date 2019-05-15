@@ -40,7 +40,7 @@ namespace InkingNewstand
             this.NavigationCacheMode = NavigationCacheMode.Disabled;
         }
 
-        private async void LayoutNews()
+        private void LayoutNews()
         {
             Feeds_OnNewsRefreshed(feeds.NewsList);
         }
@@ -59,7 +59,11 @@ namespace InkingNewstand
             else
             {
                 //设置导航栏
-                //to-do
+                if(MainPage.MainPageNavigationView.SelectedItem != e.Parameter)
+                {
+                    MainPage.NavigationEnabled = false;
+                    MainPage.MainPageNavigationView.SelectedItem = e.Parameter;
+                }
 
                 feeds = (NewsPaper)e.Parameter;
                 feeds.OnNewsRefreshing += Feeds_OnNewsRefreshing;
@@ -104,6 +108,10 @@ namespace InkingNewstand
             {
                 this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Disabled; //关闭页面缓存
             }
+            else
+            {
+                MainPage.MainPageNavigationView.SelectedItem = null;
+            } 
         }
 
         private void Feeds_OnUpdateFailed(string failNewsPaperTitle)

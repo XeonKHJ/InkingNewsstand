@@ -12,10 +12,10 @@ namespace InkingNewstand
 {
     static class Settings
     {
-        public static FontFamily Font { set; get; } = new FontFamily("微软雅黑");
+        public static FontFamily Font { set; get; } = new FontFamily("LeeLawadee UI");
         public static double FontSize { set; get; } = 20;
         public static double LineSpacing { set; get; } = 10;
-        public static double NewsWidth { set; get; } = 700;
+        public static double NewsWidth { set; get; } = 900;
         public static List<string> ExtendedFeeds { set; get; } = new List<string>();
         /// <summary>
         /// 保存设置

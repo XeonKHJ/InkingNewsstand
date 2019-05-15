@@ -40,14 +40,15 @@ namespace InkingNewstand
         public NewsDetailPage()
         {
             this.InitializeComponent();
-            
         }
+
         NewsItem News { set; get; }
         List<Windows.Web.Syndication.SyndicationLink> Links;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             HtmlConverter.OnReadingHtmlConvertCompleted -= HtmlConverter_OnReadingHtmlConvertCompleted;
             HtmlConverter.OnReadingHtmlConvertCompleted += HtmlConverter_OnReadingHtmlConvertCompleted;
+            SettingPage.ValueChanged += SettingPage_ValueChanged; ;
             if (!(e.Parameter is NewsItem))
             {
                 throw new Exception();
@@ -86,6 +87,16 @@ namespace InkingNewstand
                 CoverUrlforPage = News.CoverUrl;
             }
             LoadInkStrokes(News.InkStrokes);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            SettingPage.ValueChanged -= SettingPage_ValueChanged;
+        }
+
+        private void SettingPage_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            Bindings.Update();
         }
 
         private void HtmlConverter_OnReadingHtmlConvertCompleted(string html)

@@ -16,39 +16,34 @@
             <RowDefinition Height="5*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Viewbox VerticalAlignment="Top" Stretch="Uniform" StretchDirection="DownOnly">
-        <StackPanel x:Name="settingPanel" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top">
-            <StackPanel x:Name="fontSettingPanel" Orientation="Horizontal">
-                <Windows10version1809:DropDownButton x:Name="FontButton" Content="字体">
-                    <DropDownButton.Flyout>
-                        <MenuFlyout x:Name="FontFlyout" >
-                        </MenuFlyout>
-                    </DropDownButton.Flyout>
-                </Windows10version1809:DropDownButton>
+        <Viewbox VerticalAlignment="Top" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Left">
+            <StackPanel x:Name="settingPanel" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Top">
+                <StackPanel x:Name="fontSettingPanel" Orientation="Horizontal">
+                    <Windows10version1809:DropDownButton x:Name="FontButton" Content="字体">
+                        <DropDownButton.Flyout>
+                            <MenuFlyout x:Name="FontFlyout" >
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </Windows10version1809:DropDownButton>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="字体大小：" Margin="10"></TextBlock>
+                    <Slider x:Name="FontSizeSlider" Width="200" VerticalAlignment="Center" ValueChanged="FontSizeSlider_ValueChanged"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="行间距：" Margin="10"></TextBlock>
+                    <Slider x:Name="LineSpacingSlider" Width="200" VerticalAlignment="Center" ValueChanged="LineSpacingSlider_ValueChanged"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="页面宽度：" Margin="10"></TextBlock>
+                    <Slider x:Name="PageWidthSlider" Minimum="500" Maximum="2000" Width="200" VerticalAlignment="Center" ValueChanged="PageWidthSlider_ValueChanged"/>
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="字体大小：" Margin="10"></TextBlock>
-                <Slider x:Name="FontSizeSlider" Width="200" VerticalAlignment="Center" ValueChanged="FontSizeSlider_ValueChanged"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="行间距：" Margin="10"></TextBlock>
-                <Slider x:Name="LineSpacingSlider" Width="200" VerticalAlignment="Center" ValueChanged="LineSpacingSlider_ValueChanged"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="页面宽度：" Margin="10"></TextBlock>
-                <Slider x:Name="PageWidthSlider" Minimum="500" Maximum="2000" Width="200" VerticalAlignment="Center" ValueChanged="PageWidthSlider_ValueChanged"/>
-            </StackPanel>
-        </StackPanel>
         </Viewbox>
-        <!--<ScrollViewer x:Name="previewBox" Grid.Row="1" Width="{x:Bind local:Settings.NewsWidth}">
-            <RichTextBlock x:Name="previewBlock" htmltoxaml:Properties.Html="{x:Bind Html}" 
-                           FontSize="{x:Bind local:Settings.FontSize}" FontFamily="{x:Bind local:Settings.Font}" 
-                           LineHeight="{x:Bind local:Settings.LineSpacing}"></RichTextBlock>
-        </ScrollViewer>-->
-        <StackPanel x:Name="devTeamInfoPanel" Grid.Row="2" VerticalAlignment="Bottom">
-            <TextBlock Text="产品名称：报刊亭"></TextBlock>
-            <TextBlock Text="开发团队：十氏经纬"></TextBlock>
-            <TextBlock Text="版本：Dev 0.1"></TextBlock>
+        <StackPanel x:Name="devTeamInfoPanel" Grid.Row="2" VerticalAlignment="Bottom" Orientation="Horizontal">
+            <TextBlock Text="产品名称：报刊亭" Margin="10"></TextBlock>
+            <TextBlock Text="开发团队：十氏经纬" Margin="10"></TextBlock>
+            <TextBlock Text="版本：Dev 0.1" Margin="10"></TextBlock>
         </StackPanel>
     </Grid>
 </Page>

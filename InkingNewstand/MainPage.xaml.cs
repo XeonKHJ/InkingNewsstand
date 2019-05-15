@@ -51,9 +51,8 @@ namespace InkingNewstand
             if(!NavigationEnabled)
             {
                 NavigationEnabled = true;
-                return;
             }
-            if (args.IsSettingsSelected)
+            else if (args.IsSettingsSelected)
             {
                 //contentFrame.Navigate(typeof(SettingPage));//跳转到设置页面
                 ShowSettingFlyout(sender);
