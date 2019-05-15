@@ -101,7 +101,15 @@ namespace InkingNewstand
 
         private void HtmlConverter_OnReadingHtmlConvertCompleted(string html)
         {
-            RichTextControls.Properties.SetHtml(htmlBlock, html);
+            Properties.SetHtml(htmlBlock, html);
+            if(new Uri(News.CoverUrl) == new Uri(HtmlConverter.GetFirstImages(html)))
+            {
+                headerImg.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                headerImg.Visibility = Visibility.Visible;
+            }
         }
 
         private bool isExtend = false;
@@ -122,7 +130,6 @@ namespace InkingNewstand
                 {
                     System.Diagnostics.Debug.WriteLine(readException.Message);
                 }
-
             }
             else
             {
@@ -130,7 +137,7 @@ namespace InkingNewstand
             }
         }
 
-        public Double WindowHeight
+        public double WindowHeight
         {
             get
             {
@@ -138,7 +145,7 @@ namespace InkingNewstand
             }
         }
 
-        public Double WindowsWidth
+        public double WindowsWidth
         {
             get
             {
@@ -155,14 +162,12 @@ namespace InkingNewstand
         {
             newsPaper = NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == News.PaperTitle);
 
-            //to-do
             //保存笔迹
-            var currentStrokes = newsCanvas.InkPresenter.StrokeContainer.GetStrokes();
-
-            byte[] serializedStrokes = await SerializeStrokes(currentStrokes);
-            News.InkStrokes = serializedStrokes;
+            var currentStrokes = newsCanvas.InkPresenter.StrokeContainer.GetStrokes(); //获取笔迹
+            byte[] serializedStrokes = await SerializeStrokes(currentStrokes); //序列化笔迹
+            News.InkStrokes = serializedStrokes; //将笔迹保存到新闻实例里
             newsPaper.UpdateNewsList(News);
-            await NewsPaper.SaveToFile(newsPaper);
+            await NewsPaper.SaveToFile(newsPaper); //保存报纸
         }
 
         /// <summary>
