@@ -89,7 +89,7 @@ namespace InkingNewstand
                 }
             }
             NewsPaper.AddNewsPaper(newsPaper);
-            OnPaperAdded?.Invoke();
+            PaperPage.thisPaperpage.RefreshNews();
             //页面跳转由PaperAdded事件发生，在MainPage中实现
 
             await NewsPaper.SaveToFile(newsPaper);

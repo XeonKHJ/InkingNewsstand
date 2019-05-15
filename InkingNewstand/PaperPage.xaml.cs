@@ -45,7 +45,7 @@ namespace InkingNewstand
             Feeds_OnNewsRefreshed(feeds.NewsList);
         }
 
-        private async void RefreshNews()
+        public async void RefreshNews()
         {
             await feeds.GetNewsListAsync();
         }
