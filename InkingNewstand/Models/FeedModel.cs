@@ -15,7 +15,7 @@ namespace InkingNewstand.Models
             Title = feed.Title.Text;
             Id = feed.Id;
             //Description = feed.Subtitle.Text;
-            Icon = feed.IconUri is null ? "Nopic" : feed.IconUri.AbsoluteUri;
+            Icon = feed.IconUri is null ? (feed.ImageUri is null ? "nopic" : feed.ImageUri.AbsoluteUri) : feed.IconUri.AbsoluteUri;
         }
 
         public string Title { get; private set; }

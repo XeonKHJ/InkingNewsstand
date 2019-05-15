@@ -12,62 +12,55 @@ namespace InkingNewstand
 {
     static class Settings
     {
-        public static FontFamily Font { set; get; } = new FontFamily("微软雅黑");
+        public static FontFamily Font { set; get; } = new FontFamily("LeeLawadee UI");
         public static double FontSize { set; get; } = 20;
         public static double LineSpacing { set; get; } = 10;
-        public static double NewsWidth { set; get; } = 700;
+        public static double NewsWidth { set; get; } = 900;
         public static List<string> ExtendedFeeds { set; get; } = new List<string>();
         /// <summary>
         /// 保存设置
         /// </summary>
-        async static public void SaveSettings()
+        static public void SaveSettings()
         {
-            var serializingSettings = new SerializedSetting
-            {
-                Font = Font.Source,
-                FontSize = FontSize,
-                LineSpacing = LineSpacing,
-                NewsWidth = NewsWidth
-            };
-            StorageFile settingFile;
-            var storageFolder = ApplicationData.Current.LocalFolder;
-            string settingFileName = "Settings.xml";
 
-            settingFile = await storageFolder.CreateFileAsync(settingFileName, CreationCollisionOption.ReplaceExisting);
-            using (var stream = await settingFile.OpenAsync(FileAccessMode.ReadWrite))
-            {
-                XmlSerializer mySerializer = new XmlSerializer(typeof(SerializedSetting));
-                mySerializer.Serialize(stream.AsStream(), serializingSettings);
-            }
+            //本地设置项
+            var localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["LineSpacing"] = LineSpacing;
+            localSettings.Values["NewsWidth"] = NewsWidth;
 
+            //漫游设置项
             var roamingSettings = ApplicationData.Current.RoamingSettings;
+            roamingSettings.Values["Font"] = Font.Source;
+            roamingSettings.Values["FontSize"] = FontSize;
+            roamingSettings.Values["LineSpacing"] = LineSpacing;
+            
         }
 
         /// <summary>
         /// 加载设置
         /// </summary>
-        static async public void LoadSettings()
+        static public void LoadSettings()
         {
-            StorageFile settingFile;
-            var storageFolder = ApplicationData.Current.LocalFolder;
-            string settingFileName = "Settings.xml";
-            SerializedSetting serializedSetting;
-            settingFile = await storageFolder.CreateFileAsync(settingFileName, CreationCollisionOption.OpenIfExists);
-            using (var stream = await settingFile.OpenAsync(FileAccessMode.ReadWrite))
+            //本地设置项
+            try
             {
-                XmlSerializer mySerializer = new XmlSerializer(typeof(SerializedSetting));
-                try
-                {
-                    serializedSetting = (SerializedSetting)mySerializer.Deserialize(stream.AsStream());
-                    Font = new FontFamily(serializedSetting.Font);
-                    FontSize = serializedSetting.FontSize;
-                    LineSpacing = serializedSetting.LineSpacing;
-                    NewsWidth = serializedSetting.NewsWidth;
-                }
-                catch(System.InvalidOperationException)
-                {
-                    System.Diagnostics.Debug.WriteLine("第一次打开啦");
-                }
+                var localSettings = ApplicationData.Current.LocalSettings;
+                LineSpacing = (double)localSettings.Values["LineSpacing"];
+                NewsWidth = (double)localSettings.Values["NewsWidth"];
+
+                //漫游设置项
+                var roamingSettings = ApplicationData.Current.RoamingSettings;
+                Font = new FontFamily((string)roamingSettings.Values["Font"]);
+                FontSize = (double)roamingSettings.Values["FontSize"];
+                LineSpacing = (double)roamingSettings.Values["LineSpacing"];
+            }
+            catch(NullReferenceException exception)
+            {
+                System.Diagnostics.Debug.WriteLine("第一次打开");
+            }
+            catch(ArgumentNullException exception)
+            {
+                System.Diagnostics.Debug.WriteLine("第一次打开");
             }
         }
     }

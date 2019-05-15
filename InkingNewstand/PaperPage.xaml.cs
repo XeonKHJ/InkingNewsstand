@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InkingNewstand.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -26,20 +27,20 @@ namespace InkingNewstand
         public PaperPage()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled; //开启页面缓存
+            this.NavigationCacheMode = NavigationCacheMode.Enabled; //开启页面缓存
             thisPaperpage = this;
-            if(feeds != null)
-            {
-                feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
-            }
+            //if(feeds != null)
+            //{
+            //    feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
+            //}
         }
         public static PaperPage thisPaperpage;
         private void MainPage_CleanPaperPage()
         {
-            this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Disabled;
+            this.NavigationCacheMode = NavigationCacheMode.Disabled;
         }
 
-        private async void LayoutNews()
+        private void LayoutNews()
         {
             Feeds_OnNewsRefreshed(feeds.NewsList);
         }
@@ -57,28 +58,42 @@ namespace InkingNewstand
             }
             else
             {
+                //设置导航栏
+                if(MainPage.MainPageNavigationView.SelectedItem != e.Parameter)
+                {
+                    MainPage.NavigationEnabled = false;
+                    MainPage.MainPageNavigationView.SelectedItem = e.Parameter;
+                }
+
                 feeds = (NewsPaper)e.Parameter;
                 feeds.OnNewsRefreshing += Feeds_OnNewsRefreshing;
                 feeds.OnNewsRefreshed += Feeds_OnNewsRefreshed;
+                feeds.NoNewNews += Feeds_NoNewNews;
                 feeds.OnUpdateFailed += Feeds_OnUpdateFailed;
                 titleTextBlock.Text = feeds.PaperTitle;
                 LayoutNews();
             }
         }
 
+
+
         /// <summary>
         /// 刷新报纸后
         /// </summary>
-        /// <param name="newsItem"></param>
-        private void Feeds_OnNewsRefreshed(IList<NewsItem> newsItem)
+        /// <param name="newsItems"></param>
+        private void Feeds_OnNewsRefreshed(List<NewsItem> newsItems)
         {
-            foreach(var newNews in newsItem)
-            { 
-                if (!newsItems.Contains(newNews))
-                {
-                    newsItems.Insert(0, newNews);
-                }
-            }
+            newsList = newsItems;
+            newsViewItems = new NewsViewCollection(newsItems);
+            Bindings.Update();
+            refreshingProgressRing.IsActive = false;
+        }
+
+        /// <summary>
+        /// 无报纸
+        /// </summary>
+        private void Feeds_NoNewNews()
+        {
             refreshingProgressRing.IsActive = false;
         }
 
@@ -93,6 +108,10 @@ namespace InkingNewstand
             {
                 this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Disabled; //关闭页面缓存
             }
+            else
+            {
+                MainPage.MainPageNavigationView.SelectedItem = null;
+            } 
         }
 
         private void Feeds_OnUpdateFailed(string failNewsPaperTitle)
@@ -102,7 +121,8 @@ namespace InkingNewstand
 
         static public NewsPaper feeds { get;  set; }
 
-        ObservableCollection<NewsItem> newsItems { get; set; } = new ObservableCollection<NewsItem>();
+        private List<NewsItem> newsList { get; set; } = new List<NewsItem>();
+        private NewsViewCollection newsViewItems { set; get; } = new NewsViewCollection();
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {

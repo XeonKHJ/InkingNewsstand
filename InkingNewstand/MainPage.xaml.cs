@@ -27,6 +27,7 @@ namespace InkingNewstand
         public MainPage()
         {
             this.InitializeComponent();
+            MainPageNavigationView = paperNavigationView;
             InitializePaperlistSetting();
             GetNewsPapersAtBeginning();
         }
@@ -36,6 +37,10 @@ namespace InkingNewstand
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
         }
 
+
+        private object oldSelectedItem; //前一个选中的导航选项
+        internal static bool NavigationEnabled = true; //是否可以导航
+        internal static NavigationView MainPageNavigationView;
         /// <summary>
         /// 导航栏选项选中后
         /// </summary>
@@ -43,9 +48,15 @@ namespace InkingNewstand
         /// <param name="args"></param>
         private void PaperNavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            if (args.IsSettingsSelected)
+            if(!NavigationEnabled)
             {
-                contentFrame.Navigate(typeof(SettingPage));//跳转到设置页面
+                NavigationEnabled = true;
+            }
+            else if (args.IsSettingsSelected)
+            {
+                //contentFrame.Navigate(typeof(SettingPage));//跳转到设置页面
+                ShowSettingFlyout(sender);
+                return;
             }
             else if (args.SelectedItem is NewsPaper selectedItem)
             {
@@ -55,6 +66,24 @@ namespace InkingNewstand
                 }
                 contentFrame.Navigate(typeof(PaperPage), selectedItem);
             }
+            oldSelectedItem = args.SelectedItem;
+        }
+
+        private void ShowSettingFlyout(FrameworkElement frameworkElement)
+        {
+            Flyout flyout = new Flyout();
+            flyout.Closed += Flyout_Closed;
+            var frame = new Frame();
+            flyout.Content = frame;
+            frame.Navigate(typeof(SettingPage));
+            flyout.ShowAt(FavoritesButton);
+            
+        }
+
+        private void Flyout_Closed(object sender, object e)
+        {
+            NavigationEnabled = false;
+            paperNavigationView.SelectedItem = oldSelectedItem;
         }
 
         /// <summary>
