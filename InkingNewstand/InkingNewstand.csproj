@@ -160,6 +160,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModels\FeedViewModel.cs" />
     <Compile Include="ViewModels\NewsItemViewModel.cs" />
+    <Compile Include="ViewModels\NewsViewCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

@@ -235,6 +235,10 @@ namespace InkingNewstand
             {
                 OnNewsRefreshed?.Invoke(NewsList);
             }
+            else
+            {
+                NoNewNews?.Invoke();
+            }
             if (NewsList.Count != originalNewsCount)
             {
                 await SaveToFile(this);
@@ -299,7 +303,10 @@ namespace InkingNewstand
         public event OnNewsUpdatedDelegate OnNewsUpdatedToFile; //新闻有更新时引发
         public event OnNewsUpdatedDelegate OnNewsRefreshing; //报纸刷新前
 
-        public delegate void OnNewsRefreshedDelegate(IList<NewsItem> newsItem);
+        public delegate void NoNewNewsHandler();
+        public event NoNewNewsHandler NoNewNews;
+
+        public delegate void OnNewsRefreshedDelegate(List<NewsItem> newsItem);
         public event OnNewsRefreshedDelegate OnNewsRefreshed; //报纸刷新后
 
         public delegate void OnUpdateFailedDelegate(string failNewsPaperTitle);
