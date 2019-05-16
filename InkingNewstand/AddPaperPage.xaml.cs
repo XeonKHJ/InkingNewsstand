@@ -1,4 +1,5 @@
-﻿using InkingNewstand.ViewModels;
+﻿using InkingNewstand.Models;
+using InkingNewstand.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -101,6 +102,10 @@ namespace InkingNewstand
                 {
                     if(deletedUrisEnumerables.Contains(new Uri(news.Feed.Id)))
                     {
+                        if(news.IsFavorite)
+                        {
+                            App.Favorites.Remove(new FavoriteModel(news));
+                        }
                         deletedNews.Add(news);
                     }
                 }

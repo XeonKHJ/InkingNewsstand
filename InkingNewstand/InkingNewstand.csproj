@@ -147,9 +147,6 @@
       <DependentUpon>NewsDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\NewsItem.cs" />
-    <Compile Include="NewsPage.xaml.cs">
-      <DependentUpon>NewsPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="PaperPage.xaml.cs">
       <DependentUpon>PaperPage.xaml</DependentUpon>
     </Compile>
@@ -159,7 +156,6 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModels\FeedViewModel.cs" />
-    <Compile Include="ViewModels\NewsItemViewModel.cs" />
     <Compile Include="ViewModels\NewsViewCollection.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -200,10 +196,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="NewsDetailPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="NewsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -12,6 +12,11 @@ namespace InkingNewstand.Utilities
 {
     public class HtmlConverter
     {
+        /// <summary>
+        /// 获取给定HTML中的所有图片
+        /// </summary>
+        /// <param name="html">要从中获取图片的HTML</param>
+        /// <returns>图片URL列表</returns>
         public static List<Uri> GetImages(string html)
         {
             List<Uri> imgUrls = new List<Uri>();
@@ -25,6 +30,11 @@ namespace InkingNewstand.Utilities
             return imgUrls;
         }
 
+        /// <summary>
+        /// 获取给定HTML中的第一张图片
+        /// </summary>
+        /// <param name="html">要获取图片的HTML</param>
+        /// <returns></returns>
         public static string GetFirstImages(string html)
         {
             var htmlDocument = new HtmlDocument();
@@ -43,6 +53,11 @@ namespace InkingNewstand.Utilities
             return urlString;
         }
 
+        /// <summary>
+        /// 提取可阅读的内容
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public async static Task ExtractReadableContent(Uri url)
         {
             Reader reader = new ReadSharp.Reader();
