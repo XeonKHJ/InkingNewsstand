@@ -101,6 +101,7 @@ namespace InkingNewstand
 
         private void HtmlConverter_OnReadingHtmlConvertCompleted(string html)
         {
+            Html = html;
             Properties.SetHtml(htmlBlock, html);
             try
             {
@@ -113,7 +114,7 @@ namespace InkingNewstand
                     headerImg.Visibility = Visibility.Visible;
                 }
             }
-            catch(UriFormatException exception)
+            catch (UriFormatException exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
             }
@@ -129,13 +130,21 @@ namespace InkingNewstand
         {
             if (isExtend)
             {
-                try
+                if (News.ExtendedHtml == null)
                 {
-                    await HtmlConverter.ExtractReadableContent(url);
+                    try
+                    {
+                        await HtmlConverter.ExtractReadableContent(url);
+                        News.ExtendedHtml = Html;
+                    }
+                    catch (ReadSharp.ReadException readException)
+                    {
+                        System.Diagnostics.Debug.WriteLine(readException.Message);
+                    }
                 }
-                catch (ReadSharp.ReadException readException)
+                else
                 {
-                    System.Diagnostics.Debug.WriteLine(readException.Message);
+                    HtmlConverter_OnReadingHtmlConvertCompleted(News.ExtendedHtml);
                 }
             }
             else
@@ -317,10 +326,10 @@ namespace InkingNewstand
         private int selectionCount = 0;
         private TextPointer selectionEnd;
         bool translationFlyoutIsNullorClosed = false;
-        
+
         private void HtmlBlock_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            if(selectionCount == 0)
+            if (selectionCount == 0)
             {
                 DetectSelectionFinished();
             }
@@ -371,7 +380,7 @@ namespace InkingNewstand
                                                 Content = new TextBlock() { Text = translatedResult.GetResult(Language_t.zh), IsTextSelectionEnabled = true },
                                             };
                                         }
-                                        catch(Exception exception)
+                                        catch (Exception exception)
                                         {
                                             translationFlyout = new Flyout
                                             {
@@ -387,7 +396,7 @@ namespace InkingNewstand
                                         {
                                             translationFlyout.ShowAt(htmlBlock, flyoutShowOptions);
                                         }
-                                        catch(ArgumentException exception)
+                                        catch (ArgumentException exception)
                                         {
                                             System.Diagnostics.Debug.WriteLine(exception.Message);
                                         }
@@ -407,20 +416,20 @@ namespace InkingNewstand
         {
             var pointerPosition = Windows.UI.Core.CoreWindow.GetForCurrentThread().PointerPosition;
 
-            if(pointerPosition.X > Window.Current.Bounds.Right)
+            if (pointerPosition.X > Window.Current.Bounds.Right)
             {
                 pointerPosition.X = Window.Current.Bounds.Right;
             }
-            else if(pointerPosition.X < Window.Current.Bounds.Left)
+            else if (pointerPosition.X < Window.Current.Bounds.Left)
             {
                 pointerPosition.X = Window.Current.Bounds.Left;
             }
 
-            if(pointerPosition.Y > Window.Current.Bounds.Bottom)
+            if (pointerPosition.Y > Window.Current.Bounds.Bottom)
             {
                 pointerPosition.Y = Window.Current.Bounds.Bottom;
             }
-            else if(pointerPosition.Y < Window.Current.Bounds.Top)
+            else if (pointerPosition.Y < Window.Current.Bounds.Top)
             {
                 pointerPosition.Y = Window.Current.Bounds.Top;
             }

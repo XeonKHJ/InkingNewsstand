@@ -102,6 +102,8 @@ namespace InkingNewstand
 
         public string InnerHTML { get; private set; }
 
+        public string ExtendedHtml { get; set; }
+
         public byte[] InkStrokes { get; set; } = new byte[0];
 
         public bool IsFavorite { get; set; } //收藏属性

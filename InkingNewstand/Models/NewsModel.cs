@@ -26,6 +26,8 @@ namespace InkingNewstand.Models
 
         public string InnerHTML { get; set; }
 
+        public string ExtendedHtml { get; set; } 
+
         public static bool operator ==(NewsModel lhs, NewsModel rhs)
         {
             try

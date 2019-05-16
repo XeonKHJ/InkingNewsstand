@@ -80,6 +80,7 @@ namespace InkingNewstand
             if(isEditMode)
             {
                 List<Uri> editedUris = new List<Uri>();
+                string oldTitle = newsPaper.PaperTitle;
                 newsPaper.PaperTitle = newspaperTitleTextBox.Text;
 
                 //修改导航栏的标题
@@ -112,6 +113,13 @@ namespace InkingNewstand
                 var remainedNewsEnumerables = newsPaper.NewsList.Except(deletedNews);
                 newsPaper.NewsList = new List<NewsItem>(remainedNewsEnumerables);
                 newsPaper.FeedUrls = new List<Uri>(editedUrisEnumerables);
+                foreach(var favNewsModel in App.Favorites)
+                {
+                    if(favNewsModel.NewsPaperTitle == oldTitle)
+                    {
+                        favNewsModel.NewsPaperTitle = newsPaper.PaperTitle;
+                    }
+                }
                 this.Frame.Navigate(typeof(PaperPage), newsPaper);
                 OnPaperEdited?.Invoke();
                 NewsPaper.SaveAll();
