@@ -57,7 +57,16 @@ namespace InkingNewstand.Utilities
         {
             HtmlDocument htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(html);
-            return FindSummary(htmlDoc.DocumentNode);
+            string innerText = htmlDoc.DocumentNode.InnerText;
+            var firstParagraphEndIndex = innerText.IndexOf('\n');
+            if(firstParagraphEndIndex > 0)
+            {
+                return innerText.Substring(0, firstParagraphEndIndex);
+            }
+            else
+            {
+                return innerText;
+            }
         }
 
         private const int THRESHOLD = 100;
@@ -65,7 +74,7 @@ namespace InkingNewstand.Utilities
         {
             foreach (HtmlNode childNode in node.ChildNodes)
             {
-                if (childNode.GetType() == typeof(HtmlTextNode))
+                if (childNode is HtmlTextNode)
                 {
                         return childNode.InnerText;
                 }
