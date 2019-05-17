@@ -38,9 +38,6 @@ namespace InkingNewstand
             //设置新闻标题
             Title = staticItem.Title.Text;
 
-            //设置新闻简要
-            Summary = (staticItem.Summary != null) ? (staticItem.Summary.Text) : null;
-
             //设置出版日期
             PublishedDate = staticItem.PublishedDate;
 
@@ -53,6 +50,9 @@ namespace InkingNewstand
             {
                 Content = staticItem.Summary.Text;
             }
+
+            //设置新闻简要
+            Summary = (Content != null) ? (HtmlConverter.GetSummary(Content)) : null;
 
             //设置订阅源
             Feed = new FeedModel(syndicationFeed);

@@ -25,7 +25,10 @@
             </NavigationView.MenuItemTemplate>
 
             <NavigationView.PaneFooter>
-                <NavigationViewItem x:Name="FavoritesButton" Icon="Favorite" Content="收藏" Tapped="FavoritesButton_Tapped"></NavigationViewItem>
+                <StackPanel>
+                    <NavigationViewItem x:Name="addButton" Icon="Add" Content="添加报纸" Tapped="AddButton_Tapped"></NavigationViewItem>
+                    <NavigationViewItem x:Name="FavoritesButton" Icon="Favorite" Content="收藏" Tapped="FavoritesButton_Tapped"></NavigationViewItem>
+                </StackPanel>
             </NavigationView.PaneFooter>
             
             <Frame HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="contentFrame">

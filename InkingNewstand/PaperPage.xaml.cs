@@ -131,7 +131,6 @@ namespace InkingNewstand
 
         private void AddPaperButton_Click(object sender, RoutedEventArgs e)
         {
-            addPaperButton.Visibility = Visibility.Collapsed;
             this.Frame.Navigate(typeof(AddPaperPage));
         }
 
@@ -143,6 +142,50 @@ namespace InkingNewstand
         private void RefreshPaperButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshNews();
+        }
+
+        private void PaperDatePicker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+        {
+            List<NewsItem> selectedNews = new List<NewsItem>();
+            var sortedNews = feeds.NewsList.OrderByDescending(news => news.PublishedDate);
+            if(args.NewDate.Value == null)
+            {
+                return;
+            }
+            foreach(var news in sortedNews)
+            {
+                if(news.PublishedDate.Date == args.NewDate.Value.Date)
+                {
+                    selectedNews.Add(news);
+                }
+            }
+            Feeds_OnNewsRefreshed(selectedNews);
+        }
+
+        private IList<DateTimeOffset> selectedDates; 
+
+        private void PaperDatePicker_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
+        {
+            selectedDates = sender.SelectedDates;
+            var seletedNews = (from news in feeds.NewsList
+                               where selectedDates.Contains(news.PublishedDate.Date)
+                               select news);
+            Feeds_OnNewsRefreshed(seletedNews.ToList());
+        }
+
+        private void AllNewsButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (paperDatePicker == null)
+            {
+                return;
+            }
+            paperDatePicker.Visibility = Visibility.Collapsed;
+            Feeds_OnNewsRefreshed(feeds.NewsList);
+        }
+
+        private void AllNewsButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            paperDatePicker.Visibility = Visibility.Visible;
         }
     }
 }

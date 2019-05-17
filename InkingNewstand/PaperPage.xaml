@@ -33,14 +33,14 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <AppBar>
+        <AppBar Visibility="Collapsed">
             <AppBar.Background>
                 <AcrylicBrush></AcrylicBrush>
             </AppBar.Background>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <AppBarButton x:Name="addPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Add" Label="添加报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="AddPaperButton_Click"></AppBarButton>
-                <AppBarButton x:Name="editPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Edit" Label="编辑报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="EditPaperButton_Click"></AppBarButton>
-                <AppBarButton x:Name="refreshPaperButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Refresh" Label="刷新" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="RefreshPaperButton_Click"></AppBarButton>
+                <AppBarButton x:Name="editPaperButtonDisposed" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Edit" Label="编辑报纸" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="EditPaperButton_Click"></AppBarButton>
+                <AppBarButton x:Name="refreshPaperButtonDisposed" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Refresh" Label="刷新" IsTextScaleFactorEnabled="True" Visibility="Visible" Click="RefreshPaperButton_Click"></AppBarButton>
             </StackPanel>
         </AppBar>
 
@@ -54,7 +54,21 @@
                             FontWeight="Bold"></TextBlock>
             </Viewbox>
             <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
-            <Slider x:Name="dateRangeSlider" RelativePanel.AlignRightWithPanel="True" Margin="0, 0, 30, 0" RelativePanel.AlignVerticalCenterWithPanel="True" VerticalAlignment="Center" Width="100" Header="日期范围" x:Load="False"></Slider>
+            <StackPanel Orientation="Horizontal"
+                RelativePanel.AlignRightWithPanel="true" RelativePanel.AlignVerticalCenterWithPanel="True" Margin="10, 10, 40, 10">
+                <AppBarButton x:Name="refreshPaperButton" Content="刷新" VerticalAlignment="Center" Icon="Refresh" Label="刷新" Click="RefreshPaperButton_Click"></AppBarButton>
+                <AppBarButton x:Name="editPaperButton" Content="编辑" Icon="Edit" Label="编辑" VerticalAlignment="Center" Click="EditPaperButton_Click" Margin="10"></AppBarButton>
+                <AppBarButton x:Name="paperDateButton" Content="日期" Icon="Calendar" Label="选择日期" VerticalAlignment="Center" Width="88" Margin="10">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <CheckBox x:Name="allNewsButton" Content="显示所有新闻" Checked="AllNewsButton_Checked" Unchecked="AllNewsButton_Unchecked" IsChecked="True"></CheckBox>
+                                <CalendarView x:Name="paperDatePicker" SelectionMode="Multiple" SelectedDatesChanged="PaperDatePicker_SelectedDatesChanged" Visibility="Collapsed"></CalendarView>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </AppBarButton>
+            </StackPanel>
             <TextBlock x:Name="errorTextBlock" Visibility="Collapsed" Foreground="Red"></TextBlock>
             <ProgressRing x:Name="refreshingProgressRing" IsActive="True"></ProgressRing>
         </RelativePanel>
@@ -63,14 +77,17 @@
                   Grid.Row="2" ShowsScrollingPlaceholders="True" HorizontalAlignment="Center">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="data:NewsItem">
-                    <Grid Width="320" Height="320">
-                        <Grid.Background>
+                    <RelativePanel Width="320" Height="320">
+                        <RelativePanel.Background>
                             <SolidColorBrush Color="Black" Opacity="0.4"></SolidColorBrush>
-                        </Grid.Background>
+                        </RelativePanel.Background>
+                        <TextBlock x:Name="summaryTextBlock" Text="{x:Bind Summary}" Margin="10" Foreground="White" TextWrapping="WrapWholeWords"
+                                   RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="paperTitle"></TextBlock>
                         <Viewbox x:Name="viewBox" Stretch="UniformToFill" StretchDirection="Both" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <Image Source="{x:Bind CoverUrl}" VerticalAlignment="Top"></Image>
                         </Viewbox>
-                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch" Orientation="Horizontal" MaxHeight="30">
+                        <StackPanel x:Name="paperTitle"
+                            VerticalAlignment="Top" HorizontalAlignment="Stretch" Orientation="Horizontal" MaxHeight="30" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                             <StackPanel.Background>
                                 <SolidColorBrush Color="Black" Opacity="0.6"></SolidColorBrush>
                             </StackPanel.Background>
@@ -79,7 +96,7 @@
                             </Viewbox>
                             <TextBlock Text="{x:Bind Feed.Title}" VerticalAlignment="Center" Foreground="White"></TextBlock>
                         </StackPanel>
-                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" >
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                             <StackPanel.Background>
                                 <AcrylicBrush TintColor="Black" TintOpacity="0.2" FallbackColor="Black"></AcrylicBrush>
                             </StackPanel.Background>
@@ -88,7 +105,7 @@
                             <TextBlock Text="{x:Bind Authors}" Margin="5" FontSize="15" Foreground="White"></TextBlock>
                             <TextBlock Text="{x:Bind PublishedDate}" Margin="5" FontSize="15"  HorizontalAlignment="Right" Foreground="White"></TextBlock>
                         </StackPanel>
-                    </Grid>
+                    </RelativePanel>
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

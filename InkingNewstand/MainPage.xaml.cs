@@ -172,5 +172,10 @@ namespace InkingNewstand
             paperNavigationView.SelectedItem = null;
             contentFrame.Navigate(typeof(FavoritesPage));
         }
+
+        private void AddButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            contentFrame.Navigate(typeof(AddPaperPage));
+        }
     }
 }

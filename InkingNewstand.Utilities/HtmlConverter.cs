@@ -53,6 +53,32 @@ namespace InkingNewstand.Utilities
             return urlString;
         }
 
+        public static string GetSummary(string html)
+        {
+            HtmlDocument htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(html);
+            return FindSummary(htmlDoc.DocumentNode);
+        }
+
+        private const int THRESHOLD = 100;
+        private static string FindSummary(HtmlNode node)
+        {
+            foreach (HtmlNode childNode in node.ChildNodes)
+            {
+                if (childNode.GetType() == typeof(HtmlTextNode))
+                {
+                        return childNode.InnerText;
+                }
+                String summary = FindSummary(childNode);
+                if (summary.Length >= THRESHOLD)
+                {
+                    return summary;
+                }
+            }
+
+            return String.Empty;
+        }
+
         /// <summary>
         /// 提取可阅读的内容
         /// </summary>

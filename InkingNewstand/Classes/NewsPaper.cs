@@ -234,6 +234,8 @@ namespace InkingNewstand
                             NewsList.Add(newsItem);
                         }
                     }
+                    var orderedNewsList = NewsList.OrderBy(news => news.PublishedDate);
+                    NewsList = orderedNewsList.ToList();
                 }
                 catch(Exception exception)
                 {
