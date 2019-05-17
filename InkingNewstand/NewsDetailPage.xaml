@@ -50,7 +50,7 @@
         <!--<WebView x:Name="newsWebView"  Height="{x:Bind WindowHeight}" CanBeScrollAnchor="False"></WebView>-->
         <ScrollViewer>
             <Grid>
-                <Grid Padding="40" Width="{x:Bind local:Settings.NewsWidth}">
+                <Grid x:Name="newsGrid" Padding="40">
                     <Grid.RowDefinitions>
                         <RowDefinition x:Name="titleRow" Height="*"></RowDefinition>
                         <RowDefinition x:Name="contentRow" Height="auto"></RowDefinition>

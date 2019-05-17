@@ -55,8 +55,8 @@
                             FontWeight="Bold"></TextBlock>
             </Viewbox>
             <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
-            <ProgressRing x:Name="refreshingProgressRing" IsActive="True"></ProgressRing>
             <TextBlock x:Name="errorTextBlock" Visibility="Collapsed" Foreground="Red"></TextBlock>
+            <ProgressRing x:Name="refreshingProgressRing" IsActive="True"></ProgressRing>
         </RelativePanel>
 
         <GridView x:Name="NewsItemsGrid" ItemsSource="{x:Bind newsViewItems}" ItemClick="GridView_ItemClick" IsItemClickEnabled="True" 

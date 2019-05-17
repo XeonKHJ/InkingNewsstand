@@ -16,6 +16,7 @@ namespace InkingNewstand
         public static double FontSize { set; get; } = 20;
         public static double LineSpacing { set; get; } = 10;
         public static double NewsWidth { set; get; } = 900;
+        public static bool BindingNewsWidthwithFrame { set; get;} = true;
         public static List<string> ExtendedFeeds { set; get; } = new List<string>();
         /// <summary>
         /// 保存设置
@@ -27,6 +28,7 @@ namespace InkingNewstand
             var localSettings = ApplicationData.Current.LocalSettings;
             localSettings.Values["LineSpacing"] = LineSpacing;
             localSettings.Values["NewsWidth"] = NewsWidth;
+            localSettings.Values["BindingNewsWidthwithFrame"] = BindingNewsWidthwithFrame;
             var extendedFeedsContainer = localSettings.CreateContainer("ExtendedFeeds", ApplicationDataCreateDisposition.Always).Values;
             foreach(var extendedFeed in ExtendedFeeds)
             {
@@ -54,6 +56,7 @@ namespace InkingNewstand
                 var localSettings = ApplicationData.Current.LocalSettings;
                 LineSpacing = (double)localSettings.Values["LineSpacing"];
                 NewsWidth = (double)localSettings.Values["NewsWidth"];
+                BindingNewsWidthwithFrame = (bool)localSettings.Values["BindingNewsWidthwithFrame"];
                 var extendedFeedsContainer = localSettings.CreateContainer("ExtendedFeeds", ApplicationDataCreateDisposition.Always).Values;
                 foreach(var extendedFeedId in extendedFeedsContainer)
                 {

@@ -76,5 +76,21 @@ namespace InkingNewstand
         {
             Settings.SaveSettings();
         }
+
+        private void BindingWindowCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            //System.Diagnostics.Debug.WriteLine(bindingWindowCheckBox.IsChecked.ToString());
+            Settings.BindingNewsWidthwithFrame = true;
+            OnBindingWindowCheckBoxChanged?.Invoke(bindingWindowCheckBox);
+        }
+        public delegate void OnBindingWindowCheckBoxChangedHandler(CheckBox sender);
+        public static event OnBindingWindowCheckBoxChangedHandler OnBindingWindowCheckBoxChanged;
+
+        private void BindingWindowCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            //System.Diagnostics.Debug.WriteLine(bindingWindowCheckBox.IsChecked.ToString());
+            Settings.BindingNewsWidthwithFrame = false;
+            OnBindingWindowCheckBoxChanged?.Invoke(bindingWindowCheckBox);
+        }
     }
 }

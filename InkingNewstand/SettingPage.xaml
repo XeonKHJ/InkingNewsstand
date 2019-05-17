@@ -28,15 +28,16 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="字体大小：" Margin="10"></TextBlock>
-                    <Slider x:Name="FontSizeSlider" Width="200" VerticalAlignment="Center" ValueChanged="FontSizeSlider_ValueChanged"/>
+                    <Slider x:Name="FontSizeSlider" Width="150" VerticalAlignment="Center" ValueChanged="FontSizeSlider_ValueChanged"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="行间距：" Margin="10"></TextBlock>
-                    <Slider x:Name="LineSpacingSlider" Width="200" VerticalAlignment="Center" ValueChanged="LineSpacingSlider_ValueChanged"/>
+                    <Slider x:Name="LineSpacingSlider" Width="150" VerticalAlignment="Center" ValueChanged="LineSpacingSlider_ValueChanged"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="页面宽度：" Margin="10"></TextBlock>
-                    <Slider x:Name="PageWidthSlider" Minimum="500" Maximum="2000" Width="200" VerticalAlignment="Center" ValueChanged="PageWidthSlider_ValueChanged"/>
+                    <Slider x:Name="PageWidthSlider" Minimum="500" Maximum="1300" Width="150" VerticalAlignment="Center" ValueChanged="PageWidthSlider_ValueChanged"/>
+                    <CheckBox x:Name="bindingWindowCheckBox" Content="随窗口大小" Margin="10,  0, 0, 0" Checked="BindingWindowCheckBox_Checked" Unchecked="BindingWindowCheckBox_Unchecked" IsChecked="{x:Bind local:Settings.BindingNewsWidthwithFrame}"></CheckBox>
                 </StackPanel>
             </StackPanel>
         </Viewbox>

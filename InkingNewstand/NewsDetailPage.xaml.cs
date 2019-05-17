@@ -46,14 +46,20 @@ namespace InkingNewstand
         List<Windows.Web.Syndication.SyndicationLink> Links;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            HtmlConverter.OnReadingHtmlConvertCompleted -= HtmlConverter_OnReadingHtmlConvertCompleted;
             HtmlConverter.OnReadingHtmlConvertCompleted += HtmlConverter_OnReadingHtmlConvertCompleted;
-            SettingPage.ValueChanged += SettingPage_ValueChanged; ;
+            SettingPage.OnBindingWindowCheckBoxChanged += SettingPage_OnBindingWindowCheckBoxChanged;
+            SettingPage.ValueChanged += SettingPage_ValueChanged;
             if (!(e.Parameter is NewsItem))
             {
                 throw new Exception();
             }
             News = (NewsItem)(e.Parameter);
+
+            //调整宽度
+            if(!Settings.BindingNewsWidthwithFrame)
+            {
+                newsGrid.Width = Settings.NewsWidth;
+            }
 
             //修改收藏图标
             if (News.IsFavorite)
@@ -89,13 +95,30 @@ namespace InkingNewstand
             LoadInkStrokes(News.InkStrokes);
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        private void SettingPage_OnBindingWindowCheckBoxChanged(CheckBox sender)
+        {
+            if (Settings.BindingNewsWidthwithFrame)
+            {
+                newsGrid.Width = Double.NaN;
+                System.Diagnostics.Debug.WriteLine("BindingNewsWidthwithFrame");
+            }
+            else
+            {
+                newsGrid.Width = Settings.NewsWidth;
+                System.Diagnostics.Debug.WriteLine("NaN");
+            }
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             SettingPage.ValueChanged -= SettingPage_ValueChanged;
+            HtmlConverter.OnReadingHtmlConvertCompleted -= HtmlConverter_OnReadingHtmlConvertCompleted;
+            SettingPage.OnBindingWindowCheckBoxChanged -= SettingPage_OnBindingWindowCheckBoxChanged;
         }
 
         private void SettingPage_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            SettingPage_OnBindingWindowCheckBoxChanged(null); //每次滑块更新更改宽度
             Bindings.Update();
         }
 
