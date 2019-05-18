@@ -7,6 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:InkingNewstand"
     xmlns:controls="using:AppStudio.Uwp.Controls"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"  
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -56,7 +59,12 @@
             <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
             <StackPanel Orientation="Horizontal"
                 RelativePanel.AlignRightWithPanel="true" RelativePanel.AlignVerticalCenterWithPanel="True" Margin="10">
-                <AppBarButton x:Name="refreshPaperButton" Content="刷新" Icon="Refresh" Label="刷新" VerticalAlignment="Center" Click="RefreshPaperButton_Click" LabelPosition="Collapsed"></AppBarButton>
+                <AppBarButton x:Name="refreshPaperButton" Content="刷新" Label="刷新" VerticalAlignment="Center" Click="RefreshPaperButton_Click" LabelPosition="Collapsed">
+                    <AppBarButton.Icon>
+                        <SymbolIcon x:Name="refreshIcon" Symbol="Refresh">
+                        </SymbolIcon>
+                    </AppBarButton.Icon>
+                </AppBarButton>
                 <AppBarButton x:Name="editPaperButton" Content="编辑" Icon="Edit" Label="编辑" VerticalAlignment="Center" Click="EditPaperButton_Click" LabelPosition="Collapsed"></AppBarButton>
                 <AppBarButton x:Name="paperDateButton" Content="日期" Icon="Calendar" Label="选择日期" VerticalAlignment="Center" LabelPosition="Collapsed">
                     <Button.Flyout>
@@ -100,7 +108,7 @@
                             <Viewbox>
                                 <Image Source="{x:Bind Feed.Icon}"></Image>
                             </Viewbox>
-                            <TextBlock Text="{x:Bind Feed.Title}" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                            <TextBlock Text="{x:Bind Feed.Title}" VerticalAlignment="Center" Foreground="White" Margin="10, 0, 0, 0"></TextBlock>
                         </StackPanel>
                         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                             <StackPanel.Background>

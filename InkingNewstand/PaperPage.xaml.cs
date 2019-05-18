@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -15,6 +16,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Xaml.Interactivity;
+using Microsoft.Toolkit.Uwp.UI.Animations.Behaviors;
+using Microsoft.Toolkit.Uwp.UI.Animations;
+using System.Threading.Tasks;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -85,6 +90,7 @@ namespace InkingNewstand
             //设置订阅源选择菜单弹窗项
             if (feedsChooseMenuFlyout.Items.Count != paper.Feeds.Count) //消除缓存带来的影响
             {
+                feedsChooseMenuFlyout.Items.Clear();
                 foreach (var feed in paper.Feeds)
                 {
                     ToggleMenuFlyoutItem toggleMenuFlyoutItem = new ToggleMenuFlyoutItem
@@ -109,6 +115,8 @@ namespace InkingNewstand
             newsViewItems = new NewsViewCollection(newsList);
             Bindings.Update();
             refreshingProgressRing.IsActive = false;
+            isRefreshing = false;
+            System.Diagnostics.Debug.WriteLine(isRefreshing);
         }
 
         /// <summary>
@@ -117,11 +125,17 @@ namespace InkingNewstand
         private void Feeds_NoNewNews()
         {
             refreshingProgressRing.IsActive = false;
+            isRefreshing = false;
         }
-
-        private void Feeds_OnNewsRefreshing()
+        private bool isRefreshing = false;
+        private async void Feeds_OnNewsRefreshing()
         {
-            refreshingProgressRing.IsActive = true;
+            isRefreshing = true;
+            while (isRefreshing)
+            {
+                await refreshIcon.Rotate(value: angle, centerX: 10.0f, centerY: 10.0f, duration: 1000, delay: 0, easingType: EasingType.Default).StartAsync();
+                angle += 360;
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -161,8 +175,10 @@ namespace InkingNewstand
             this.Frame.Navigate(typeof(AddPaperPage), PaperPage.paper);
         }
 
-        private void RefreshPaperButton_Click(object sender, RoutedEventArgs e)
+        float angle = 360;
+        private async void RefreshPaperButton_Click(object sender, RoutedEventArgs e)
         {
+            
             RefreshNews();
         }
 
@@ -202,6 +218,11 @@ namespace InkingNewstand
         private void AllNewsButton_Unchecked(object sender, RoutedEventArgs e)
         {
             paperDatePicker.Visibility = Visibility.Visible;
+        }
+
+        public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
         }
     }
 }

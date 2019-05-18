@@ -110,6 +110,14 @@ namespace InkingNewstand
                         deletedNews.Add(news);
                     }
                 }
+
+                //删除相应的订阅源
+                var deletedFeedModels = from feedModel in newsPaper.Feeds
+                                        where deletedUrisEnumerables.Contains(new Uri(feedModel.Id))
+                                        select feedModel;
+                var remainedFeedModel = newsPaper.Feeds.Except(deletedFeedModels);
+                newsPaper.Feeds = remainedFeedModel.ToList();
+
                 var remainedNewsEnumerables = newsPaper.NewsList.Except(deletedNews);
                 newsPaper.NewsList = new List<NewsItem>(remainedNewsEnumerables);
                 newsPaper.FeedUrls = new List<Uri>(editedUrisEnumerables);

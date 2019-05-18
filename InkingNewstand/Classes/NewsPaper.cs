@@ -80,7 +80,7 @@ namespace InkingNewstand
             {
                 return newsPaperModel.Feeds;
             }
-            private set
+            set
             {
                 newsPaperModel.Feeds = value;
             }
@@ -236,12 +236,12 @@ namespace InkingNewstand
                 try
                 {
                     var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
+                    feed.Id = feedUrl.AbsoluteUri;
                     FeedModel feedModel = new FeedModel(feed);
-                    if(!Feeds.Contains(feedModel))
+                    if (!Feeds.Contains(feedModel))
                     {
                         Feeds.Add(feedModel);
                     }
-                    feed.Id = feedUrl.AbsoluteUri;
                     //将新闻添加到newsItems中
                     for (int retrievedNewsIndex = feed.Items.Count - 1; retrievedNewsIndex >= 0; --retrievedNewsIndex)
                     {

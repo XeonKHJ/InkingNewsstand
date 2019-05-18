@@ -8,7 +8,7 @@ using Windows.Web.Syndication;
 namespace InkingNewstand.Models
 {
     [Serializable]
-    public class FeedModel
+    public class FeedModel: IEquatable<FeedModel>
     {
         public FeedModel(SyndicationFeed feed)
         {
@@ -22,5 +22,10 @@ namespace InkingNewstand.Models
         public string Id { get; private set; }
         public string Description { get; private set; }
         public string Icon { get; private set; }
+
+        public bool Equals(FeedModel other)
+        {
+            return Id == other.Id;
+        }
     }
 }
