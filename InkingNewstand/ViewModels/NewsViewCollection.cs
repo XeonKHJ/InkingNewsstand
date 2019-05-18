@@ -26,7 +26,7 @@ namespace InkingNewstand.ViewModels
         private void LoadData(int index)
         {
             System.Diagnostics.Debug.WriteLine($"LoadMoreItemsAsync{index}, {currentIndex}");
-            int max = index + 10;
+            int max = index + 20;
             for (int i = index; i< max && i < newsItems.Count; ++i)
             {
                 var news = newsItems[newsItems.Count - i - 1];

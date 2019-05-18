@@ -55,10 +55,10 @@
             </Viewbox>
             <RelativePanel RelativePanel.AlignBottomWithPanel="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="true" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"></RelativePanel>
             <StackPanel Orientation="Horizontal"
-                RelativePanel.AlignRightWithPanel="true" RelativePanel.AlignVerticalCenterWithPanel="True" Margin="10, 10, 40, 10">
-                <AppBarButton x:Name="refreshPaperButton" Content="刷新" VerticalAlignment="Center" Icon="Refresh" Label="刷新" Click="RefreshPaperButton_Click"></AppBarButton>
-                <AppBarButton x:Name="editPaperButton" Content="编辑" Icon="Edit" Label="编辑" VerticalAlignment="Center" Click="EditPaperButton_Click" Margin="10"></AppBarButton>
-                <AppBarButton x:Name="paperDateButton" Content="日期" Icon="Calendar" Label="选择日期" VerticalAlignment="Center" Width="88" Margin="10">
+                RelativePanel.AlignRightWithPanel="true" RelativePanel.AlignVerticalCenterWithPanel="True" Margin="10">
+                <AppBarButton x:Name="refreshPaperButton" Content="刷新" Icon="Refresh" Label="刷新" VerticalAlignment="Center" Click="RefreshPaperButton_Click" LabelPosition="Collapsed"></AppBarButton>
+                <AppBarButton x:Name="editPaperButton" Content="编辑" Icon="Edit" Label="编辑" VerticalAlignment="Center" Click="EditPaperButton_Click" LabelPosition="Collapsed"></AppBarButton>
+                <AppBarButton x:Name="paperDateButton" Content="日期" Icon="Calendar" Label="选择日期" VerticalAlignment="Center" LabelPosition="Collapsed">
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel>
@@ -67,6 +67,12 @@
                             </StackPanel>
                         </Flyout>
                     </Button.Flyout>
+                </AppBarButton>
+                <AppBarButton x:Name="feedChooseButton" Content="订阅源" Icon="Page2" Label="订阅源" VerticalAlignment="Center" Width="88" LabelPosition="Collapsed">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout x:Name="feedsChooseMenuFlyout">
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
                 </AppBarButton>
             </StackPanel>
             <TextBlock x:Name="errorTextBlock" Visibility="Collapsed" Foreground="Red"></TextBlock>

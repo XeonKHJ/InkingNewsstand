@@ -14,6 +14,7 @@ namespace InkingNewstand.Models
             FeedUrls = newsPaper.FeedUrls;
             PaperTitle = newsPaper.PaperTitle;
             NewsList = newsPaper.NewsList;
+            Feeds = newsPaper.Feeds;
         }
 
         public NewsPaperModel(string paperTitle)
@@ -21,8 +22,24 @@ namespace InkingNewstand.Models
             PaperTitle = paperTitle;
         }
 
+        /// <summary>
+        /// 订阅源列表
+        /// </summary>
+        public List<FeedModel> Feeds { set; get; } = new List<FeedModel>();
+
+        /// <summary>
+        /// 存入的订阅源URL列表
+        /// </summary>
         public List<Uri> FeedUrls { get; set; } = new List<Uri>();
+
+        /// <summary>
+        /// 报纸标题
+        /// </summary>
         public string PaperTitle { get; set; } = "未命名报纸";
+
+        /// <summary>
+        /// 新闻数
+        /// </summary>
         public int Count
         {
             get
@@ -31,6 +48,10 @@ namespace InkingNewstand.Models
             }
         }
         public bool ExtendMode = false; //扩展模式
+
+        /// <summary>
+        /// 新闻列表
+        /// </summary>
         public List<NewsItem> NewsList { get; set; } = new List<NewsItem>();
 
         public bool Equals(NewsPaperModel other)

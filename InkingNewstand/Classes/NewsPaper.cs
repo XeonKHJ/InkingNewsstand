@@ -56,6 +56,9 @@ namespace InkingNewstand
             }
         }
 
+        /// <summary>
+        /// 订阅源URL列表
+        /// </summary>
         public List<Uri> FeedUrls
         {
             get
@@ -65,6 +68,21 @@ namespace InkingNewstand
             set
             {
                 newsPaperModel.FeedUrls = value;
+            }
+        }
+
+        /// <summary>
+        /// 订阅源列表
+        /// </summary>
+        public List<FeedModel> Feeds
+        { 
+            get
+            {
+                return newsPaperModel.Feeds;
+            }
+            private set
+            {
+                newsPaperModel.Feeds = value;
             }
         }
 
@@ -144,8 +162,6 @@ namespace InkingNewstand
             return NewsPapers;
         }
 
-
-
         /// <summary>
         /// 从文件中获取报纸列表
         /// </summary>
@@ -220,6 +236,11 @@ namespace InkingNewstand
                 try
                 {
                     var feed = await new SyndicationClient().RetrieveFeedAsync(feedUrl);
+                    FeedModel feedModel = new FeedModel(feed);
+                    if(!Feeds.Contains(feedModel))
+                    {
+                        Feeds.Add(feedModel);
+                    }
                     feed.Id = feedUrl.AbsoluteUri;
                     //将新闻添加到newsItems中
                     for (int retrievedNewsIndex = feed.Items.Count - 1; retrievedNewsIndex >= 0; --retrievedNewsIndex)
