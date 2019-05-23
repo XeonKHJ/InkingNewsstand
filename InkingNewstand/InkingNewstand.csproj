@@ -129,6 +129,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ContinueonPageToPrint.xaml.cs">
+      <DependentUpon>ContinueonPageToPrint.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FavoritesPage.xaml.cs">
       <DependentUpon>FavoritesPage.xaml</DependentUpon>
     </Compile>
@@ -147,6 +150,9 @@
       <DependentUpon>NewsDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\NewsItem.cs" />
+    <Compile Include="PageToPrint.xaml.cs">
+      <DependentUpon>PageToPrint.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PaperPage.xaml.cs">
       <DependentUpon>PaperPage.xaml</DependentUpon>
     </Compile>
@@ -183,6 +189,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ContinueonPageToPrint.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="FavoritesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -196,6 +206,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="NewsDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageToPrint.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

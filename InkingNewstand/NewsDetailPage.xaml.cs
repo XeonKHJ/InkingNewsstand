@@ -27,6 +27,11 @@ using Windows.Graphics.Printing;
 using RichTextControls;
 using InkingNewstand.Translate;
 using Windows.UI.Xaml.Documents;
+using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Graphics.Canvas;
+using Windows.UI;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -40,7 +45,10 @@ namespace InkingNewstand
         public NewsDetailPage()
         {
             this.InitializeComponent();
+            printManager = PrintManager.GetForCurrentView();
+            printManager.PrintTaskRequested += PrintManager_PrintTaskRequested; ;
         }
+        PrintManager printManager;
 
         NewsItem News { set; get; }
         List<Windows.Web.Syndication.SyndicationLink> Links;
@@ -58,7 +66,7 @@ namespace InkingNewstand
             //调整宽度
             if(!Settings.BindingNewsWidthwithFrame)
             {
-                newsGrid.Width = Settings.NewsWidth;
+                contentGrid.Width = Settings.NewsWidth;
             }
 
             //修改收藏图标
@@ -99,21 +107,22 @@ namespace InkingNewstand
         {
             if (Settings.BindingNewsWidthwithFrame)
             {
-                newsGrid.Width = Double.NaN;
+                contentGrid.Width = Double.NaN;
                 System.Diagnostics.Debug.WriteLine("BindingNewsWidthwithFrame");
             }
             else
             {
-                newsGrid.Width = Settings.NewsWidth;
+                contentGrid.Width = Settings.NewsWidth;
                 System.Diagnostics.Debug.WriteLine("NaN");
             }
         }
-
+        
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             SettingPage.ValueChanged -= SettingPage_ValueChanged;
             HtmlConverter.OnReadingHtmlConvertCompleted -= HtmlConverter_OnReadingHtmlConvertCompleted;
             SettingPage.OnBindingWindowCheckBoxChanged -= SettingPage_OnBindingWindowCheckBoxChanged;
+            printManager.PrintTaskRequested -= PrintManager_PrintTaskRequested;
         }
 
         private void SettingPage_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -262,20 +271,263 @@ namespace InkingNewstand
             }
         }
 
-        private void ExportButton_Click(object sender, RoutedEventArgs e)
+        IPrintDocumentSource printDocumentSource;
+        PrintDocument printDocument;
+        PrintHelper printHelper;
+        private async void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            //// Initalize common helper class and register for printing
-            //var printHelper = new PrintHelper(this);
-            //printHelper.RegisterForPrinting();
+            printDocument = new PrintDocument();
+            printDocumentSource = printDocument.DocumentSource;
 
-            //// Initialize print content for this scenario
-            //printHelper.PreparePrintContent(new NewsDetailPage());
+
+            printDocument.Paginate += PrintDocument_Paginate;
+            printDocument.GetPreviewPage += PrintDocument_GetPreviewPage;
+            printDocument.AddPages += PrintDocument_AddPages;
+
+            await PrintManager.ShowPrintUIAsync();
         }
 
-        private void PrintMan_PrintTaskRequested(PrintManager sender, PrintTaskRequestedEventArgs args)
+        private void PrintManager_PrintTaskRequested(PrintManager sender, PrintTaskRequestedEventArgs args)
         {
-            PrintTask printTask = null;
-            //printTask = args.Request.CreatePrintTask(News.NewsLink); //to-do
+            var printTask = args.Request.CreatePrintTask("新闻打印", PrintTaskSourceRequested);
+            printTask.Completed += PrintTask_Completed;
+        }
+
+        private void PrintTaskSourceRequested(PrintTaskSourceRequestedArgs args)
+        {
+            args.SetSource(printDocumentSource);
+        }
+
+        private void PrintTask_Completed(PrintTask sender, PrintTaskCompletedEventArgs args)
+        {
+            //恢复属性
+            Invoke(() =>
+            {
+                newsPanel.Width = double.NaN;
+                newsPanel.Height = double.NaN;
+                newsPanel.Padding = new Thickness(40);
+                htmlBlock.Width = double.NaN;
+                htmlBlock.Height = double.NaN;
+                grid.Children.Remove(newsPanel);
+                contentGrid.Children.Add(newsPanel);
+                newsPanel.InvalidateMeasure();
+                newsPanel.UpdateLayout();
+
+                UpdateInlineUIElementsLayout(htmlBlock, new Size(htmlBlock.ActualWidth, htmlBlock.ActualHeight));
+                newsPanel.InvalidateMeasure();
+                newsPanel.UpdateLayout();
+            });
+        }
+
+        List<UIElement> pagesToPrint;
+        Grid grid;
+
+        private async void PrintDocument_Paginate(object sender, PaginateEventArgs e)
+        {
+            PrintTaskOptions printingOptions = e.PrintTaskOptions;
+            PrintPageDescription printPageDescription = printingOptions.GetPageDescription(0);
+            RememberInlineUIElementsLayout(htmlBlock);
+
+            //创建新打印页面
+            PageToPrint page = new PageToPrint
+            {
+                Width = printPageDescription.PageSize.Width,
+                Height = printPageDescription.PageSize.Height,
+                VerticalAlignment = VerticalAlignment.Top
+            };
+            printPanel.Children.Add(page);
+            printPanel.InvalidateMeasure();
+            printPanel.UpdateLayout();
+
+            //设置新页面
+            pagesToPrint = new List<UIElement>();
+
+            //记录RichTextBlock中每个控件的大小
+            RememberInlineUIElementsLayout(htmlBlock);
+
+            //将控件迁移到打印页面
+            newsPanel.Width = newsPanel.ActualWidth;
+            newsPanel.Height = printPageDescription.PageSize.Height;
+            newsPanel.Padding = new Thickness(0);
+            headerPanel.Width = headerPanel.ActualWidth;
+            htmlBlock.Width = htmlBlock.ActualWidth;
+            htmlBlock.Height = printPageDescription.PageSize.Height - headerPanel.ActualHeight;
+            grid = new Grid()
+            {
+                Width = newsPanel.Width,
+                Height = newsPanel.Height
+            };
+            contentGrid.Children.Remove(newsPanel);
+            grid.Children.Add(newsPanel);
+            page.PrintableContentViewBox.Child = grid;
+            UpdateInlineUIElementsLayout(htmlBlock, new Size(htmlBlock.Width, htmlBlock.Height));
+            //更新布局
+            page.InvalidateMeasure();
+            page.UpdateLayout();
+
+
+            //将页面添加到页面列表
+            pagesToPrint.Add(page);
+
+            bool hasOverflowContent = false;
+            RichTextBlockOverflow richTextBlockOverflow = null;
+            if (htmlBlock.HasOverflowContent)
+            {
+                hasOverflowContent = true;
+                richTextBlockOverflow = new RichTextBlockOverflow
+                {
+                    Height = grid.ActualHeight,
+                    Width = htmlBlock.Width,
+                    VerticalAlignment = VerticalAlignment.Top,
+                }; 
+                htmlBlock.OverflowContentTarget = richTextBlockOverflow;
+            }
+
+            
+            while (hasOverflowContent)
+            {
+                ContinueonPageToPrint continueonPageToPrint = new ContinueonPageToPrint()
+                {
+                    Width = printPageDescription.PageSize.Width,
+                    Height = printPageDescription.PageSize.Height,
+                    VerticalAlignment = VerticalAlignment.Top
+                };
+                printPanel.Children.Add(continueonPageToPrint);
+                printPanel.InvalidateMeasure();
+                printPanel.UpdateLayout();
+
+                Grid overFlowGrid = new Grid()
+                {
+                    Width = grid.Width,
+                    Height = grid.Height
+                };
+                StackPanel stackPanel = new StackPanel()
+                {
+                    Height = newsPanel.Height,
+                    Width = newsPanel.Width
+                };
+                stackPanel.Children.Add(richTextBlockOverflow);
+                //htmlBlock.OverflowContentTarget = richTextBlockOverflow;
+                continueonPageToPrint.PrintableContentViewBox.Child = stackPanel;
+                continueonPageToPrint.InvalidateMeasure();
+                continueonPageToPrint.UpdateLayout();
+                pagesToPrint.Add(continueonPageToPrint);
+
+                if(richTextBlockOverflow.HasOverflowContent)
+                {
+                    hasOverflowContent = true;
+                    var oldRichTextBlockOverflow = richTextBlockOverflow;
+                    richTextBlockOverflow = new RichTextBlockOverflow
+                    {
+                        Height = grid.ActualHeight,
+                        Width = htmlBlock.Width,
+                        VerticalAlignment = VerticalAlignment.Top,
+                    };
+                    oldRichTextBlockOverflow.OverflowContentTarget = richTextBlockOverflow;
+                }
+                else
+                {
+                    hasOverflowContent = false;
+                }
+            }
+            printDocument.SetPreviewPageCount(pagesToPrint.Count, PreviewPageCountType.Final);
+
+            //将笔迹转换成图片呢
+            CanvasDevice canvasDevice = new CanvasDevice();
+            CanvasRenderTarget renderTarget = new CanvasRenderTarget(canvasDevice, (int)newsCanvas.ActualWidth, (int)newsCanvas.ActualHeight, 96);
+            using (var ds = renderTarget.CreateDrawingSession())
+            {
+                ds.Clear(Colors.White);
+                ds.DrawInk(newsCanvas.InkPresenter.StrokeContainer.GetStrokes());
+            }
+            BitmapImage inkBitmapImage;
+            using (var stream = new InMemoryRandomAccessStream())
+            {
+                await renderTarget.SaveAsync(stream, CanvasBitmapFileFormat.Png);
+                inkBitmapImage = new BitmapImage();
+
+                stream.Seek(0);
+                await inkBitmapImage.SetSourceAsync(stream);
+            }
+            Invoke(() =>
+            {
+                Image inkImage = new Image
+                {
+                    Width = htmlBlock.Width,
+                    Height = htmlBlock.ActualHeight,
+                    Stretch = Stretch.UniformToFill,
+                    Source = inkBitmapImage
+                };
+                grid.Children.Add(inkImage);
+                page.InvalidateMeasure();
+                page.UpdateLayout();
+            });
+
+        }
+
+        /// <summary>
+        /// 更新RichTextBlock中的布局
+        /// </summary>
+        /// <param name="richTextBlock"></param>
+        /// <param name="compareSize"></param>
+        private void UpdateInlineUIElementsLayout(RichTextBlock richTextBlock, Size compareSize)
+        {
+            int i = 0;
+            foreach(var paragraph in richTextBlock.Blocks)
+            {
+                foreach (var child in ((Paragraph)paragraph).Inlines)
+                {
+                    if (child is InlineUIContainer)
+                    {
+                        var inlineUIContainerChild = (child as InlineUIContainer).Child;
+                        if (inlineUIContainerChild is FrameworkElement)
+                        {
+                            var inlineUIContainerFramworkElement = inlineUIContainerChild as FrameworkElement;
+                            inlineUIContainerFramworkElement.Width = oldSizes[i].Width * compareSize.Width;
+                            inlineUIContainerFramworkElement.Height = oldSizes[i++].Height * inlineUIContainerFramworkElement.Width;
+
+                            inlineUIContainerChild.InvalidateMeasure();
+                            inlineUIContainerChild.UpdateLayout();
+                        }
+                    }
+                }
+            }
+        }
+
+        private List<Size> oldSizes;
+        private void RememberInlineUIElementsLayout(RichTextBlock richTextBlock)
+        {
+            oldSizes = new List<Size>();
+            foreach (var paragraph in richTextBlock.Blocks)
+            {
+                foreach (var child in ((Paragraph)paragraph).Inlines)
+                {
+                    if (child is InlineUIContainer)
+                    {
+                        var inlineUIContainerChild = (child as InlineUIContainer).Child;
+                        if(inlineUIContainerChild is FrameworkElement)
+                        {
+                            var inlineUIContainerFramworkElement = inlineUIContainerChild as FrameworkElement;
+                            oldSizes.Add(new Size(inlineUIContainerFramworkElement.ActualWidth / htmlBlock.ActualWidth, inlineUIContainerFramworkElement.ActualHeight / inlineUIContainerFramworkElement.ActualWidth));
+                        }
+                    }
+                }
+            }
+        }
+
+        private void PrintDocument_GetPreviewPage(object sender, GetPreviewPageEventArgs e)
+        {
+            printDocument.SetPreviewPage(e.PageNumber, pagesToPrint[e.PageNumber - 1]);
+        }
+
+        private void PrintDocument_AddPages(object sender, AddPagesEventArgs e)
+        {
+            foreach (var page in pagesToPrint)
+            {
+                printDocument.AddPage(page);
+            }
+
+            printDocument.AddPagesComplete();
         }
 
         private void FavoriteButton_Click(object sender, RoutedEventArgs e)

@@ -10,65 +10,25 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Page.Resources>
-        <Style x:Key="sampleStyle" TargetType="controls:HtmlBlock">
-            <Setter Property="Foreground" Value="#666" />
-            <Setter Property="DocumentStyle">
-                <Setter.Value>
-                    <controls:DocumentStyle>
-                        <controls:DocumentStyle.P>
-                            <controls:ParagraphStyle Margin="0,24,0,24" Foreground="Black"/>
-                        </controls:DocumentStyle.P>
-                        <controls:DocumentStyle.Ul>
-                            <controls:ContainerStyle Margin="0,24,0,24" />
-                        </controls:DocumentStyle.Ul>
-                        <controls:DocumentStyle.H1>
-                            <controls:ParagraphStyle Foreground="#fa9419" FontFamily="Times New Roman" FontSizeRatio="2" />
-                        </controls:DocumentStyle.H1>
-                        <controls:DocumentStyle.H2>
-                            <controls:ParagraphStyle FontFamily="Times New Roman" />
-                        </controls:DocumentStyle.H2>
-                        <controls:DocumentStyle.Li>
-                            <controls:ListStyle Bullet="˗" />
-                        </controls:DocumentStyle.Li>
-                        <controls:DocumentStyle.A>
-                            <controls:TextStyle Foreground="#0645AD" />
-                        </controls:DocumentStyle.A>
-                        <controls:DocumentStyle.Strong>
-                            <controls:TextStyle Foreground="#fa9419" />
-                        </controls:DocumentStyle.Strong>
-                        <controls:DocumentStyle.Time>
-                            <controls:TextStyle Foreground="#bbbbbb" FontSizeRatio="0.9" FontStyle="Italic" />
-                        </controls:DocumentStyle.Time>
-                    </controls:DocumentStyle>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Page.Resources>
-
     <Grid x:Name="newsDetailPageGrid">
-        <!--<WebView x:Name="newsWebView"  Height="{x:Bind WindowHeight}" CanBeScrollAnchor="False"></WebView>-->
-        <ScrollViewer>
-            <Grid>
-                <Grid x:Name="newsGrid" Padding="40">
-                    <Grid.RowDefinitions>
-                        <RowDefinition x:Name="titleRow" Height="*"></RowDefinition>
-                        <RowDefinition x:Name="contentRow" Height="auto"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <StackPanel x:Name="headerPanel" Grid.Row="0">
+        <ScrollViewer x:Name="contentScrollViewer">
+            <Grid x:Name="contentGrid">
+                <StackPanel x:Name="newsPanel" Padding="40">
+                    <StackPanel x:Name="headerPanel" Margin="0, 0, 0, 10">
                         <TextBlock Text="{x:Bind News.Title}" FontSize="40" TextWrapping="WrapWholeWords"></TextBlock>
                         <TextBlock Text="{x:Bind News.PublishedDate}" FontSize="15"></TextBlock>
                         <Image x:Name="headerImg" Source="{x:Bind CoverUrlforPage}"></Image>
                     </StackPanel>
                     <RichTextBlock x:Name="htmlBlock" 
                                    FontSize="{x:Bind local:Settings.FontSize}" FontFamily="{x:Bind local:Settings.Font}" LineHeight="{x:Bind local:Settings.LineSpacing}"
-                                   Grid.Row="1" x:DefaultBindMode="TwoWay" SelectionChanged="HtmlBlock_SelectionChanged">
+                                   x:DefaultBindMode="TwoWay" SelectionChanged="HtmlBlock_SelectionChanged">
                     </RichTextBlock>
-                </Grid>
+                </StackPanel>
+                <Canvas x:Name="printPanel" Opacity="0"></Canvas>
                 <InkCanvas x:Name="newsCanvas" 
                            AllowFocusOnInteraction="False" IsTapEnabled="False" IsRightTapEnabled="False" IsHoldingEnabled="False" IsHitTestVisible="False" IsDoubleTapEnabled="False">
                 </InkCanvas>
-                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
+                <StackPanel x:Name="buttonPanel" HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
                     <AppBarButton x:Name="favoriteButton" Icon="Favorite" Label="收藏" Click="FavoriteButton_Click"></AppBarButton>
                     <AppBarButton x:Name="saveButton" Icon="Save" Click="SaveButton_Click" Label="保存" ></AppBarButton>
                     <AppBarButton x:Name="exportButton" Icon="Print" Click="ExportButton_Click" Label="导出"></AppBarButton>
@@ -83,6 +43,7 @@
                         </AppBarButton.Flyout>
                     </AppBarButton>
                 </StackPanel>
+                <Image x:Name="fuckoff"></Image>
             </Grid>
         </ScrollViewer>
         <AppBar HorizontalAlignment="Center" IsHoldingEnabled="True">

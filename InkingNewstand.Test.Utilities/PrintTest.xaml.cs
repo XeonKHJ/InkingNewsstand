@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Printing;
+using System.Diagnostics;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -53,27 +54,41 @@ namespace InkingNewstand.Test.Utilities
         
         private void PrintDocument_AddPages(object sender, AddPagesEventArgs e)
         {
+            Debug.WriteLine("PrintDocument_AddPages");
             printDocument.AddPage(printContent);
             printDocument.AddPagesComplete();
         }
 
         Grid printContent;
+        RichTextBlockOverflow richTextBlockOverflow;
         private void PrintDocument_GetPreviewPage(object sender, GetPreviewPageEventArgs e)
         {
-            printContent = NewsGrid;
-            printContent.Width = 400;
-            printDocument.SetPreviewPage(e.PageNumber, printContent);
+            Debug.WriteLine("PrintDocument_GetPreviewPage");
+            printDocument.SetPreviewPage(e.PageNumber, page);
         }
-
+        Page page;
         private void PrintDocument_Paginate(object sender, PaginateEventArgs e)
         {
-            printDocument.SetPreviewPageCount(1, PreviewPageCountType.Final);
+            Debug.WriteLine("PrintDocument_Paginate");
+
+            PrintTaskOptions printingOptions = ((PrintTaskOptions)e.PrintTaskOptions);
+            PrintPageDescription printPageDescription = printingOptions.GetPageDescription(0);
+
+            page = this;
+            //NewsGrid.Width = double.NaN;
+            //NewsGrid.Height = double.NaN;
+            //Grid grid = new Grid();
+            //grid.Children.Add(htmlBlock);
+
+
+            printDocument.SetPreviewPageCount(2, PreviewPageCountType.Final);
         }
 
 
 
         private void PrintManager_PrintTaskRequested(PrintManager sender, PrintTaskRequestedEventArgs args)
         {
+            Debug.WriteLine("PrintManager_PrintTaskRequested");
             PrintTask printTask = null;
             printTask = args.Request.CreatePrintTask("新闻打印", PrintTaskSourceRequested);
             printTask.Completed += PrintTask_Completed;
@@ -81,11 +96,12 @@ namespace InkingNewstand.Test.Utilities
 
         private void PrintTask_Completed(PrintTask sender, PrintTaskCompletedEventArgs args)
         {
-            System.Diagnostics.Debug.WriteLine("打印完成");
+            Debug.WriteLine("PrintTask_Completed");
         }
 
         private void PrintTaskSourceRequested(PrintTaskSourceRequestedArgs args)
         {
+            Debug.WriteLine("PrintTaskSourceRequested");
             args.SetSource(printDocumentSource);
         }
     }
