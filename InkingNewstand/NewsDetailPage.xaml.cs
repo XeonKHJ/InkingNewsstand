@@ -46,7 +46,7 @@ namespace InkingNewstand
         {
             this.InitializeComponent();
             printManager = PrintManager.GetForCurrentView();
-            printManager.PrintTaskRequested += PrintManager_PrintTaskRequested; ;
+            printManager.PrintTaskRequested += PrintManager_PrintTaskRequested;
         }
         PrintManager printManager;
 
@@ -305,31 +305,31 @@ namespace InkingNewstand
             {
                 newsPanel.Width = double.NaN;
                 newsPanel.Height = double.NaN;
-                newsPanel.Padding = new Thickness(40);
+                //newsPanel.Padding = new Thickness(40);
                 htmlBlock.Width = double.NaN;
                 htmlBlock.Height = double.NaN;
                 grid.Children.Remove(newsPanel);
                 contentGrid.Children.Add(newsPanel);
                 newsPanel.InvalidateMeasure();
                 newsPanel.UpdateLayout();
-
                 UpdateInlineUIElementsLayout(htmlBlock, new Size(htmlBlock.ActualWidth, htmlBlock.ActualHeight));
                 newsPanel.InvalidateMeasure();
                 newsPanel.UpdateLayout();
             });
         }
 
-        List<UIElement> pagesToPrint;
-        Grid grid;
-
-        private async void PrintDocument_Paginate(object sender, PaginateEventArgs e)
+        private List<UIElement> pagesToPrint;
+        private Grid grid;
+        private PageToPrint page;
+        private double oldCanvasSize;
+        private void PrintDocument_Paginate(object sender, PaginateEventArgs e)
         {
             PrintTaskOptions printingOptions = e.PrintTaskOptions;
             PrintPageDescription printPageDescription = printingOptions.GetPageDescription(0);
             RememberInlineUIElementsLayout(htmlBlock);
 
             //创建新打印页面
-            PageToPrint page = new PageToPrint
+            page = new PageToPrint
             {
                 Width = printPageDescription.PageSize.Width,
                 Height = printPageDescription.PageSize.Height,
@@ -348,14 +348,15 @@ namespace InkingNewstand
             //将控件迁移到打印页面
             newsPanel.Width = newsPanel.ActualWidth;
             newsPanel.Height = printPageDescription.PageSize.Height;
-            newsPanel.Padding = new Thickness(0);
+            oldCanvasSize = newsCanvas.ActualHeight;
             headerPanel.Width = headerPanel.ActualWidth;
             htmlBlock.Width = htmlBlock.ActualWidth;
             htmlBlock.Height = printPageDescription.PageSize.Height - headerPanel.ActualHeight;
             grid = new Grid()
             {
                 Width = newsPanel.Width,
-                Height = newsPanel.Height
+                Height = newsPanel.Height,
+                VerticalAlignment = VerticalAlignment.Top
             };
             contentGrid.Children.Remove(newsPanel);
             grid.Children.Add(newsPanel);
@@ -364,7 +365,6 @@ namespace InkingNewstand
             //更新布局
             page.InvalidateMeasure();
             page.UpdateLayout();
-
 
             //将页面添加到页面列表
             pagesToPrint.Add(page);
@@ -377,7 +377,7 @@ namespace InkingNewstand
                 richTextBlockOverflow = new RichTextBlockOverflow
                 {
                     Height = grid.ActualHeight,
-                    Width = htmlBlock.Width,
+                    Width = grid.Width,
                     VerticalAlignment = VerticalAlignment.Top,
                 }; 
                 htmlBlock.OverflowContentTarget = richTextBlockOverflow;
@@ -407,7 +407,6 @@ namespace InkingNewstand
                     Width = newsPanel.Width
                 };
                 stackPanel.Children.Add(richTextBlockOverflow);
-                //htmlBlock.OverflowContentTarget = richTextBlockOverflow;
                 continueonPageToPrint.PrintableContentViewBox.Child = stackPanel;
                 continueonPageToPrint.InvalidateMeasure();
                 continueonPageToPrint.UpdateLayout();
@@ -431,38 +430,6 @@ namespace InkingNewstand
                 }
             }
             printDocument.SetPreviewPageCount(pagesToPrint.Count, PreviewPageCountType.Final);
-
-            //将笔迹转换成图片呢
-            CanvasDevice canvasDevice = new CanvasDevice();
-            CanvasRenderTarget renderTarget = new CanvasRenderTarget(canvasDevice, (int)newsCanvas.ActualWidth, (int)newsCanvas.ActualHeight, 96);
-            using (var ds = renderTarget.CreateDrawingSession())
-            {
-                ds.Clear(Colors.White);
-                ds.DrawInk(newsCanvas.InkPresenter.StrokeContainer.GetStrokes());
-            }
-            BitmapImage inkBitmapImage;
-            using (var stream = new InMemoryRandomAccessStream())
-            {
-                await renderTarget.SaveAsync(stream, CanvasBitmapFileFormat.Png);
-                inkBitmapImage = new BitmapImage();
-
-                stream.Seek(0);
-                await inkBitmapImage.SetSourceAsync(stream);
-            }
-            Invoke(() =>
-            {
-                Image inkImage = new Image
-                {
-                    Width = htmlBlock.Width,
-                    Height = htmlBlock.ActualHeight,
-                    Stretch = Stretch.UniformToFill,
-                    Source = inkBitmapImage
-                };
-                grid.Children.Add(inkImage);
-                page.InvalidateMeasure();
-                page.UpdateLayout();
-            });
-
         }
 
         /// <summary>
@@ -515,9 +482,78 @@ namespace InkingNewstand
             }
         }
 
-        private void PrintDocument_GetPreviewPage(object sender, GetPreviewPageEventArgs e)
+        private async void PrintDocument_GetPreviewPage(object sender, GetPreviewPageEventArgs e)
         {
-            printDocument.SetPreviewPage(e.PageNumber, pagesToPrint[e.PageNumber - 1]);
+            System.Diagnostics.Debug.WriteLine("开始设置预览页面");
+
+            //将墨迹转换成图片
+            //将笔迹转换成图片
+
+            CanvasDevice canvasDevice = new CanvasDevice();
+            CanvasRenderTarget renderTarget = new CanvasRenderTarget(canvasDevice, (int)newsCanvas.ActualWidth, (int)oldCanvasSize, 96);
+
+            using (var ds = renderTarget.CreateDrawingSession())
+            {
+                ds.Clear(Colors.Transparent);
+                ds.DrawInk(newsCanvas.InkPresenter.StrokeContainer.GetStrokes());
+            }
+            List<InkStroke> dehighlightedInkStrokes = new List<InkStroke>();
+            foreach (var inkStroke in newsCanvas.InkPresenter.StrokeContainer.GetStrokes())
+            {
+                if (inkStroke.DrawingAttributes.DrawAsHighlighter == true)
+                {
+                    var noHighlightedStroke = inkStroke.Clone();
+                    InkDrawingAttributes inkDrawingAttributes = new InkDrawingAttributes()
+                    {
+                        DrawAsHighlighter = false,
+                        Color = noHighlightedStroke.DrawingAttributes.Color,
+                        PenTip = noHighlightedStroke.DrawingAttributes.PenTip,
+                        Size = noHighlightedStroke.DrawingAttributes.Size
+                    };
+                    noHighlightedStroke.DrawingAttributes = inkDrawingAttributes;
+                    dehighlightedInkStrokes.Add(noHighlightedStroke);
+                }
+            }
+            newsCanvas.InkPresenter.StrokeContainer.AddStrokes(dehighlightedInkStrokes);
+            using (var ds = renderTarget.CreateDrawingSession())
+            {
+                using (ds.CreateLayer(0.5f))
+                {
+                    ds.Clear(Colors.Transparent);
+                    ds.DrawInk(newsCanvas.InkPresenter.StrokeContainer.GetStrokes());
+                }
+            }
+
+            BitmapSource inkBitmapImage;
+            using (var stream = new InMemoryRandomAccessStream())
+            {
+                await renderTarget.SaveAsync(stream, CanvasBitmapFileFormat.Png);
+                inkBitmapImage = new BitmapImage();
+                stream.Seek(0);
+                await inkBitmapImage.SetSourceAsync(stream);
+            }
+            Image inkImage = null;
+
+            //调高图片
+            Invoke(() =>
+            {
+                inkImage = new Image
+                {
+                    Stretch = Stretch.Uniform,
+                    Source = inkBitmapImage,
+                    VerticalAlignment = VerticalAlignment.Top,
+                };
+                grid.Children.Add(inkImage);
+                inkImage.Width = newsPanel.Width;
+                inkImage.Height = grid.Height;
+                inkImage.Stretch = Stretch.UniformToFill;
+
+                page.InvalidateMeasure();
+                page.UpdateLayout();
+                System.Diagnostics.Debug.WriteLine(inkImage.Translation);
+                printDocument.SetPreviewPage(e.PageNumber, pagesToPrint[e.PageNumber - 1]);
+            });
+            //System.Diagnostics.Debug.WriteLine("图片添加完成");
         }
 
         private void PrintDocument_AddPages(object sender, AddPagesEventArgs e)

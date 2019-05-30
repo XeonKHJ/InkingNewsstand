@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Grid x:Name="printableGrid">
+    <Grid x:Name="printableGrid" VerticalAlignment="Top" Padding="10">
         <Viewbox x:Name="printableContentViewBox" Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Stretch">
         </Viewbox>
     </Grid>

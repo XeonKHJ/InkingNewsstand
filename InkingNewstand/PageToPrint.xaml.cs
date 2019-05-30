@@ -29,7 +29,7 @@ namespace InkingNewstand
             this.InitializeComponent();
             PrintableGrid = printableGrid;
             PrintableContentViewBox = printableContentViewBox;
-            printableContentViewBox.Width = this.Width;
+            printableContentViewBox.Width = this.Width - 20;
             printableContentViewBox.Height = this.Height;
         }
     }
