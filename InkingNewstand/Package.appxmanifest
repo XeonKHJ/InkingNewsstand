@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="ddb4f763-1fca-4b0d-a199-e50c2be502f2" Publisher="CN=redal" Version="0.1.9.0" />
-  <mp:PhoneIdentity PhoneProductId="ddb4f763-1fca-4b0d-a199-e50c2be502f2" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="49B948DFEE.46180BFDABFB0" Publisher="CN=6D1D92C0-BE50-4A21-AFF0-97E77C56134C" Version="0.1.15.0" />
+  <mp:PhoneIdentity PhoneProductId="3aa25f16-81a4-4569-8fba-5bdb4e5582de" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>InkingNewstand</DisplayName>
-    <PublisherDisplayName>redal</PublisherDisplayName>
+    <DisplayName>报刊亭</DisplayName>
+    <PublisherDisplayName>康宏嘉</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
