@@ -138,7 +138,7 @@ namespace InkingNewstand
                 {
                     obj = binForm.Deserialize(memStream);
                 }
-                catch (System.Runtime.Serialization.SerializationException exception)
+                catch (System.Runtime.Serialization.SerializationException)
                 {
                     obj = null;
                 }
@@ -159,7 +159,7 @@ namespace InkingNewstand
                 {
                     bf.Serialize(ms, obj);
                 }
-                catch (System.Runtime.Serialization.SerializationException serializationException)
+                catch (System.Runtime.Serialization.SerializationException)
                 {
                     ;
                 }
@@ -182,7 +182,7 @@ namespace InkingNewstand
             {
                 favoriteListFile = await storageFolder.CreateFileAsync(favoirtesFileName, CreationCollisionOption.OpenIfExists);
             }
-            catch (System.IO.FileLoadException exception)
+            catch (System.IO.FileLoadException)
             {
                 ;
             }

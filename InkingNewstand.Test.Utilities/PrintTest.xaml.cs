@@ -59,8 +59,7 @@ namespace InkingNewstand.Test.Utilities
             printDocument.AddPagesComplete();
         }
 
-        Grid printContent;
-        RichTextBlockOverflow richTextBlockOverflow;
+        private Grid printContent;
         private void PrintDocument_GetPreviewPage(object sender, GetPreviewPageEventArgs e)
         {
             Debug.WriteLine("PrintDocument_GetPreviewPage");

@@ -164,9 +164,6 @@ namespace InkingNewstand
             }
         }
 
-        public delegate void CleanPaperPageEventHandler();
-        public static event CleanPaperPageEventHandler CleanPaperPage;
-
         private void FavoritesButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
             paperNavigationView.SelectedItem = null;

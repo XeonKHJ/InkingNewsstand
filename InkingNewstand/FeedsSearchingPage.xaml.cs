@@ -42,14 +42,22 @@ namespace InkingNewstand
             List<Uri> feedUrls = new List<Uri>();
             try
             {
-                feedUrls = await FeedsFinder.GetFeedsFromUrl(new Uri(websiteTextBox.Text));
+                //feedUrls = await FeedsFinder.GetFeedsFromUrl(new Uri(websiteTextBox.Text));
+                feedUrls = await FeedsFinder.GetFeedsFromKeywords(websiteTextBox.Text);
                 var client = new SyndicationClient();
                 var feeds = new List<FeedViewModel>();
-                foreach (var url in feedUrls)
+                Parallel.ForEach(feedUrls, async (url, loopstat) =>
                 {
-                    var feed = await client.RetrieveFeedAsync(url);
-                    Feeds.Add(new FeedViewModel(feed, url.AbsoluteUri));
-                }
+                    try
+                    {
+                        var feed = await client.RetrieveFeedAsync(url);
+                        Feeds.Add(new FeedViewModel(feed, url.AbsoluteUri));
+                    }
+                    catch
+                    {
+                        //to-do
+                    }
+                });
             }
             catch(Exception)
             {

@@ -27,7 +27,6 @@ using Windows.Graphics.Printing;
 using RichTextControls;
 using InkingNewstand.Translate;
 using Windows.UI.Xaml.Documents;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Graphics.Canvas;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
@@ -51,7 +50,6 @@ namespace InkingNewstand
         PrintManager printManager;
 
         NewsItem News { set; get; }
-        List<Windows.Web.Syndication.SyndicationLink> Links;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             HtmlConverter.OnReadingHtmlConvertCompleted += HtmlConverter_OnReadingHtmlConvertCompleted;
@@ -169,7 +167,7 @@ namespace InkingNewstand
                         await HtmlConverter.ExtractReadableContent(url);
                         News.ExtendedHtml = Html;
                     }
-                    catch (ReadSharp.ReadException readException)
+                    catch (Exception readException)
                     {
                         System.Diagnostics.Debug.WriteLine(readException.Message);
                     }
@@ -273,7 +271,7 @@ namespace InkingNewstand
 
         IPrintDocumentSource printDocumentSource;
         PrintDocument printDocument;
-        PrintHelper printHelper;
+
         private async void ExportButton_Click(object sender, RoutedEventArgs e)
         {
             printDocument = new PrintDocument();
@@ -691,7 +689,7 @@ namespace InkingNewstand
                                                 Content = new TextBlock() { Text = translatedResult.GetResult(Language_t.zh), IsTextSelectionEnabled = true },
                                             };
                                         }
-                                        catch (Exception exception)
+                                        catch (Exception)
                                         {
                                             translationFlyout = new Flyout
                                             {

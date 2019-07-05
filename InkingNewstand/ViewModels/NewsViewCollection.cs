@@ -34,9 +34,9 @@ namespace InkingNewstand.ViewModels
             }
             currentIndex = max;
         }
+
         public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {
-            
             return InnerLoadMoreItemsAsync(count).AsAsyncOperation();
         }
 

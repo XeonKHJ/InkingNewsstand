@@ -177,7 +177,7 @@ namespace InkingNewstand
             {
                 paperListFile = await storageFolder.CreateFileAsync(paperListFileName, CreationCollisionOption.OpenIfExists);
             }
-            catch (System.IO.FileLoadException exception)
+            catch (System.IO.FileLoadException)
             {
                 ;
             }

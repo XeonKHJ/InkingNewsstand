@@ -69,11 +69,11 @@ namespace InkingNewstand
                 FontSize = (double)roamingSettings.Values["FontSize"];
                 LineSpacing = (double)roamingSettings.Values["LineSpacing"];
             }
-            catch(NullReferenceException exception)
+            catch(NullReferenceException)
             {
                 System.Diagnostics.Debug.WriteLine("第一次打开");
             }
-            catch(ArgumentNullException exception)
+            catch(ArgumentNullException)
             {
                 System.Diagnostics.Debug.WriteLine("第一次打开");
             }

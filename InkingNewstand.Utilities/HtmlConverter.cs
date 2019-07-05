@@ -46,7 +46,7 @@ namespace InkingNewstand.Utilities
                 var imgNode = htmlDocument.DocumentNode.SelectSingleNode("//img");
                 urlString = imgNode is null ? "" : imgNode.Attributes["src"].Value;
             }
-            catch(Exception exception)
+            catch(Exception)
             {
                 System.Diagnostics.Debug.WriteLine("fucked:");
             }

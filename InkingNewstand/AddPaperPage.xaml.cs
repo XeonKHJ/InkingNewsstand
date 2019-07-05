@@ -91,7 +91,7 @@ namespace InkingNewstand
                         var editedFeedUri = new Uri((element as TextBox).Text);
                         editedUris.Add(editedFeedUri);
                     }
-                    catch (Exception exception)
+                    catch (Exception)
                     {
                         continue;
                     }
@@ -153,7 +153,7 @@ namespace InkingNewstand
                         {
                             newsPaper.AddFeedLink(new Uri((element as TextBox).Text));
                         }
-                        catch (Exception exception)
+                        catch (Exception)
                         {
                             continue;
                         }
