@@ -55,7 +55,7 @@ namespace InkingNewstand.Utilities
             List<Uri> feedUrls = new List<Uri>();
             foreach(var feed in results)
             {
-                char[] feedUrlByteArray = new char[feed.Id.Length - 4];
+                char[] feedUrlByteArray = new char[feed.Id.Length - 5];
                 feed.Id.CopyTo(5, feedUrlByteArray, 0, feed.Id.Length - 5);
                 feedUrls.Add(new Uri(new string(feedUrlByteArray)));
             }
