@@ -41,7 +41,7 @@ namespace InkingNewstand
             searchingProgressRing.IsActive = true;
             Feeds.Clear();
             List<Uri> feedUrls = new List<Uri>();
-            Semaphore semaphore = new Semaphore(0, feedUrls.Count);
+            //Semaphore semaphore = new Semaphore(0, feedUrls.Count);
             try
             {
                 feedUrls = await FeedsFinder.SearchFromFeedly(websiteTextBox.Text);
@@ -55,7 +55,10 @@ namespace InkingNewstand
                         var feed = await client.RetrieveFeedAsync(url);
                         lock(feeds)
                         {
-                            feeds.Add(new FeedViewModel(feed, url.AbsoluteUri));
+                            Invoke(() =>
+                            {
+                                Feeds.Add(new FeedViewModel(feed, url.AbsoluteUri));
+                            });
                             System.Diagnostics.Debug.WriteLine("循环内");
                         }
                     }
