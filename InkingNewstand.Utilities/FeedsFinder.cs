@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPackForInkingNewstand;
 using FeedlySharp;
+using Windows.Web.Http;
+using Newtonsoft.Json.Linq;
+using System.Web;
 
 namespace InkingNewstand.Utilities
 {
@@ -82,6 +85,25 @@ namespace InkingNewstand.Utilities
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(html);
             return htmlDoc;
+        }
+
+        public async static Task<List<Uri>> SearchFromFeedly(string rawQuery)
+        {
+            string query = HttpUtility.UrlEncode(rawQuery);
+            Uri requestUrl= new Uri("https://cloud.feedly.com/v3/search/feeds?query=" + query);
+            HttpClient httpClient = new HttpClient();
+            var httpResponseMessage = await httpClient.GetAsync(requestUrl);
+            List<Uri> uris = new List<Uri>();
+            JObject jObject = JObject.Parse(httpResponseMessage.Content.ToString());
+            var results = jObject.GetValue("results");
+            foreach (var searchResult in results.Children())
+            {
+                string id = searchResult.Value<string>("id");
+                char[] feedUrlByteArray = new char[id.Length - 5];
+                id.CopyTo(5, feedUrlByteArray, 0, id.Length - 5);
+                uris.Add(new Uri(new string(feedUrlByteArray)));
+            }
+            return uris;
         }
     }
 }

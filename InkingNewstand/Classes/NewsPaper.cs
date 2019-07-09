@@ -230,7 +230,7 @@ namespace InkingNewstand
             OnNewsRefreshing?.Invoke();
             List<NewsItem> newNewsitems = new List<NewsItem>();
             int originalNewsCount = NewsList.Count;
-            foreach (var feedUrl in FeedUrls)
+            Parallel.ForEach(FeedUrls, async (feedUrl, loopStat) =>
             {
                 var syndicationClient = new SyndicationClient();
                 try
@@ -255,16 +255,16 @@ namespace InkingNewstand
                             NewsList.Add(newsItem);
                         }
                     }
-                    var orderedNewsList = NewsList.OrderBy(news => news.PublishedDate);
-                    NewsList = orderedNewsList.ToList();
                 }
-                catch(Exception exception)
+                catch (Exception exception)
                 {
                     System.Diagnostics.Debug.WriteLine(exception.Message);
                     OnUpdateFailed?.Invoke(feedUrl.AbsoluteUri);
                 }
-            }
-            if(NewsList.Count > originalNewsCount)
+            });
+            var orderedNewsList = NewsList.OrderBy(news => news.PublishedDate);
+            NewsList = orderedNewsList.ToList();
+            if (NewsList.Count > originalNewsCount)
             {
                 OnNewsRefreshed?.Invoke(NewsList);
             }

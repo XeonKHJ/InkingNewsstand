@@ -178,7 +178,6 @@ namespace InkingNewstand
         float angle = 360;
         private async void RefreshPaperButton_Click(object sender, RoutedEventArgs e)
         {
-            
             RefreshNews();
         }
 

@@ -17,6 +17,7 @@ using Windows.Web.Syndication;
 using InkingNewstand.ViewModels;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -40,30 +41,36 @@ namespace InkingNewstand
             searchingProgressRing.IsActive = true;
             Feeds.Clear();
             List<Uri> feedUrls = new List<Uri>();
+            Semaphore semaphore = new Semaphore(0, feedUrls.Count);
             try
             {
-                //feedUrls = await FeedsFinder.GetFeedsFromUrl(new Uri(websiteTextBox.Text));
-                feedUrls = await FeedsFinder.GetFeedsFromKeywords(websiteTextBox.Text);
+                feedUrls = await FeedsFinder.SearchFromFeedly(websiteTextBox.Text);
                 var client = new SyndicationClient();
-                var feeds = new List<FeedViewModel>();
+                List<FeedViewModel> feeds = new List<FeedViewModel>();
+                
                 Parallel.ForEach(feedUrls, async (url, loopstat) =>
                 {
                     try
                     {
                         var feed = await client.RetrieveFeedAsync(url);
-                        Feeds.Add(new FeedViewModel(feed, url.AbsoluteUri));
+                        lock(feeds)
+                        {
+                            feeds.Add(new FeedViewModel(feed, url.AbsoluteUri));
+                            System.Diagnostics.Debug.WriteLine("循环内");
+                        }
                     }
-                    catch
+                    catch (Exception exception)
                     {
-                        //to-do
+                        System.Diagnostics.Debug.WriteLine(exception.Message);
                     }
                 });
             }
-            catch(Exception)
+            catch (Exception)
             {
-                Feeds.Add(new FeedViewModel("无结果或链接错误",  "",  "", "Nopic"));
+                Feeds.Add(new FeedViewModel("无结果或链接错误", "", "", "Nopic"));
             }
-            Invoke(()=>searchingProgressRing.IsActive = false);
+            System.Diagnostics.Debug.WriteLine("循环外");
+            Invoke(() => searchingProgressRing.IsActive = false);
         }
 
         ObservableCollection<FeedViewModel> Feeds { set; get; } = new ObservableCollection<FeedViewModel>();
