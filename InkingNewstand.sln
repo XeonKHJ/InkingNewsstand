@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkingNewstand.Test.Utiliti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RichTextControls", "..\UWP-RichTextControls\RichTextControls\RichTextControls\RichTextControls.csproj", "{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeedlySharp", "..\FeedlySharp\FeedlySharp\FeedlySharp.csproj", "{DC0FC882-14B5-4155-9A6C-3F2B8323467D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,26 +117,6 @@ Global
 		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|x64.Build.0 = Release|x64
 		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|x86.ActiveCfg = Release|x86
 		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|x86.Build.0 = Release|x86
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Debug|ARM.Build.0 = Debug|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Debug|x64.Build.0 = Debug|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Debug|x86.Build.0 = Debug|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Release|ARM.ActiveCfg = Release|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Release|ARM.Build.0 = Release|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Release|ARM64.Build.0 = Release|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Release|x64.ActiveCfg = Release|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Release|x64.Build.0 = Release|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Release|x86.ActiveCfg = Release|Any CPU
-		{DC0FC882-14B5-4155-9A6C-3F2B8323467D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

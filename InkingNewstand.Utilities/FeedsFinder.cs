@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPackForInkingNewstand;
-using FeedlySharp;
 using Windows.Web.Http;
 using Newtonsoft.Json.Linq;
 using System.Web;
@@ -48,23 +47,6 @@ namespace InkingNewstand.Utilities
             return feedUrls;
         }
 
-        public static async Task<List<Uri>> GetFeedsFromKeywords(string keywords)
-        {
-            string clientId = "863bd138-abce-4674-befc-d72feac1921c";
-            string clientToken = "AzsG2thwsiGeW11b4LrAUBoNVuj6gWvToXeCLX8YW7UXHHKZjecLf-nWL3NZ-6YJOf_J859CAd8e1KnnlTL9v6hEULeMXsM-CEaFYOnYSpaP40rduioySmz4LoFa7qn38n4KqLvP7FzjtlwOt5CmWbnXDOa6xRVHjWTT4JqO7v2Ukj8cj9rrkPfefcQeJtzsM9TSqni2gFddpYvYkycpyK3LD4J42MjytqS1RIkVHkYF2AKPSRZhZVVVgco:feedlydev";
-            CloudEnvironment cloudEnvironment = new CloudEnvironment();
-            FeedlyClient feedlyClient = new FeedlyClient(cloudEnvironment, clientId, clientToken, "no");
-            var results = await feedlyClient.FindFeeds(keywords);
-            List<Uri> feedUrls = new List<Uri>();
-            foreach(var feed in results)
-            {
-                char[] feedUrlByteArray = new char[feed.Id.Length - 5];
-                feed.Id.CopyTo(5, feedUrlByteArray, 0, feed.Id.Length - 5);
-                feedUrls.Add(new Uri(new string(feedUrlByteArray)));
-            }
-            return feedUrls;
-        }
-
         private static HtmlDocument GetHtmlDoc(Uri url)
         {
             var htmlWeb = new HtmlWeb();
@@ -87,6 +69,11 @@ namespace InkingNewstand.Utilities
             return htmlDoc;
         }
 
+        /// <summary>
+        /// 从Feedly中进行搜索
+        /// </summary>
+        /// <param name="rawQuery"></param>
+        /// <returns></returns>
         public async static Task<List<Uri>> SearchFromFeedly(string rawQuery)
         {
             string query = HttpUtility.UrlEncode(rawQuery);

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPackForInkingNewstand;
-//using SmartReader;
+using SmartReader;
 using ReadSharp;
 
 namespace InkingNewstand.Utilities
@@ -95,9 +95,12 @@ namespace InkingNewstand.Utilities
         /// <returns></returns>
         public async static Task ExtractReadableContent(Uri url)
         {
-            Reader reader = new ReadSharp.Reader();
-            var readerSharpArticle = await reader.Read(url);
-            var Html = readerSharpArticle.Content;
+            //Reader reader = new ReadSharp.Reader();
+            //var readerSharpArticle = await reader.Read(url);
+            //var Html = readerSharpArticle.Content;
+
+            var article = await SmartReader.Reader.ParseArticleAsync(url.AbsoluteUri);
+            var Html = article.Content;
 
             OnReadingHtmlConvertCompleted?.Invoke(Html);
         }
