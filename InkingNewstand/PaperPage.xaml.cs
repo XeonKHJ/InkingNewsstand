@@ -152,7 +152,10 @@ namespace InkingNewstand
 
         private void Feeds_OnUpdateFailed(string failNewsPaperTitle)
         {
-            errorTextBlock.Text = "连接failNewsPaperTitle失败";
+            Invoke(() =>
+            {
+                errorTextBlock.Text = "连接" + failNewsPaperTitle + "失败";
+            });
         }
 
         static public NewsPaper paper { get;  set; }

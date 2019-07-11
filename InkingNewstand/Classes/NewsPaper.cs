@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -230,7 +231,8 @@ namespace InkingNewstand
             OnNewsRefreshing?.Invoke();
             List<NewsItem> newNewsitems = new List<NewsItem>();
             int originalNewsCount = NewsList.Count;
-            Parallel.ForEach(FeedUrls, async (feedUrl, loopStat) =>
+
+            foreach (var feedUrl in FeedUrls)
             {
                 var syndicationClient = new SyndicationClient();
                 try
@@ -255,15 +257,15 @@ namespace InkingNewstand
                             NewsList.Add(newsItem);
                         }
                     }
+                    var orderedNewsList = NewsList.OrderBy(news => news.PublishedDate);
+                    NewsList = orderedNewsList.ToList();
                 }
                 catch (Exception exception)
                 {
                     System.Diagnostics.Debug.WriteLine(exception.Message);
                     OnUpdateFailed?.Invoke(feedUrl.AbsoluteUri);
                 }
-            });
-            var orderedNewsList = NewsList.OrderBy(news => news.PublishedDate);
-            NewsList = orderedNewsList.ToList();
+            }
             if (NewsList.Count > originalNewsCount)
             {
                 OnNewsRefreshed?.Invoke(NewsList);
