@@ -46,7 +46,7 @@ namespace InkingNewstand
         public static bool isThereFeed = false;
         public static FeedViewModel feedViewModel;
 
-
+        
 
         private void AddFeedButton_Click(object sender, RoutedEventArgs e)
         {
@@ -192,6 +192,7 @@ namespace InkingNewstand
                     ((TextBox)rssInputPanel.Children[rssInputPanel.Children.Count - 1]).Text = url.AbsoluteUri;
                     AddFeedButton_Click(null, null);
                 }
+                NewsPaper.OnPaperDeleted += NewsPaper_OnPaperDeleted;
                 deleteButton.Visibility = Visibility.Visible;
                 isEditMode = true;
             }
@@ -200,6 +201,12 @@ namespace InkingNewstand
                 isEditMode = false;
             }
         }
+
+        private void NewsPaper_OnPaperDeleted(NewsPaper updatedNewspaper)
+        {
+            throw new NotImplementedException();
+        }
+
         private bool isEditMode = false;
         public void AddFeedLink(FeedViewModel feedViewModel)
         {
@@ -211,11 +218,21 @@ namespace InkingNewstand
             get { return typeof(FeedsSearchingPage); }
         }
 
+        /// <summary>
+        /// 删除按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             await NewsPaper.DeleteNewsPaper(newsPaper);
         }
 
+        /// <summary>
+        /// 从网页中获取按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GetFromWebsiteButton_Click(object sender, RoutedEventArgs e)
         {
             isFeedsSearchingPageActive = true;
@@ -223,7 +240,7 @@ namespace InkingNewstand
         }
 
         /// <summary>
-        /// 异步实现从搜索中提娜佳订阅源
+        /// 异步实现从搜索中添加订阅源
         /// </summary>
         private async void AddFeedWatcher()
         {

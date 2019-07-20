@@ -12,6 +12,11 @@ namespace InkingNewstand.Utilities
 {
     public class FeedsFinder
     {
+        /// <summary>
+        /// 通过链接获取订阅源
+        /// </summary>
+        /// <param name="websiteUrl"></param>
+        /// <returns></returns>
         public static async Task<List<Uri>> GetFeedsFromUrl(Uri websiteUrl)
         {
             List<Uri> feedUrls = new List<Uri>();
@@ -47,6 +52,11 @@ namespace InkingNewstand.Utilities
             return feedUrls;
         }
 
+        /// <summary>
+        /// 通过URL获取HTML页面
+        /// </summary>
+        /// <param name="url">URL</param>
+        /// <returns></returns>
         private static HtmlDocument GetHtmlDoc(Uri url)
         {
             var htmlWeb = new HtmlWeb();
@@ -70,16 +80,22 @@ namespace InkingNewstand.Utilities
         }
 
         /// <summary>
-        /// 从Feedly中进行搜索
+        /// 从Feedly中进行搜索获取订阅源
         /// </summary>
-        /// <param name="rawQuery"></param>
-        /// <returns></returns>
+        /// <param name="rawQuery">查询字符串</param>
+        /// <returns>获取的订阅源URL列表</returns>
         public async static Task<List<Uri>> SearchFromFeedly(string rawQuery)
         {
             string query = HttpUtility.UrlEncode(rawQuery);
+
+            //准备请求的URL
             Uri requestUrl= new Uri("https://cloud.feedly.com/v3/search/feeds?query=" + query);
+
+            //发送HTTP请求
             HttpClient httpClient = new HttpClient();
             var httpResponseMessage = await httpClient.GetAsync(requestUrl);
+
+            //解析返回的Json数据
             List<Uri> uris = new List<Uri>();
             JObject jObject = JObject.Parse(httpResponseMessage.Content.ToString());
             var results = jObject.GetValue("results");
