@@ -1,0 +1,61 @@
+﻿<Page
+    x:Class="InkingNewsstand.NewsDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:InkingNewsstand"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:AppStudio.Uwp.Controls"
+    xmlns:htmltoxaml="using:RichTextControls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid x:Name="newsDetailPageGrid">
+        <ScrollViewer x:Name="contentScrollViewer">
+            <Grid x:Name="contentGrid" Margin="10, 0, 10, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackPanel x:Name="newsPanel" Grid.Row="1">
+                    <StackPanel x:Name="headerPanel" Margin="0, 0, 0, 10">
+                        <TextBlock Text="{x:Bind News.Title}" FontSize="40" TextWrapping="WrapWholeWords"></TextBlock>
+                        <TextBlock Text="{x:Bind News.PublishedDate}" FontSize="15"></TextBlock>
+                        <Image x:Name="headerImg" Source="{x:Bind CoverUrlforPage}"></Image>
+                    </StackPanel>
+                    <RichTextBlock x:Name="htmlBlock" 
+                                   FontSize="{x:Bind local:Settings.FontSize}" FontFamily="{x:Bind local:Settings.Font}" LineHeight="{x:Bind local:Settings.LineSpacing}"
+                                   x:DefaultBindMode="TwoWay" SelectionChanged="HtmlBlock_SelectionChanged">
+                    </RichTextBlock>
+                </StackPanel>
+                <Canvas x:Name="printPanel" Opacity="0" Grid.Row="1"></Canvas>
+                <InkCanvas x:Name="newsCanvas" Grid.Row="1" 
+                           AllowFocusOnInteraction="False" IsTapEnabled="False" IsRightTapEnabled="False" IsHoldingEnabled="False" IsHitTestVisible="False" IsDoubleTapEnabled="False"
+                           >
+                </InkCanvas>
+                <StackPanel x:Name="buttonPanel" HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal" Grid.Row="0">
+                    <AppBarButton x:Name="favoriteButton" Icon="Favorite" Label="收藏" Click="FavoriteButton_Click"></AppBarButton>
+                    <AppBarButton x:Name="saveButton" Icon="Save" Click="SaveButton_Click" Label="保存" ></AppBarButton>
+                    <AppBarButton x:Name="exportButton" Icon="Print" Click="ExportButton_Click" Label="导出"></AppBarButton>
+                    <AppBarButton x:Name="shareButton" Icon="Share" Label="分享" Click="ShareButton_Click"></AppBarButton>
+                    <AppBarButton x:Name="extendButton" Icon="DockLeft" Label="扩展" Click="ExtendButton_Click"></AppBarButton>
+                    <AppBarButton x:Name="moreButton" Icon="More" Label="更多">
+                        <AppBarButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem x:Name="openInBroswerButton" Text="在浏览器中打开" Click="OpenInBroswerButton_Click"></MenuFlyoutItem>
+                                <MenuFlyoutItem x:Name="openInEdgeReadingModeButton" Text="在Edge浏览器中的阅读模式打开" Click="OpenInEdgeReadingModeButton_Click"></MenuFlyoutItem>
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                </StackPanel>
+                <Image x:Name="fuckoff"></Image>
+            </Grid>
+        </ScrollViewer>
+        <AppBar HorizontalAlignment="Center" IsHoldingEnabled="True">
+            <AppBar.Background>
+                <AcrylicBrush TintOpacity="0.2"></AcrylicBrush>
+            </AppBar.Background>
+            <InkToolbar x:Name="newsInkToolbar" HorizontalAlignment="Center" VerticalAlignment="Top" TargetInkCanvas="{x:Bind newsCanvas}"/>
+        </AppBar>
+    </Grid>
+</Page>
