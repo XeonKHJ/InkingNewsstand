@@ -51,7 +51,7 @@
                 <Image x:Name="fuckoff"></Image>
             </Grid>
         </ScrollViewer>
-        <AppBar HorizontalAlignment="Left" IsHoldingEnabled="True">
+        <AppBar HorizontalAlignment="Center" IsHoldingEnabled="True">
             <AppBar.Background>
                 <AcrylicBrush TintOpacity="0.2"></AcrylicBrush>
             </AppBar.Background>
