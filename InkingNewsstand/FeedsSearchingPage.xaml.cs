@@ -44,7 +44,14 @@ namespace InkingNewsstand
             //Semaphore semaphore = new Semaphore(0, feedUrls.Count);
             try
             {
-                feedUrls = await FeedsFinder.SearchFromFeedly(websiteTextBox.Text);
+                if(((Button)sender).Content.ToString() == "从Feedly搜索")
+                {
+                    feedUrls = await FeedsFinder.SearchFromFeedly(websiteTextBox.Text);
+                }
+                else
+                {
+                    feedUrls = await FeedsFinder.GetFeedsFromUrl(new Uri(websiteTextBox.Text));
+                }
                 var client = new SyndicationClient();
                 List<FeedViewModel> feeds = new List<FeedViewModel>();
                 
