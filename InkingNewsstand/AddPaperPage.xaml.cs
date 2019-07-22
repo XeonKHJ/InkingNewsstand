@@ -192,7 +192,6 @@ namespace InkingNewsstand
                     ((TextBox)rssInputPanel.Children[rssInputPanel.Children.Count - 1]).Text = url.AbsoluteUri;
                     AddFeedButton_Click(null, null);
                 }
-                NewsPaper.OnPaperDeleted += NewsPaper_OnPaperDeleted;
                 deleteButton.Visibility = Visibility.Visible;
                 isEditMode = true;
             }
@@ -200,11 +199,6 @@ namespace InkingNewsstand
             {
                 isEditMode = false;
             }
-        }
-
-        private void NewsPaper_OnPaperDeleted(NewsPaper updatedNewspaper)
-        {
-            throw new NotImplementedException();
         }
 
         private bool isEditMode = false;

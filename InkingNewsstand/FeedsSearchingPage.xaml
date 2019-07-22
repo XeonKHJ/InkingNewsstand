@@ -19,8 +19,8 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Stretch">
             <TextBox x:Name="websiteTextBox" MinWidth="150" Margin="10" Text="https://www.theverge.com"></TextBox>
-            <Button x:Name="searchButton" Content="从Feedly搜索" Click="SearchButton_Click" Height="32"></Button>
-            <Button x:Name="searchButtonFromUrl" Content="在网页中搜索" Click="SearchButton_Click" Height="32" Margin="10, 0,0,0"></Button>
+            <Button x:Name="searchButton" Content="Feedly" Click="SearchButton_Click" Height="32"></Button>
+            <Button x:Name="searchButtonFromUrl" Content="网页中搜索" Click="SearchButton_Click" Height="32" Margin="10, 0,0,0"></Button>
             <ProgressRing x:Name="searchingProgressRing" Margin="10" Height="32" Width="32"></ProgressRing>
         </StackPanel>
         <ListView Grid.Row="1" ItemsSource="{x:Bind Feeds}" IsItemClickEnabled="True" ItemClick="ListView_ItemClick">
