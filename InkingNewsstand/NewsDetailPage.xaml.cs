@@ -147,6 +147,7 @@ namespace InkingNewsstand
             catch (UriFormatException exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
+                System.Diagnostics.Debug.WriteLine(exception.StackTrace);
             }
         }
 
@@ -170,6 +171,7 @@ namespace InkingNewsstand
                     catch (Exception readException)
                     {
                         System.Diagnostics.Debug.WriteLine(readException.Message);
+                        System.Diagnostics.Debug.WriteLine(readException.StackTrace);
                     }
                 }
                 else
@@ -272,6 +274,7 @@ namespace InkingNewsstand
         IPrintDocumentSource printDocumentSource;
         PrintDocument printDocument;
 
+        //“导出”按钮点击事件
         private async void ExportButton_Click(object sender, RoutedEventArgs e)
         {
             printDocument = new PrintDocument();
@@ -320,6 +323,12 @@ namespace InkingNewsstand
         private Grid grid;
         private PageToPrint page;
         private double oldCanvasSize;
+
+        /// <summary>
+        /// “导出”的关键方法，用于添加打印选项和设置打印页面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PrintDocument_Paginate(object sender, PaginateEventArgs e)
         {
             PrintTaskOptions printingOptions = e.PrintTaskOptions;
@@ -431,7 +440,7 @@ namespace InkingNewsstand
         }
 
         /// <summary>
-        /// 更新RichTextBlock中的布局
+        /// 更新RichTextBlock中的布局，用于导出时添加页面用
         /// </summary>
         /// <param name="richTextBlock"></param>
         /// <param name="compareSize"></param>
@@ -460,6 +469,11 @@ namespace InkingNewsstand
         }
 
         private List<Size> oldSizes;
+
+        /// <summary>
+        /// 用于记住HtmlBlock中的的InlineUIElement的布局，以便以后还原
+        /// </summary>
+        /// <param name="richTextBlock"></param>
         private void RememberInlineUIElementsLayout(RichTextBlock richTextBlock)
         {
             oldSizes = new List<Size>();
@@ -480,6 +494,11 @@ namespace InkingNewsstand
             }
         }
 
+        /// <summary>
+        /// “导出”功能获取预览页面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void PrintDocument_GetPreviewPage(object sender, GetPreviewPageEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("开始设置预览页面");
@@ -554,6 +573,11 @@ namespace InkingNewsstand
             //System.Diagnostics.Debug.WriteLine("图片添加完成");
         }
 
+        /// <summary>
+        /// “导出”功能添加页面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PrintDocument_AddPages(object sender, AddPagesEventArgs e)
         {
             foreach (var page in pagesToPrint)
@@ -564,6 +588,11 @@ namespace InkingNewsstand
             printDocument.AddPagesComplete();
         }
 
+        /// <summary>
+        /// “收藏”按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FavoriteButton_Click(object sender, RoutedEventArgs e)
         {
             News.IsFavorite = !News.IsFavorite;
@@ -580,11 +609,21 @@ namespace InkingNewsstand
             //newsPaper = NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == News.PaperTitle);
         }
 
+        /// <summary>
+        /// “在浏览器中打开”按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void OpenInBroswerButton_Click(object sender, RoutedEventArgs e)
         {
             var success = await Windows.System.Launcher.LaunchUriAsync(News.NewsLink);
         }
 
+        /// <summary>
+        /// 在阅读模式下打开按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void OpenInEdgeReadingModeButton_Click(object sender, RoutedEventArgs e)
         {
             var options = new Windows.System.LauncherOptions
@@ -598,14 +637,24 @@ namespace InkingNewsstand
             var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(readingModeUriString), options);
         }
 
+        /// <summary>
+        /// “分享”点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ShareButton_Click(object sender, RoutedEventArgs e)
         {
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += DataTransferManager_DataRequested;
 
-            DataTransferManager.ShowShareUI();
+            DataTransferManager.ShowShareUI(); //显示分享界面
         }
 
+        /// <summary>
+        /// "分享"处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             DataRequest request = args.Request;
@@ -614,6 +663,11 @@ namespace InkingNewsstand
             request.Data.Properties.Description = "该新闻的链接";
         }
 
+        /// <summary>
+        /// “扩展模式”按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExtendButton_Click(object sender, RoutedEventArgs e)
         {
             if (isExtend)
@@ -636,6 +690,11 @@ namespace InkingNewsstand
         private TextPointer selectionEnd;
         bool translationFlyoutIsNullorClosed = false;
 
+        /// <summary>
+        /// 选中新闻中的文本后触发该事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HtmlBlock_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if (selectionCount == 0)
@@ -654,6 +713,10 @@ namespace InkingNewsstand
 
         private Flyout translationFlyout;
         WordPicker wordPicker = new WordPicker();
+
+        /// <summary>
+        /// 检测到完成一次选择文本
+        /// </summary>
         private async void DetectSelectionFinished()
         {
             await Task.Run(async () =>
@@ -721,6 +784,10 @@ namespace InkingNewsstand
             });
         }
 
+        /// <summary>
+        /// 获取光标位置
+        /// </summary>
+        /// <returns></returns>
         private Point GetPointerPosition()
         {
             var pointerPosition = Windows.UI.Core.CoreWindow.GetForCurrentThread().PointerPosition;
