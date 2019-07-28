@@ -44,7 +44,7 @@
         <StackPanel x:Name="devTeamInfoPanel" Grid.Row="2" VerticalAlignment="Bottom" Orientation="Horizontal">
             <TextBlock Text="产品名称：报刊亭" Margin="10"></TextBlock>
             <TextBlock Text="开发团队：十氏经纬" Margin="10"></TextBlock>
-            <TextBlock Text="版本：Dev 0.2" Margin="10"></TextBlock>
+            <TextBlock Text="版本：Dev 0.21" Margin="10"></TextBlock>
         </StackPanel>
     </Grid>
 </Page>
