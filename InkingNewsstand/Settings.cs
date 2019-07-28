@@ -30,12 +30,10 @@ namespace InkingNewsstand
             localSettings.Values["NewsWidth"] = NewsWidth;
             localSettings.Values["BindingNewsWidthwithFrame"] = BindingNewsWidthwithFrame;
             var extendedFeedsContainer = localSettings.CreateContainer("ExtendedFeeds", ApplicationDataCreateDisposition.Always).Values;
+            extendedFeedsContainer.Clear();
             foreach(var extendedFeed in ExtendedFeeds)
             {
-                if(extendedFeedsContainer[extendedFeed] == null)
-                {
-                    extendedFeedsContainer[extendedFeed] = extendedFeed;
-                }
+                extendedFeedsContainer[extendedFeed] = extendedFeed;
             }
 
             //漫游设置项
