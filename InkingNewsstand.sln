@@ -9,7 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RichTextControls", "..\UWP-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkingNewsstand.Utilities", "InkingNewsstand.Utilities\InkingNewsstand.Utilities.csproj", "{FC399F28-DC20-45A1-8F5E-046AD5309257}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartReader", "..\..\SmartReader\src\SmartReader\SmartReader.csproj", "{977CD4E5-66FD-4FAD-A880-9379E04DA4CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartReader", "..\SmartReader\src\SmartReader\SmartReader.csproj", "{977CD4E5-66FD-4FAD-A880-9379E04DA4CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkingNewsstand.Test", "InkingNewsstand.Test\InkingNewsstand.Test.csproj", "{5493BBAF-699F-47B7-B285-D5F6D363D666}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +117,32 @@ Global
 		{977CD4E5-66FD-4FAD-A880-9379E04DA4CE}.Release|x64.Build.0 = Release|Any CPU
 		{977CD4E5-66FD-4FAD-A880-9379E04DA4CE}.Release|x86.ActiveCfg = Release|Any CPU
 		{977CD4E5-66FD-4FAD-A880-9379E04DA4CE}.Release|x86.Build.0 = Release|Any CPU
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|ARM.ActiveCfg = Debug|ARM
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|ARM.Build.0 = Debug|ARM
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|ARM.Deploy.0 = Debug|ARM
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|ARM64.Build.0 = Debug|ARM64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|x64.ActiveCfg = Debug|x64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|x64.Build.0 = Debug|x64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|x64.Deploy.0 = Debug|x64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|x86.ActiveCfg = Debug|x86
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|x86.Build.0 = Debug|x86
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Debug|x86.Deploy.0 = Debug|x86
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|Any CPU.ActiveCfg = Release|x86
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|ARM.ActiveCfg = Release|ARM
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|ARM.Build.0 = Release|ARM
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|ARM.Deploy.0 = Release|ARM
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|ARM64.ActiveCfg = Release|ARM64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|ARM64.Build.0 = Release|ARM64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|ARM64.Deploy.0 = Release|ARM64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|x64.ActiveCfg = Release|x64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|x64.Build.0 = Release|x64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|x64.Deploy.0 = Release|x64
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|x86.ActiveCfg = Release|x86
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|x86.Build.0 = Release|x86
+		{5493BBAF-699F-47B7-B285-D5F6D363D666}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

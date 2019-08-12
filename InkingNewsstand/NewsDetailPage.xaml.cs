@@ -25,7 +25,6 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml.Printing;
 using Windows.Graphics.Printing;
 using RichTextControls;
-using InkingNewsstand.Translate;
 using Windows.UI.Xaml.Documents;
 using Microsoft.Graphics.Canvas;
 using Windows.UI;
@@ -707,12 +706,12 @@ namespace InkingNewsstand
             translationFlyoutIsNullorClosed = (translationFlyout == null) ? true : !translationFlyout.IsOpen;
 
             System.Diagnostics.Debug.WriteLine(selectionCount.ToString());
-            WordPicker wordPicker = new WordPicker();
-            var result = wordPicker.Lookfor(htmlBlock.SelectedText, Language_t.en);
+            //WordPicker wordPicker = new WordPicker();
+            //var result = wordPicker.Lookfor(htmlBlock.SelectedText, Language_t.en);
         }
 
         private Flyout translationFlyout;
-        WordPicker wordPicker = new WordPicker();
+        //WordPicker wordPicker = new WordPicker();
 
         /// <summary>
         /// 检测到完成一次选择文本
@@ -746,10 +745,11 @@ namespace InkingNewsstand
                                     {
                                         try
                                         {
-                                            var translatedResult = wordPicker.Lookfor(selectedText, Language_t.en);
+                                            //var translatedResult = wordPicker.Lookfor(selectedText, Language_t.en);
                                             translationFlyout = new Flyout
                                             {
-                                                Content = new TextBlock() { Text = translatedResult.GetResult(Language_t.zh), IsTextSelectionEnabled = true },
+                                                //Content = new TextBlock() { Text = translatedResult.GetResult(Language_t.zh), IsTextSelectionEnabled = true },
+                                                Content = new TextBlock() { Text = "翻译模块修改中……" }
                                             };
                                         }
                                         catch (Exception)
