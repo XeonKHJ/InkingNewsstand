@@ -61,7 +61,7 @@ namespace InkingNewsstand
             News = (NewsItem)(e.Parameter);
 
             //调整宽度
-            if(!Settings.BindingNewsWidthwithFrame)
+            if (!Settings.BindingNewsWidthwithFrame)
             {
                 contentGrid.Width = Settings.NewsWidth;
             }
@@ -113,7 +113,7 @@ namespace InkingNewsstand
                 System.Diagnostics.Debug.WriteLine("NaN");
             }
         }
-        
+
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             SettingPage.ValueChanged -= SettingPage_ValueChanged;
@@ -385,11 +385,11 @@ namespace InkingNewsstand
                     Height = grid.ActualHeight,
                     Width = grid.Width,
                     VerticalAlignment = VerticalAlignment.Top,
-                }; 
+                };
                 htmlBlock.OverflowContentTarget = richTextBlockOverflow;
             }
 
-            
+
             while (hasOverflowContent)
             {
                 ContinueonPageToPrint continueonPageToPrint = new ContinueonPageToPrint()
@@ -418,7 +418,7 @@ namespace InkingNewsstand
                 continueonPageToPrint.UpdateLayout();
                 pagesToPrint.Add(continueonPageToPrint);
 
-                if(richTextBlockOverflow.HasOverflowContent)
+                if (richTextBlockOverflow.HasOverflowContent)
                 {
                     hasOverflowContent = true;
                     var oldRichTextBlockOverflow = richTextBlockOverflow;
@@ -446,7 +446,7 @@ namespace InkingNewsstand
         private void UpdateInlineUIElementsLayout(RichTextBlock richTextBlock, Size compareSize)
         {
             int i = 0;
-            foreach(var paragraph in richTextBlock.Blocks)
+            foreach (var paragraph in richTextBlock.Blocks)
             {
                 foreach (var child in ((Paragraph)paragraph).Inlines)
                 {
@@ -483,7 +483,7 @@ namespace InkingNewsstand
                     if (child is InlineUIContainer)
                     {
                         var inlineUIContainerChild = (child as InlineUIContainer).Child;
-                        if(inlineUIContainerChild is FrameworkElement)
+                        if (inlineUIContainerChild is FrameworkElement)
                         {
                             var inlineUIContainerFramworkElement = inlineUIContainerChild as FrameworkElement;
                             oldSizes.Add(new Size(inlineUIContainerFramworkElement.ActualWidth / htmlBlock.ActualWidth, inlineUIContainerFramworkElement.ActualHeight / inlineUIContainerFramworkElement.ActualWidth));
@@ -712,76 +712,73 @@ namespace InkingNewsstand
 
         private Flyout translationFlyout;
         //WordPicker wordPicker = new WordPicker();
+        Translator translator = new Translator();
 
         /// <summary>
         /// 检测到完成一次选择文本
         /// </summary>
         private async void DetectSelectionFinished()
         {
-            await Task.Run(async () =>
+            bool flyoutShowed = false;
+            while (true)
             {
-                bool flyoutShowed = false;
-                while (true)
+                var oldSelectionCount = selectionCount;
+                var oldSelectionEnd = selectionEnd;
+                await Task.Delay(100);
+                //bool translationFlyoutIsNullorClosed = false;
+                var newSelectionEnd = selectionEnd;
+                System.Diagnostics.Debug.WriteLine(translationFlyoutIsNullorClosed.ToString());
+                if (translationFlyoutIsNullorClosed) //如果translationFlyout被初始化了但没有开着
                 {
-                    var oldSelectionCount = selectionCount;
-                    var oldSelectionEnd = selectionEnd;
-                    await Task.Delay(100);
-                    //bool translationFlyoutIsNullorClosed = false;
-                    var newSelectionEnd = selectionEnd;
-                    System.Diagnostics.Debug.WriteLine(translationFlyoutIsNullorClosed.ToString());
-                    if (translationFlyoutIsNullorClosed) //如果translationFlyout被初始化了但没有开着
+                    if (selectionCount == oldSelectionCount)
                     {
-                        if (selectionCount == oldSelectionCount)
+                        selectionCount = 0;
+                        if (!flyoutShowed //是否已经显示了Flyout
+                            || ((oldSelectionEnd != null && newSelectionEnd != null) && oldSelectionEnd != newSelectionEnd)) //是否是重复选择
                         {
-                            selectionCount = 0;
-                            if (!flyoutShowed //是否已经显示了Flyout
-                                || ((oldSelectionEnd != null && newSelectionEnd != null) && oldSelectionEnd != newSelectionEnd)) //是否是重复选择
-                            {
 
-                                Invoke(() =>
+                            Invoke(() =>
+                            {
+                                var selectedText = htmlBlock.SelectedText;
+                                if (selectedText != "" && selectedText != null)
                                 {
-                                    var selectedText = htmlBlock.SelectedText;
-                                    if (selectedText != "" && selectedText != null)
+                                    try
                                     {
-                                        try
+                                        translationFlyout = new Flyout
                                         {
-                                            //var translatedResult = wordPicker.Lookfor(selectedText, Language_t.en);
-                                            translationFlyout = new Flyout
-                                            {
-                                                //Content = new TextBlock() { Text = translatedResult.GetResult(Language_t.zh), IsTextSelectionEnabled = true },
-                                                Content = new TextBlock() { Text = "翻译模块修改中……" }
+                                            Content = new TextBlock() { Text = translator.Translate(selectedText, LanguageCode.zh), IsTextSelectionEnabled = true },
+                                                //Content = new TextBlock() { Text = "翻译模块修改中……" }
                                             };
-                                        }
-                                        catch (Exception)
-                                        {
-                                            translationFlyout = new Flyout
-                                            {
-                                                Content = new TextBlock() { Text = "翻译出错", IsTextSelectionEnabled = true },
-                                            };
-                                        }
-                                        FlyoutShowOptions flyoutShowOptions = new FlyoutShowOptions
-                                        {
-                                            Position = new Point(newSelectionEnd.GetCharacterRect(LogicalDirection.Forward).X, newSelectionEnd.GetCharacterRect(LogicalDirection.Forward).Y),
-                                            ShowMode = FlyoutShowMode.Transient
-                                        };
-                                        try
-                                        {
-                                            translationFlyout.ShowAt(htmlBlock, flyoutShowOptions);
-                                        }
-                                        catch (ArgumentException exception)
-                                        {
-                                            System.Diagnostics.Debug.WriteLine(exception.Message);
-                                        }
-                                        flyoutShowed = true;
                                     }
-                                });
-                            }
-                            System.Diagnostics.Debug.WriteLine("break!");
-                            break;
+                                    catch (Exception)
+                                    {
+                                        translationFlyout = new Flyout
+                                        {
+                                            Content = new TextBlock() { Text = "翻译出错", IsTextSelectionEnabled = true },
+                                        };
+                                    }
+                                    FlyoutShowOptions flyoutShowOptions = new FlyoutShowOptions
+                                    {
+                                        Position = new Point(newSelectionEnd.GetCharacterRect(LogicalDirection.Forward).X, newSelectionEnd.GetCharacterRect(LogicalDirection.Forward).Y),
+                                        ShowMode = FlyoutShowMode.Transient
+                                    };
+                                    try
+                                    {
+                                        translationFlyout.ShowAt(htmlBlock, flyoutShowOptions);
+                                    }
+                                    catch (ArgumentException exception)
+                                    {
+                                        System.Diagnostics.Debug.WriteLine(exception.Message);
+                                    }
+                                    flyoutShowed = true;
+                                }
+                            });
                         }
+                        System.Diagnostics.Debug.WriteLine("break!");
+                        break;
                     }
                 }
-            });
+            }
         }
 
         /// <summary>

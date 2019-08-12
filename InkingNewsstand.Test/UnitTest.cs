@@ -14,12 +14,12 @@ namespace InkingNewsstand.Test
         [TestMethod]
         public async void TestMethod1()
         {
-            var result = await translator.Translate("fuck", LanguageCode.zh);
+            var result = await translator.TranslateAsync("fuck", LanguageCode.zh);
         }
 
         public static async void TranslationTest()
         {
-            var result = await translator.Translate("apple", LanguageCode.zh);
+            var result = await translator.TranslateAsync("apple", LanguageCode.zh);
         }
     }
 }

@@ -26,32 +26,65 @@ namespace InkingNewsstand.Utilities
             };
         }
 
-        public async Task<string> Translate(string stringToTranslate, LanguageCode language)
+        public string Translate(string stringToTranslate, LanguageCode language)
         {
             int salt = random.Next();
             string parameterList = "translate?q=" + stringToTranslate
                                  + "&from=auto" + "&to=" + language
                                  + "&appid=" + appId + "&salt=" + salt.ToString()
                                  + "&sign=" + GetMD5WithString(appId + stringToTranslate + salt + key);
-            var responseMessage = await translationProvider.GetAsync(parameterList);
-
-            if(responseMessage.IsSuccessStatusCode)
-            {
-                throw new System.Net.Http.HttpRequestException();
-            }
 
             TranslationResponse result;
-
-            try
+            var getTask = translationProvider.GetAsync(parameterList);
+            getTask.Wait();
+            using (var responseMessage = getTask.Result)
             {
-                var responseString = await responseMessage.Content.ReadAsStringAsync();
-                result = JsonConvert.DeserializeObject<TranslationResponse>(responseString);
-            }
-            catch(ArgumentException ex)
-            {
-                throw new TranslationException();
-            }
+                if (!responseMessage.IsSuccessStatusCode)
+                {
+                    throw new System.Net.Http.HttpRequestException();
+                }
 
+                try
+                {
+                    var convertToStringTask = responseMessage.Content.ReadAsStringAsync();
+                    convertToStringTask.Wait();
+                    var responseString = convertToStringTask.Result;
+                    result = JsonConvert.DeserializeObject<TranslationResponse>(responseString);
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new TranslationException();
+                }
+            }
+            return result.Trans_result[0].Dst;
+        }
+
+        public async Task<string> TranslateAsync(string stringToTranslate, LanguageCode language)
+        {
+            int salt = random.Next();
+            string parameterList = "translate?q=" + stringToTranslate
+                                 + "&from=auto" + "&to=" + language
+                                 + "&appid=" + appId + "&salt=" + salt.ToString()
+                                 + "&sign=" + GetMD5WithString(appId + stringToTranslate + salt + key);
+
+            TranslationResponse result;
+            using (var responseMessage = await translationProvider.GetAsync(parameterList))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    throw new System.Net.Http.HttpRequestException();
+                }
+
+                try
+                {
+                    var responseString = await responseMessage.Content.ReadAsStringAsync();
+                    result = JsonConvert.DeserializeObject<TranslationResponse>(responseString);
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new TranslationException();
+                }
+            }
             return result.Trans_result[0].Dst;
         }
 
