@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using System.Net;
+using System.Web;
 
 namespace InkingNewsstand.Utilities
 {
@@ -16,7 +17,6 @@ namespace InkingNewsstand.Utilities
         private readonly HttpClient translationProvider;
         private readonly string appId = "20190308000275134";
         private readonly string key = "BXDte3KBBP5eKDyLrIW_";
-        private readonly Random random = new Random();
         private readonly Uri translationProviderUrl = new Uri("http://api.fanyi.baidu.com/api/trans/vip/");
         public Translator()
         {
@@ -28,13 +28,15 @@ namespace InkingNewsstand.Utilities
 
         public string Translate(string stringToTranslate, LanguageCode language)
         {
-            int salt = random.Next();
-            string parameterList = "translate?q=" + stringToTranslate
+            string salt = DateTime.Now.Millisecond.ToString();
+
+            string parameterList = "translate?q=" + HttpUtility.UrlEncode(stringToTranslate, Encoding.UTF8)
                                  + "&from=auto" + "&to=" + language
                                  + "&appid=" + appId + "&salt=" + salt.ToString()
                                  + "&sign=" + GetMD5WithString(appId + stringToTranslate + salt + key);
 
             TranslationResponse result;
+            System.Diagnostics.Debug.WriteLine(stringToTranslate);
             var getTask = translationProvider.GetAsync(parameterList);
             getTask.Wait();
             using (var responseMessage = getTask.Result)
@@ -61,7 +63,7 @@ namespace InkingNewsstand.Utilities
 
         public async Task<string> TranslateAsync(string stringToTranslate, LanguageCode language)
         {
-            int salt = random.Next();
+            string salt = DateTime.Now.Millisecond.ToString();
             string parameterList = "translate?q=" + stringToTranslate
                                  + "&from=auto" + "&to=" + language
                                  + "&appid=" + appId + "&salt=" + salt.ToString()

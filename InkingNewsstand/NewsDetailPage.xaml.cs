@@ -724,8 +724,10 @@ namespace InkingNewsstand
             {
                 var oldSelectionCount = selectionCount;
                 var oldSelectionEnd = selectionEnd;
-                await Task.Delay(100);
-                //bool translationFlyoutIsNullorClosed = false;
+
+                //每个100毫秒检测一次变动。
+                await Task.Delay(100); 
+
                 var newSelectionEnd = selectionEnd;
                 System.Diagnostics.Debug.WriteLine(translationFlyoutIsNullorClosed.ToString());
                 if (translationFlyoutIsNullorClosed) //如果translationFlyout被初始化了但没有开着
@@ -733,10 +735,13 @@ namespace InkingNewsstand
                     if (selectionCount == oldSelectionCount)
                     {
                         selectionCount = 0;
-                        if (!flyoutShowed //是否已经显示了Flyout
-                            || ((oldSelectionEnd != null && newSelectionEnd != null) && oldSelectionEnd != newSelectionEnd)) //是否是重复选择
-                        {
 
+                            //是否已经显示了Flyout
+                        if (!flyoutShowed
+                            //是否是重复选择
+                            || ((oldSelectionEnd != null && newSelectionEnd != null) && oldSelectionEnd != newSelectionEnd)) 
+                        {
+                            //如果没有显示Flyout并且两次触发SelectionChanged的内容一样。
                             Invoke(() =>
                             {
                                 var selectedText = htmlBlock.SelectedText;
@@ -746,9 +751,19 @@ namespace InkingNewsstand
                                     {
                                         translationFlyout = new Flyout
                                         {
-                                            Content = new TextBlock() { Text = translator.Translate(selectedText, LanguageCode.zh), IsTextSelectionEnabled = true },
-                                                //Content = new TextBlock() { Text = "翻译模块修改中……" }
-                                            };
+                                            Content = new ScrollViewer
+                                            {
+                                                Content = new TextBlock()
+                                                {
+                                                    Text = translator.Translate(selectedText, LanguageCode.zh),
+                                                    IsTextSelectionEnabled = true,
+                                                    TextWrapping = TextWrapping.WrapWholeWords
+                                                },
+                                                MaxWidth = 400,
+                                                MaxHeight = 500
+                                            }
+                                            
+                                        };
                                     }
                                     catch (Exception)
                                     {
