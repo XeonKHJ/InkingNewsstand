@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace InkingNewsstand.Model
@@ -14,14 +15,18 @@ namespace InkingNewsstand.Model
         /// <summary>
         /// 存入的订阅源URL列表
         /// </summary>
-        public List<string> FeedUrls { get; set; }
+        //public List<string> FeedUrls { get; set; }
 
         public List<News> News { get; set; } 
 
         /// <summary>
         /// 报纸标题
         /// </summary>
-        public string PaperTitle { get; set; } = "未命名报纸";
-        public bool ExtendMode = false; //扩展模式
+        [Key]
+        public string PaperTitle { get; set; }
+
+        public bool ExtendMode { get; set; }
+
+        public string IconType { get; set; }
     }
 }
