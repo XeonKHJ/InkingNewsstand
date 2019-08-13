@@ -27,7 +27,7 @@ namespace InkingNewsstand.Model
 
             //设置订阅源和新闻的一定多关系
             modelBuilder.Entity<News>()
-                .HasOne(n => n.Feed).WithMany(f => f.News).HasForeignKey(n => n.FeedId);
+                .HasOne(n => n.Feed).WithMany(f => f.News).HasForeignKey(n => n.FeedId).HasConstraintName("OneToMany_OneFeedContainsManyNews");
         }
     }
 
