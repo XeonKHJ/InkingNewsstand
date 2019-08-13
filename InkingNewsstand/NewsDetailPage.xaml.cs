@@ -48,17 +48,17 @@ namespace InkingNewsstand
         }
         PrintManager printManager;
 
-        NewsItem News { set; get; }
+        News News { set; get; }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             HtmlConverter.OnReadingHtmlConvertCompleted += HtmlConverter_OnReadingHtmlConvertCompleted;
             SettingPage.OnBindingWindowCheckBoxChanged += SettingPage_OnBindingWindowCheckBoxChanged;
             SettingPage.ValueChanged += SettingPage_ValueChanged;
-            if (!(e.Parameter is NewsItem))
+            if (!(e.Parameter is News))
             {
                 throw new Exception();
             }
-            News = (NewsItem)(e.Parameter);
+            News = (News)(e.Parameter);
 
             //调整宽度
             if (!Settings.BindingNewsWidthwithFrame)

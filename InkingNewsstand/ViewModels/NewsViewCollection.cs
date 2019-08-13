@@ -10,9 +10,9 @@ using Windows.UI.Xaml.Data;
 
 namespace InkingNewsstand.ViewModels
 {
-    class NewsViewCollection: ObservableCollection<NewsItem>, ISupportIncrementalLoading
+    class NewsViewCollection: ObservableCollection<News>, ISupportIncrementalLoading
     {
-        public NewsViewCollection(List<NewsItem> _newsItems)
+        public NewsViewCollection(List<News> _newsItems)
         {
             this.newsItems = _newsItems;
             HasMoreItems = true;
@@ -20,7 +20,7 @@ namespace InkingNewsstand.ViewModels
 
         public NewsViewCollection()
         {
-            this.newsItems = new List<NewsItem>();
+            this.newsItems = new List<News>();
         }
 
         private void LoadData(int index)
@@ -55,7 +55,7 @@ namespace InkingNewsstand.ViewModels
 
         private int currentIndex = 0;
 
-        private List<NewsItem> newsItems { set; get; } = new List<NewsItem>();
+        private List<News> newsItems { set; get; } = new List<News>();
 
         public bool HasMoreItems
         {

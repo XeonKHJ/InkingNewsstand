@@ -8,10 +8,10 @@ namespace InkingNewsstand.Model
     public class Feed
     {
         [Key]
-        public string Id { get; private set; }
-        public string Title { get; private set; }
-        public string Description { get; private set; }
-        public string Icon { get; private set; }
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Icon { get; set; }
 
         public List<News> News { set; get; }
     }

@@ -133,6 +133,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Feed.cs" />
     <Compile Include="ContinueonPageToPrint.xaml.cs">
       <DependentUpon>ContinueonPageToPrint.xaml</DependentUpon>
     </Compile>
@@ -146,14 +147,10 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\NewsPaper.cs" />
-    <Compile Include="Models\FavoriteModel.cs" />
-    <Compile Include="Models\FeedModel.cs" />
-    <Compile Include="Models\NewsModel.cs" />
-    <Compile Include="Models\NewsPaperModel.cs" />
     <Compile Include="NewsDetailPage.xaml.cs">
       <DependentUpon>NewsDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\NewsItem.cs" />
+    <Compile Include="Classes\News.cs" />
     <Compile Include="PageToPrint.xaml.cs">
       <DependentUpon>PageToPrint.xaml</DependentUpon>
     </Compile>

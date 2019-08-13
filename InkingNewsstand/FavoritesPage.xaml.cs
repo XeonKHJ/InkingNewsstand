@@ -40,12 +40,12 @@ namespace InkingNewsstand
             {
                 FavoriteNews.Add(
                     (NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == favNewsModel.NewsPaperTitle))
-                    .NewsList.Find((NewsItem newsItem) => newsItem.GetHashCode() == favNewsModel.HashCode)
+                    .NewsList.Find((News newsItem) => newsItem.GetHashCode() == favNewsModel.HashCode)
                     );
             }
         }
 
-        private ObservableCollection<NewsItem> FavoriteNews { set; get; } = new ObservableCollection<NewsItem>();
+        private ObservableCollection<News> FavoriteNews { set; get; } = new ObservableCollection<News>();
 
         private void NewsItemsGrid_ItemClick(object sender, ItemClickEventArgs e)
         {

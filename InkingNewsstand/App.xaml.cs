@@ -107,7 +107,7 @@ namespace InkingNewsstand
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             SaveFavoritesToFile();
-            NewsPaper.SaveAll();
+            NewsPaper.SaveAllAsync();
             Settings.SaveSettings();
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动

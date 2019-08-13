@@ -98,7 +98,7 @@ namespace InkingNewsstand
                 }
                 var editedUrisEnumerables = newsPaper.FeedUrls.Union(editedUris).Intersect(editedUris);
                 var deletedUrisEnumerables = newsPaper.FeedUrls.Except(editedUrisEnumerables);
-                List<NewsItem> deletedNews = new List<NewsItem>();
+                List<News> deletedNews = new List<News>();
                 foreach(var news in newsPaper.NewsList)
                 {
                     if(deletedUrisEnumerables.Contains(new Uri(news.Feed.Id)))
@@ -119,7 +119,7 @@ namespace InkingNewsstand
                 newsPaper.Feeds = remainedFeedModel.ToList();
 
                 var remainedNewsEnumerables = newsPaper.NewsList.Except(deletedNews);
-                newsPaper.NewsList = new List<NewsItem>(remainedNewsEnumerables);
+                newsPaper.NewsList = new List<News>(remainedNewsEnumerables);
                 newsPaper.FeedUrls = new List<Uri>(editedUrisEnumerables);
                 foreach(var favNewsModel in App.Favorites)
                 {
@@ -130,7 +130,7 @@ namespace InkingNewsstand
                 }
                 this.Frame.Navigate(typeof(PaperPage), newsPaper);
                 OnPaperEdited?.Invoke();
-                NewsPaper.SaveAll();
+                NewsPaper.SaveAllAsync();
             }
             else
             {

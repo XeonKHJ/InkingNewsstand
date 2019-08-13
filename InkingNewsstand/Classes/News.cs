@@ -6,15 +6,15 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Web.Syndication;
 using InkingNewsstand.Utilities;
-using InkingNewsstand.Models;
+using InkingNewsstand.Classes;
 
 namespace InkingNewsstand
 {
     [Serializable]
-    public class NewsItem : IEquatable<NewsItem>
+    public class News : IEquatable<News>
     {
         private static SyndicationItem staticItem;
-        public NewsItem(SyndicationItem item, Uri url, string paperTitle, SyndicationFeed syndicationFeed)
+        public News(SyndicationItem item, Uri url, string paperTitle, Feed feed)
         {
             staticItem = item;
 
@@ -38,6 +38,8 @@ namespace InkingNewsstand
             //设置新闻标题
             Title = staticItem.Title.Text;
 
+            Feed = feed;
+
             //设置出版日期
             PublishedDate = staticItem.PublishedDate;
 
@@ -54,9 +56,6 @@ namespace InkingNewsstand
             //设置新闻简要
             Summary = (Content != null) ? (HtmlConverter.GetSummary(Content)) : null;
 
-            //设置订阅源
-            Feed = new FeedModel(syndicationFeed);
-
             //设置新闻作者
             string authorsString = "";
             for (int i = 0; i < staticItem.Authors.Count; ++i)
@@ -65,10 +64,25 @@ namespace InkingNewsstand
             }
             Authors = authorsString;
         }
+        private Model.News newsModel;
+        public News(Model.News newsModel)
+        {
+            Content = newsModel.Content;
+            Feed = new Feed(newsModel.Feed);
+            Title = newsModel.Title;
+            Summary = newsModel.Summary;
+            PublishedDate = newsModel.PublishedDate;
+            NewsLink = new Uri(newsModel.NewsLink);
+            Authors = newsModel.Authors;
+            InnerHTML = newsModel.InnerHTML;
+            ExtendedHtml = newsModel.ExtendedHtml;
+            InkStrokes = newsModel.InkStrokes;
+            IsFavorite = newsModel.IsFavorite;
+        }
 
         public string Content { get; set; }
 
-        public FeedModel Feed { get; private set; }
+        public Feed Feed { get; private set; }
 
         public SyndicationItem Item
         {
@@ -108,7 +122,7 @@ namespace InkingNewsstand
 
         public bool IsFavorite { get; set; } //收藏属性
 
-        public bool Equals(NewsItem other)
+        public bool Equals(News other)
         {
             return this == other;
         }
@@ -124,7 +138,7 @@ namespace InkingNewsstand
         /// <param name="lhs">左操作数</param>
         /// <param name="rhs">右操作数</param>
         /// <returns>是否等价</returns>
-        public static bool operator ==(NewsItem lhs, NewsItem rhs)
+        public static bool operator ==(News lhs, News rhs)
         {
             if(lhs is null || rhs is null)
             {
@@ -146,7 +160,7 @@ namespace InkingNewsstand
         /// <param name="lhs">左操作数</param>
         /// <param name="rhs">右操作数</param>
         /// <returns>是否不等价</returns>
-        public static bool operator !=(NewsItem lhs, NewsItem rhs)
+        public static bool operator !=(News lhs, News rhs)
         {
             return !(lhs == rhs);
         }
@@ -164,9 +178,9 @@ namespace InkingNewsstand
 
         public override bool Equals(object obj)
         {
-            if (obj is NewsItem)
+            if (obj is News)
             {
-                return this.GetHashCode() == ((NewsItem)obj).GetHashCode();
+                return this.GetHashCode() == ((News)obj).GetHashCode();
             }
             else
             {

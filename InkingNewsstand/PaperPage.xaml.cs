@@ -85,7 +85,7 @@ namespace InkingNewsstand
         /// 刷新报纸后显示新闻
         /// </summary>
         /// <param name="newsItems"></param>
-        private void Feeds_OnNewsRefreshed(List<NewsItem> newsItems)
+        private void Feeds_OnNewsRefreshed(List<News> newsItems)
         {
             //设置订阅源选择菜单弹窗项
             if (feedsChooseMenuFlyout.Items.Count != paper.Feeds.Count) //消除缓存带来的影响
@@ -160,7 +160,7 @@ namespace InkingNewsstand
 
         static public NewsPaper paper { get;  set; }
 
-        private List<NewsItem> newsList { get; set; } = new List<NewsItem>();
+        private List<News> newsList { get; set; } = new List<News>();
         private NewsViewCollection newsViewItems { set; get; } = new NewsViewCollection();
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
