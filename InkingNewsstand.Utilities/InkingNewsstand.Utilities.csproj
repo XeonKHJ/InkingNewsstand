@@ -121,6 +121,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="FeedsFinder.cs" />
+    <Compile Include="DataOperator.cs" />
     <Compile Include="HtmlConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Translator.cs" />
@@ -129,6 +130,9 @@
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.11.10</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore">
+      <Version>2.2.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
@@ -144,6 +148,10 @@
     <ProjectReference Include="..\..\SmartReader\src\SmartReader\SmartReader.csproj">
       <Project>{977cd4e5-66fd-4fad-a880-9379e04da4ce}</Project>
       <Name>SmartReader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InkingNewsstand.Model\InkingNewsstand.Model.csproj">
+      <Project>{a17bbd0f-61ef-43aa-b539-c423ad7cd851}</Project>
+      <Name>InkingNewsstand.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

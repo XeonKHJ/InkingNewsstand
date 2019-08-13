@@ -231,6 +231,9 @@
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.11.10</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore">
+      <Version>2.2.6</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
     </PackageReference>
@@ -248,6 +251,10 @@
     <ProjectReference Include="..\..\UWP-RichTextControls\RichTextControls\RichTextControls\RichTextControls.csproj">
       <Project>{e3bd6f6f-b39e-4180-8182-dfe85c780bf4}</Project>
       <Name>RichTextControls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InkingNewsstand.Model\InkingNewsstand.Model.csproj">
+      <Project>{a17bbd0f-61ef-43aa-b539-c423ad7cd851}</Project>
+      <Name>InkingNewsstand.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\InkingNewsstand.Utilities\InkingNewsstand.Utilities.csproj">
       <Project>{fc399f28-dc20-45a1-8f5e-046ad5309257}</Project>

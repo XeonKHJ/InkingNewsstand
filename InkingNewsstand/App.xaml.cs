@@ -18,6 +18,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using InkingNewsstand.Models;
+using InkingNewsstand.Utilities;
 
 namespace InkingNewsstand
 {
@@ -34,6 +35,9 @@ namespace InkingNewsstand
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            //初始化数据库
+            DataOperator.MigrateData();
         }
 
         /// <summary>
