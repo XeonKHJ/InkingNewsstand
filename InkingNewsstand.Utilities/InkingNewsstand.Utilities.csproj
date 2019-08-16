@@ -123,6 +123,7 @@
     <Compile Include="FeedsFinder.cs" />
     <Compile Include="DataOperator.cs" />
     <Compile Include="HtmlConverter.cs" />
+    <Compile Include="InkHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Translator.cs" />
     <EmbeddedResource Include="Properties\InkingNewstand.Utilities.rd.xml" />

@@ -7,22 +7,14 @@ namespace InkingNewsstand.Model
 {
     public class NewsPaper
     {
-        /// <summary>
-        /// 订阅源列表
-        /// </summary>
-        public List<Feed> Feeds { set; get; } = new List<Feed>();
+
+        public List<NewsPaper_Feed> NewsPaper_Feeds { get; set; }
+
+        public int Id { set; get; }
 
         /// <summary>
-        /// 存入的订阅源URL列表
+        /// 报纸标题。
         /// </summary>
-        //public List<string> FeedUrls { get; set; }
-
-        public List<News> News { get; set; } 
-
-        /// <summary>
-        /// 报纸标题
-        /// </summary>
-        [Key]
         public string PaperTitle { get; set; }
 
         public bool ExtendMode { get; set; }

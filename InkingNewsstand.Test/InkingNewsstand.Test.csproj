@@ -158,6 +158,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\InkingNewsstand.Model\InkingNewsstand.Model.csproj">
+      <Project>{a17bbd0f-61ef-43aa-b539-c423ad7cd851}</Project>
+      <Name>InkingNewsstand.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\InkingNewsstand.Utilities\InkingNewsstand.Utilities.csproj">
       <Project>{fc399f28-dc20-45a1-8f5e-046ad5309257}</Project>
       <Name>InkingNewsstand.Utilities</Name>

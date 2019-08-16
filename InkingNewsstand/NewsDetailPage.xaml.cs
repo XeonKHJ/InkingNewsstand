@@ -30,6 +30,7 @@ using Microsoft.Graphics.Canvas;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage;
+using InkingNewsstand.Classes;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -46,9 +47,10 @@ namespace InkingNewsstand
             printManager = PrintManager.GetForCurrentView();
             printManager.PrintTaskRequested += PrintManager_PrintTaskRequested;
         }
-        PrintManager printManager;
 
-        News News { set; get; }
+        private PrintManager printManager;
+
+        private News News { set; get; }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             HtmlConverter.OnReadingHtmlConvertCompleted += HtmlConverter_OnReadingHtmlConvertCompleted;
@@ -100,17 +102,19 @@ namespace InkingNewsstand
             LoadInkStrokes(News.InkStrokes);
         }
 
+        /// <summary>
+        /// 当“自动调整宽度”复选框改变时
+        /// </summary>
+        /// <param name="sender"></param>
         private void SettingPage_OnBindingWindowCheckBoxChanged(CheckBox sender)
         {
             if (Settings.BindingNewsWidthwithFrame)
             {
                 contentGrid.Width = Double.NaN;
-                System.Diagnostics.Debug.WriteLine("BindingNewsWidthwithFrame");
             }
             else
             {
                 contentGrid.Width = Settings.NewsWidth;
-                System.Diagnostics.Debug.WriteLine("NaN");
             }
         }
 
@@ -204,46 +208,14 @@ namespace InkingNewsstand
 
         string CoverUrlforPage { set; get; }
 
-        NewsPaper newsPaper = null;
+        private NewsPaper newsPaper = null;
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            newsPaper = NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == News.PaperTitle);
-
             //保存笔迹
             var currentStrokes = newsCanvas.InkPresenter.StrokeContainer.GetStrokes(); //获取笔迹
-            byte[] serializedStrokes = await SerializeStrokes(currentStrokes); //序列化笔迹
+            byte[] serializedStrokes = await InkHelper.SerializeStrokes(currentStrokes); //序列化笔迹
             News.InkStrokes = serializedStrokes; //将笔迹保存到新闻实例里
-            newsPaper.UpdateNewsList(News);
-            await NewsPaper.SaveToFile(newsPaper); //保存报纸
-        }
-
-        /// <summary>
-        /// 序列化笔迹
-        /// </summary>
-        /// <param name="strokes">笔迹列表</param>
-        /// <returns>序列化后的字节数组</returns>
-        private async Task<byte[]> SerializeStrokes(IReadOnlyCollection<InkStroke> strokes)
-        {
-            byte[] bytes = null;
-
-            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
-            {
-                //先把笔迹输出到输出流
-                using (var outputStream = stream.GetOutputStreamAt(0))
-                {
-                    await newsCanvas.InkPresenter.StrokeContainer.SaveAsync(outputStream);
-                }
-
-                //从输入流中读出序列化结果
-                using (var inputStream = stream.GetInputStreamAt(0))
-                {
-                    var dataReader = new DataReader(inputStream); //在该输入流中附着一个数据读取器
-                    uint loadBytes = await dataReader.LoadAsync((uint)stream.Size); //加载数据数据到中间缓冲区
-                    bytes = new byte[stream.Size];
-                    dataReader.ReadBytes(bytes);
-                }
-            }
-            return bytes;
+            await News.Save(); //保存报纸
         }
 
         /// <summary>
@@ -269,6 +241,8 @@ namespace InkingNewsstand
                 }
             }
         }
+
+        /*++++++++++++++++++++++导出（打印）功能++++++++++++++++++++++++++++++*/
 
         IPrintDocumentSource printDocumentSource;
         PrintDocument printDocument;
@@ -301,7 +275,7 @@ namespace InkingNewsstand
         private void PrintTask_Completed(PrintTask sender, PrintTaskCompletedEventArgs args)
         {
             //恢复属性
-            Invoke(() =>
+            App.Invoke(() =>
             {
                 newsPanel.Width = double.NaN;
                 newsPanel.Height = double.NaN;
@@ -551,7 +525,7 @@ namespace InkingNewsstand
             Image inkImage = null;
 
             //调高图片
-            Invoke(() =>
+            App.Invoke(() =>
             {
                 inkImage = new Image
                 {
@@ -587,6 +561,9 @@ namespace InkingNewsstand
             printDocument.AddPagesComplete();
         }
 
+
+        /*---------------打印功能结束-----------------------*/
+
         /// <summary>
         /// “收藏”按钮点击事件
         /// </summary>
@@ -597,12 +574,12 @@ namespace InkingNewsstand
             News.IsFavorite = !News.IsFavorite;
             if (News.IsFavorite)
             {
+                //将“收藏”图标改成“取消收藏”图标
                 favoriteButton.Icon = new SymbolIcon(Symbol.UnFavorite);
-                App.Favorites.Add(new Models.FavoriteModel(News));
             }
             else
             {
-                App.Favorites.Remove(new Models.FavoriteModel(News));
+                //将“取消收藏”图标改成“收藏”图标
                 favoriteButton.Icon = new SymbolIcon(Symbol.Favorite);
             }
             //newsPaper = NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == News.PaperTitle);
@@ -742,7 +719,7 @@ namespace InkingNewsstand
                             || ((oldSelectionEnd != null && newSelectionEnd != null) && oldSelectionEnd != newSelectionEnd)) 
                         {
                             //如果没有显示Flyout并且两次触发SelectionChanged的内容一样。
-                            Invoke(() =>
+                            App.Invoke(() =>
                             {
                                 var selectedText = htmlBlock.SelectedText;
                                 if (selectedText != "" && selectedText != null)
@@ -834,11 +811,6 @@ namespace InkingNewsstand
             y -= screenCoords.Y + 10;
 
             return new Point(x, y);
-        }
-
-        public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
-        {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
         }
     }
 }

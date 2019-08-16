@@ -35,5 +35,32 @@ namespace InkingNewsstand.Utilities
                 await db.SaveChangesAsync();
             }
         }
+
+        public static async Task DeleteNewsPaperAsync(NewsPaper newsPaperModel)
+        {
+            using (var db = new InkingNewsstandContext())
+            {
+                db.NewsPapers.Remove(newsPaperModel);
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public static async Task SaveNewsPaper(NewsPaper newsPaperModel)
+        {
+            using (var db = new InkingNewsstandContext())
+            {
+                db.NewsPapers.Update(newsPaperModel);
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public static async Task AddNewsPaper(NewsPaper newsPaperModel)
+        {
+            using (var db = new InkingNewsstandContext())
+            {
+                db.NewsPapers.Update(newsPaperModel);
+                await db.SaveChangesAsync();
+            }
+        }
     }
 }

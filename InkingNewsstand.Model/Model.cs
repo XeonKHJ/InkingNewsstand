@@ -17,19 +17,16 @@ namespace InkingNewsstand.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //设置News主键。
-            modelBuilder.Entity<News>()
-                .HasKey(n => new { n.Title, n.Authors, n.PublishedDate }).HasName("CompositePrimaryKey_News");
+            modelBuilder.Entity<NewsPaper_Feed>().HasKey(nf => new { nf.FeedId, nf.NewsPaperId });
 
-            //设置报纸和订阅源的单一导航多对多关系。
-            modelBuilder.Entity<NewsPaper>()
-                .HasMany(np => np.Feeds).WithOne().HasConstraintName("ManyToOne_OneFeedBelongsToManyNewsPapers");
+            //设置订阅源和报纸的多对多关系
+            modelBuilder.Entity<NewsPaper_Feed>()
+                .HasOne(nf => nf.Feed).WithMany(f => f.NewsPaper_Feeds).HasForeignKey(nf => nf.FeedId);
+            modelBuilder.Entity<NewsPaper_Feed>()
+                .HasOne(nf => nf.NewsPaper).WithMany(np => np.NewsPaper_Feeds).HasForeignKey(nf => nf.NewsPaperId);
 
-            //设置订阅源和新闻的一定多关系
-            modelBuilder.Entity<News>()
-                .HasOne(n => n.Feed).WithMany(f => f.News).HasForeignKey(n => n.FeedId).HasConstraintName("OneToMany_OneFeedContainsManyNews");
+            //设置订阅源和新闻的一对多关系
+            modelBuilder.Entity<News>().HasOne(f => f.Feed).WithMany(n => n.News).HasForeignKey(n => n.FeedId);
         }
     }
-
-
 }

@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using InkingNewsstand.Classes;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -40,7 +41,7 @@ namespace InkingNewsstand
             {
                 FavoriteNews.Add(
                     (NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == favNewsModel.NewsPaperTitle))
-                    .NewsList.Find((News newsItem) => newsItem.GetHashCode() == favNewsModel.HashCode)
+                    .News.Find((News newsItem) => newsItem.GetHashCode() == favNewsModel.HashCode)
                     );
             }
         }

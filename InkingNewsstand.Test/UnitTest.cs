@@ -3,6 +3,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using InkingNewsstand.Utilities;
+using InkingNewsstand.Model;
 
 namespace InkingNewsstand.Test
 {
@@ -21,5 +22,7 @@ namespace InkingNewsstand.Test
         {
             var result = await translator.TranslateAsync("apple", LanguageCode.zh);
         }
+
+        
     }
 }

@@ -11,27 +11,42 @@ using Windows.Web.Syndication;
 using InkingNewsstand.Utilities;
 using InkingNewsstand.Classes;
 
-namespace InkingNewsstand
+namespace InkingNewsstand.Classes
 {
     /// <summary>
     /// 报纸类 ，旧名字为MixedFeeds
     /// </summary>
     public class NewsPaper
     {
-        static private StorageFile paperListFile;
-        private Model.NewsPaper newsPaperModel;
+        private Model.NewsPaper Model;
+
+        /// <summary>
+        /// 通过报纸名创建实例
+        /// </summary>
+        /// <param name="paperTitle"></param>
         public NewsPaper(string paperTitle)
         {
-            newsPaperModel = new Model.NewsPaper { PaperTitle = paperTitle };
+            Model = new Model.NewsPaper { PaperTitle = paperTitle };
         }
 
+        /// <summary>
+        /// 通过数据库模型创建实例
+        /// </summary>
+        /// <param name="newsPaperModel"></param>
         public NewsPaper(Model.NewsPaper newsPaperModel)
         {
-            List<News> newsItems = new List<News>();
-            foreach (var newsModel in newsPaperModel.News)
+            foreach (var newsPaper_Feed in newsPaperModel.NewsPaper_Feeds)
             {
-                newsItems.Add(new News(newsModel));
+                foreach (var newsModel in newsPaper_Feed.Feed.News)
+                {
+                    News.Add(new News(newsModel));
+                }
             }
+        }
+
+        public int Id
+        {
+            get { return Model.Id; }
         }
 
         /// <summary>
@@ -39,14 +54,8 @@ namespace InkingNewsstand
         /// </summary>
         public string PaperTitle
         {
-            get
-            {
-                return newsPaperModel.PaperTitle;
-            }
-            set
-            {
-                newsPaperModel.PaperTitle = value;
-            }
+            get { return Model.PaperTitle; }
+            set { Model.PaperTitle = value; }
         }
 
         /// <summary>
@@ -54,140 +63,254 @@ namespace InkingNewsstand
         /// </summary>
         public int Count
         {
-            get
-            {
-                return Feeds.Count;
-            }
+            get { return Feeds.Count; }
+        }
+
+        public string IconType
+        {
+            get { return Model.IconType; }
+            set { Model.IconType = value; }
         }
 
         /// <summary>
         /// 订阅源列表
         /// </summary>
-        public List<Feed> Feeds { get; set; }
+        public List<Feed> Feeds
+        {
+            get
+            {
+                var feeds = from nf in Model.NewsPaper_Feeds
+                            select new Feed(nf.Feed);
+                return feeds.ToList();
+            }
+        }
 
         /// <summary>
         /// 添加报纸
         /// </summary>
         /// <param name="newsPaper"></param>
-        static public void AddNewsPaper(NewsPaper newsPaper)
+        static public async void AddNewsPaper(NewsPaper newsPaper)
         {
             OnPaperAdding?.Invoke(newsPaper);
-            NewsPapers.Add(newsPaper);
+
+            //添加到数据库中
+            using (var db = new Model.InkingNewsstandContext())
+            {
+                db.NewsPapers.Add(newsPaper.Model);
+                await db.SaveChangesAsync();
+            }
+
             OnPaperAdded?.Invoke(newsPaper); //报纸添加后引发
         }
 
         /// <summary>
-        /// 保存到文件
+        /// 往报纸添加订阅源
         /// </summary>
-        /// <param name="newsPaper"></param>
-        /// <returns>要保存的报纸</returns>
-        static public async Task SaveToFile(NewsPaper newsPaper)
+        /// <param name="feed">要添加的订阅源</param>
+        public async void AddFeed(Feed feed)
         {
-            await DataOperator.SaveNewsPapers();
-            OnPaperSaved?.Invoke();
+            using (var db = new Model.InkingNewsstandContext())
+            {
+                //先查找该订阅源是否已存在数据库
+                var feedResult = await db.Feeds.FindAsync(feed);
+
+                //如果没有则添加到数据库
+                if (feedResult == null)
+                {
+                    db.Feeds.Add(feed.Model);
+                }
+
+                //更新报纸
+                if (feedResult == null  //如果之前FeedResult没有的话，就说明在这张报纸里面肯定没有这个订阅源，因此一定要添加。
+                    || !(this.Feeds.Exists(f => f.Id == feed.Id))) //如果之前报纸中不存在这个订阅源的话。
+                {
+                    this.Model.NewsPaper_Feeds.Add(new InkingNewsstand.Model.NewsPaper_Feed { FeedId = feed.Id, NewsPaperId = this.Id });
+                    db.NewsPapers.Update(Model);
+                    await db.SaveChangesAsync();
+                }
+            }
         }
 
-        /// <summary>
-        /// 保存全包报纸
-        /// </summary>
-        public static async void SaveAllAsync()
+        public async void AddFeeds(List<Feed> addedFeeds)
         {
-            await DataOperator.SaveNewsPapers();
+            using (var db = new Model.InkingNewsstandContext())
+            {
+                var feeds = db.Feeds.ToList();
+                //筛选出没有在报纸中的所有的订阅源
+                var feedModelsNotInNewsPaper = from feed in addedFeeds
+                                          where Feeds.Exists(f => f.Id == feed.Id)
+                                          select feed.Model;
+
+                //筛选出新的订阅源
+                var newFeedModels = from feedModel in feedModelsNotInNewsPaper
+                               where !feeds.Exists(f => f.Id == feedModel.Id)
+                               select feedModel;
+
+                //筛选出已经在数据库存在但在报纸中不存在的订阅源
+                var oldFeeds = from feedModel in feedModelsNotInNewsPaper
+                               where Feeds.Exists(f => f.Id == feedModel.Id)
+                               select feedModel;
+
+                //将新的订阅源添加到数据库
+                db.Feeds.AddRange(newFeedModels);
+
+                //生成该报纸与所有要添加的订阅源的关系
+                Model.NewsPaper_Feeds.AddRange(
+                    from feedModel in feedModelsNotInNewsPaper
+                    select (new Model.NewsPaper_Feed
+                    {
+                        NewsPaperId = Id, FeedId = feedModel.Id
+                    }));
+
+                //更新报纸
+                db.NewsPapers.Update(Model);
+
+                //保存数据库
+                await db.SaveChangesAsync();
+            }
         }
 
-        /// <summary>
-        /// 添加订阅源
-        /// </summary>
-        /// <param name="feedUrl">订阅源链接</param>
-        public void AddFeedLink(Uri feedUrl)
+        public async void RemoveFeeds(IEnumerable<Feed> removedFeeds)
         {
-            newsPaperModel.Feeds.Add(new Model.Feed { Id = feedUrl.AbsoluteUri});
+            using (var db = new Model.InkingNewsstandContext())
+            {
+                var removedFeedsList = removedFeeds.ToList();
+
+                //从该数据库模型中剔除被删除的关系。
+                Model.NewsPaper_Feeds.Except(
+                    from nf in Model.NewsPaper_Feeds
+                    where removedFeedsList.Exists(f => f.Id == nf.FeedId)
+                    select nf);
+
+                //更新数据库
+                db.NewsPapers.Update(Model);
+
+                //保存到数据库
+                await db.SaveChangesAsync();
+            }
         }
 
         /// <summary>
         /// 刷新报纸，获取文章列表
         /// </summary>
-        public async Task<List<News>> GetNewsListAsync()
+        public async Task<List<News>> RefreshNewsAsync()
         {
+            //触发OnNewsfreshing事件
             OnNewsRefreshing?.Invoke();
-            List<News> newNewsitems = new List<News>();
-            int originalNewsCount = NewsList.Count;
 
+            //为刷新出来的新闻创建列表
+            List<News> newNewsitems = new List<News>();
+
+            //记录原始新闻的数量。
+            int originalNewsCount = News.Count;
+
+            //对每个订阅源依次进行刷新。
             foreach (var feed in Feeds)
             {
                 var syndicationClient = new SyndicationClient();
                 try
                 {
+                    //联网获取订阅源信息
                     var syndicationFeed = await new SyndicationClient().RetrieveFeedAsync(new Uri(feed.Id));
                     syndicationFeed.Id = feed.Id;
+
                     //更新Feed信息
                     feed.Update(syndicationFeed);
 
-                    //将新闻添加到newsItems中
                     for (int retrievedNewsIndex = syndicationFeed.Items.Count - 1; retrievedNewsIndex >= 0; --retrievedNewsIndex)
                     {
-                        var newsLink = syndicationFeed.Items[retrievedNewsIndex].ItemUri ?? syndicationFeed.Items[retrievedNewsIndex].Links.Select(l => l.Uri).FirstOrDefault();
-                        var newsItem = new News(syndicationFeed.Items[retrievedNewsIndex], newsLink, PaperTitle, feed);
+                        //获取新闻链接
+                        var newsLink = syndicationFeed.Items[retrievedNewsIndex].ItemUri ??
+                                       syndicationFeed.Items[retrievedNewsIndex].Links.Select(l => l.Uri).FirstOrDefault();
+
+                        //新建News实例
+                        var newsItem = new News(syndicationFeed.Items[retrievedNewsIndex], newsLink, feed);
 
                         //如果原新闻列表中不包含改新闻，则添加到新闻列表
-                        if (!NewsList.Contains(newsItem))
-                        {
-                            newNewsitems.Add(newsItem);
-                            NewsList.Add(newsItem);
-                        }
+                        newNewsitems.Add(newsItem);
                     }
-                    var orderedNewsList = NewsList.OrderBy(news => news.PublishedDate);
-                    NewsList = orderedNewsList.ToList();
+
+                    await feed.AddNewsAsync(newNewsitems);
                 }
                 catch (Exception exception)
                 {
                     System.Diagnostics.Debug.WriteLine(exception.Message);
+                    System.Diagnostics.Debug.WriteLine(exception.StackTrace);
                     OnUpdateFailed?.Invoke(feed.Id);
                 }
             }
-            if (NewsList.Count > originalNewsCount)
+
+            //新闻数量有变动，才引发OnNewsRefreshed事件，
+            if (News.Count > originalNewsCount)
             {
-                OnNewsRefreshed?.Invoke(NewsList);
+                OnNewsRefreshed?.Invoke(News);
             }
+            //否则引发NoNewNews（没有新的新闻）事件。
             else
             {
                 NoNewNews?.Invoke();
             }
-            if (NewsList.Count != originalNewsCount)
-            {
-                await SaveToFile(this);
-                OnNewsUpdatedToFile?.Invoke();
-            }
-            return NewsList;
+
+            return News;
         }
 
         /// <summary>
         /// 打开的报纸列表
         /// </summary>
-        public static List<NewsPaper> NewsPapers { get; private set; } = new List<NewsPaper>();
+        public static List<NewsPaper> NewsPapers
+        {
+            get
+            {
+                List<NewsPaper> newsPapers;
+                using (var db = new Model.InkingNewsstandContext())
+                {
+                    newsPapers = (from newsPaperModel in db.NewsPapers
+                                  select new NewsPaper(newsPaperModel)).ToList();
+                }
+                return newsPapers;
+            }
+        }
 
         /// <summary>
         /// 新闻列表
         /// </summary>
         //private List<NewsItem> newsList = new List<NewsItem>();
-        public List<News> NewsList { set; get; }
+        public List<News> News
+        {
+            get
+            {
+                List<News> news = new List<News>();
+
+                foreach (var feed in Feeds)
+                {
+                    news.AddRange(from n in feed.News select n);
+                }
+
+                return news;
+            }
+        }
 
         /// <summary>
         /// 删除一张报纸
         /// </summary>
         /// <param name="newsPaper">要删除的报纸</param>
-        static async public Task DeleteNewsPaper(NewsPaper newsPaper)
+        static public async void DeleteNewsPaper(NewsPaper newsPaper)
         {
+            //删除内存中的报纸
+            NewsPapers.Remove(newsPaper);
+
+            //删除数据库中的报纸
+            await DataOperator.DeleteNewsPaperAsync(newsPaper.Model);
+
+            //触发OnPaperDeleted事件
             OnPaperDeleted?.Invoke(newsPaper);
         }
 
         public void UpdateNewsList(News newsItem)
         {
-            NewsList[this.NewsList.IndexOf(newsItem)] = newsItem;
+            News[this.News.IndexOf(newsItem)] = newsItem;
             OnNewsListUpdated?.Invoke(newsItem);
         }
-
-
 
         public delegate void OnPaperUpdatedDelegate(NewsPaper updatedNewspaper);
         public static event OnPaperUpdatedDelegate OnPaperAdding;

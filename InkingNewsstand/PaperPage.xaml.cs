@@ -1,5 +1,4 @@
-﻿using InkingNewsstand.Models;
-using InkingNewsstand.ViewModels;
+﻿using InkingNewsstand.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,6 +19,7 @@ using Microsoft.Xaml.Interactivity;
 using Microsoft.Toolkit.Uwp.UI.Animations.Behaviors;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using System.Threading.Tasks;
+using InkingNewsstand.Classes;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -36,7 +36,10 @@ namespace InkingNewsstand
             this.NavigationCacheMode = NavigationCacheMode.Enabled; //开启页面缓存
             thisPaperpage = this;
         }
+
+        //当前页面实例
         public static PaperPage thisPaperpage;
+
         private void MainPage_CleanPaperPage()
         {
             this.NavigationCacheMode = NavigationCacheMode.Disabled;
@@ -44,12 +47,12 @@ namespace InkingNewsstand
 
         private void LayoutNews()
         {
-            Feeds_OnNewsRefreshed(paper.NewsList);
+            Feeds_OnNewsRefreshed(paper.News);
         }
 
         public async void RefreshNews()
         {
-            await paper.GetNewsListAsync();
+            await paper.RefreshNewsAsync();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -107,10 +110,11 @@ namespace InkingNewsstand
             var selectedFeedTitle = (from toggleItem in feedsChooseMenuFlyout.Items
                                      where (toggleItem is ToggleMenuFlyoutItem && ((ToggleMenuFlyoutItem)toggleItem).IsChecked)
                                      select ((ToggleMenuFlyoutItem)toggleItem).Text);
-            var selectedNews = (from newsItem in paper.NewsList
+            var selectedNews = (from newsItem in paper.News
                                 where selectedFeedTitle.Contains(newsItem.Feed.Title)
                                     && (allNewsButton.IsChecked == true || selectedDates.Contains(newsItem.PublishedDate.Date))
                                 select newsItem);
+
             newsList = selectedNews.ToList();
             newsViewItems = new NewsViewCollection(newsList);
             Bindings.Update();
@@ -161,16 +165,12 @@ namespace InkingNewsstand
         static public NewsPaper paper { get;  set; }
 
         private List<News> newsList { get; set; } = new List<News>();
+
         private NewsViewCollection newsViewItems { set; get; } = new NewsViewCollection();
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             this.Frame.Navigate(typeof(NewsDetailPage), e.ClickedItem);
-        }
-
-        private void AddPaperButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(AddPaperPage));
         }
 
         private void EditPaperButton_Click(object sender, RoutedEventArgs e)
@@ -194,7 +194,7 @@ namespace InkingNewsstand
         private void PaperDatePicker_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
         {
             selectedDates = sender.SelectedDates;
-            Feeds_OnNewsRefreshed(paper.NewsList);
+            Feeds_OnNewsRefreshed(paper.News);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace InkingNewsstand
         /// <param name="e"></param>
         private void ToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            Feeds_OnNewsRefreshed(paper.NewsList);
+            Feeds_OnNewsRefreshed(paper.News);
         }
 
         private void AllNewsButton_Checked(object sender, RoutedEventArgs e)
@@ -214,7 +214,7 @@ namespace InkingNewsstand
                 return;
             }
             paperDatePicker.Visibility = Visibility.Collapsed;
-            Feeds_OnNewsRefreshed(paper.NewsList);
+            Feeds_OnNewsRefreshed(paper.News);
         }
 
         private void AllNewsButton_Unchecked(object sender, RoutedEventArgs e)

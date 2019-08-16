@@ -5,23 +5,23 @@ namespace InkingNewsstand.Model
 {
     public class News
     {
-        public string Content { get; set; }
-
-        public string FeedId { set; get; }
+        public int Id { get; set; }
 
         public Feed Feed { get; set; }
 
+        public string FeedId { set; get; }
+        
         public string Title { get; set; }
 
-        public string Summary { get; set; }
+        public string Authors { get; set; }
 
         public DateTimeOffset PublishedDate { get; set; }
 
+        public string Summary { get; set; }
+
+        public string Content { get; set; }
+
         public string NewsLink { set; get; }
-
-        public NewsPaper NewsPaper { set; get; }
-
-        public string Authors { get; set; }
 
         public string CoverUrl{ get; set; }
 

@@ -8,49 +8,42 @@ using Windows.Web.Syndication;
 using InkingNewsstand.Utilities;
 using InkingNewsstand.Classes;
 
-namespace InkingNewsstand
+namespace InkingNewsstand.Classes
 {
-    [Serializable]
     public class News : IEquatable<News>
     {
-        private static SyndicationItem staticItem;
-        public News(SyndicationItem item, Uri url, string paperTitle, Feed feed)
+        public News(SyndicationItem item, Uri url, Feed feed)
         {
-            staticItem = item;
-
             //设置新闻链接
             NewsLink = url;
 
-            //该新闻报纸的标题
-            PaperTitle = paperTitle;
-
             //设置保存在订阅源中的该新闻的HTML
-            if (staticItem.Content != null)
+            if (item.Content != null)
             {
-                InnerHTML = staticItem.Content.Text;
+                InnerHTML = item.Content.Text;
             }
-            else if (staticItem.NodeValue != null)
+            else if (item.NodeValue != null)
             {
-                InnerHTML = staticItem.NodeValue;
+                InnerHTML = item.NodeValue;
             }
             else InnerHTML = null;
 
             //设置新闻标题
-            Title = staticItem.Title.Text;
+            Title = item.Title.Text;
 
             Feed = feed;
 
             //设置出版日期
-            PublishedDate = staticItem.PublishedDate;
+            PublishedDate = item.PublishedDate;
 
             //设置Content
-            if (staticItem.Content != null)
+            if (item.Content != null)
             {
-                Content = staticItem.Content.Text;
+                Content = item.Content.Text;
             }
             else
             {
-                Content = staticItem.Summary.Text;
+                Content = item.Summary.Text;
             }
 
             //设置新闻简要
@@ -58,48 +51,69 @@ namespace InkingNewsstand
 
             //设置新闻作者
             string authorsString = "";
-            for (int i = 0; i < staticItem.Authors.Count; ++i)
+            for (int i = 0; i < item.Authors.Count; ++i)
             {
-                authorsString += staticItem.Authors[i].Name;
+                authorsString += item.Authors[i].Name;
             }
             Authors = authorsString;
         }
-        private Model.News newsModel;
+
+        /// <summary>
+        /// 数据库模型实例
+        /// </summary>
+        public Model.News Model { set; get; } = new Model.News();
+
         public News(Model.News newsModel)
         {
-            Content = newsModel.Content;
-            Feed = new Feed(newsModel.Feed);
-            Title = newsModel.Title;
-            Summary = newsModel.Summary;
-            PublishedDate = newsModel.PublishedDate;
-            NewsLink = new Uri(newsModel.NewsLink);
-            Authors = newsModel.Authors;
-            InnerHTML = newsModel.InnerHTML;
-            ExtendedHtml = newsModel.ExtendedHtml;
-            InkStrokes = newsModel.InkStrokes;
-            IsFavorite = newsModel.IsFavorite;
+            Model = newsModel;
         }
 
-        public string Content { get; set; }
-
-        public Feed Feed { get; private set; }
-
-        public SyndicationItem Item
+        public int Id
         {
-            get { return staticItem; }
+            get { return Model.Id; }
         }
 
-        public string Title { get; private set; }
+        public string Content
+        {
+            get { return Model.Content; }
+            set { Model.Content = value; }
+        }
 
-        public string Summary { get; private set; }
+        public Feed Feed
+        {
+            get { return new Feed(Model.Feed); }
+            private set { Model.Feed = value.Model; }
+        }
 
-        public DateTimeOffset PublishedDate { get; private set; }
+        public string Title
+        {
+            get { return Model.Title; }
+            private set { Model.Title = value; }
+        }
 
-        public Uri NewsLink { private set; get; }
+        public string Summary
+        {
+            get { return Model.Summary; }
+            private set { Model.Summary = value; }
+        }
 
-        public string PaperTitle { set; get; }
+        public DateTimeOffset PublishedDate
+        {
+            get {return Model.PublishedDate; }
+            private set { Model.PublishedDate = value; }
+        }
 
-        public string Authors { get; private set; }
+        public Uri NewsLink
+        {
+            get { return new Uri(Model.NewsLink); }
+            private set { Model.NewsLink = value.AbsoluteUri; }
+        }
+
+        public string Authors
+        {
+            get { return Model.Authors; }
+            private set { Model.Authors = value; }
+        }
 
         public string CoverUrl
         {
@@ -114,13 +128,36 @@ namespace InkingNewsstand
             }
         }
 
-        public string InnerHTML { get; private set; }
+        public string InnerHTML { get { return Model.InnerHTML; } private set { Model.InnerHTML = value; } }
 
-        public string ExtendedHtml { get; set; }
+        public async Task Save()
+        {
+            using(var db = new Model.InkingNewsstandContext())
+            {
+                db.Update(Model);
+            }
+        }
 
-        public byte[] InkStrokes { get; set; } = new byte[0];
+        public string ExtendedHtml
+        {
+            get { return Model.ExtendedHtml; }
+            set { Model.ExtendedHtml = value; }
+        }
 
-        public bool IsFavorite { get; set; } //收藏属性
+        public byte[] InkStrokes
+        {
+            get { return Model.InkStrokes; }
+            set { Model.InkStrokes = value; }
+        }
+
+        /// <summary>
+        /// 是否收藏
+        /// </summary>
+        public bool IsFavorite
+        {
+            get { return Model.IsFavorite; }
+            set { Model.IsFavorite = value; }
+        } 
 
         public bool Equals(News other)
         {
@@ -129,8 +166,10 @@ namespace InkingNewsstand
 
         public override string ToString()
         {
-            return staticItem.Title.Text.ToString();
+            return Title;
         }
+
+        /*------------必须提供不同于数据库中主键的不同的相等判定方法，避免更新新闻时更新相同的新闻。---------------*/
 
         /// <summary>
         /// 重载运算符==
@@ -168,7 +207,7 @@ namespace InkingNewsstand
         public override int GetHashCode()
         {
             var hash = 0;
-            foreach(var character in Title)
+            foreach (var character in Title)
             {
                 hash += character;
             }

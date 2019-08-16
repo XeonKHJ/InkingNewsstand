@@ -1,4 +1,4 @@
-﻿using InkingNewsstand.Models;
+﻿using InkingNewsstand.Classes;
 using InkingNewsstand.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -77,63 +77,53 @@ namespace InkingNewsstand
         /// <param name="e"></param>
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            //如果时编辑模式的话
             if(isEditMode)
             {
-                List<Uri> editedUris = new List<Uri>();
+                List<Feed> editedFeeds = new List<Feed>();
                 string oldTitle = newsPaper.PaperTitle;
                 newsPaper.PaperTitle = newspaperTitleTextBox.Text;
 
+                //!!
                 //修改导航栏的标题
                 foreach (var element in rssInputPanel.Children)
                 {
                     try
                     {
-                        var editedFeedUri = new Uri((element as TextBox).Text);
-                        editedUris.Add(editedFeedUri);
+                        var EditedFeed = new Feed(new Uri((element as TextBox).Text));
+                        editedFeeds.Add(EditedFeed);
                     }
                     catch (Exception)
                     {
                         continue;
                     }
                 }
-                var editedUrisEnumerables = newsPaper.FeedUrls.Union(editedUris).Intersect(editedUris);
-                var deletedUrisEnumerables = newsPaper.FeedUrls.Except(editedUrisEnumerables);
-                List<News> deletedNews = new List<News>();
-                foreach(var news in newsPaper.NewsList)
-                {
-                    if(deletedUrisEnumerables.Contains(new Uri(news.Feed.Id)))
-                    {
-                        if(news.IsFavorite)
-                        {
-                            App.Favorites.Remove(new FavoriteModel(news));
-                        }
-                        deletedNews.Add(news);
-                    }
-                }
 
-                //删除相应的订阅源
-                var deletedFeedModels = from feedModel in newsPaper.Feeds
-                                        where deletedUrisEnumerables.Contains(new Uri(feedModel.Id))
-                                        select feedModel;
-                var remainedFeedModel = newsPaper.Feeds.Except(deletedFeedModels);
-                newsPaper.Feeds = remainedFeedModel.ToList();
+                //先筛选出原来就存在该报纸中的订阅源。
+                var originalFeeds = newsPaper.Feeds.Union(editedFeeds).Intersect(editedFeeds).ToList();
 
-                var remainedNewsEnumerables = newsPaper.NewsList.Except(deletedNews);
-                newsPaper.NewsList = new List<News>(remainedNewsEnumerables);
-                newsPaper.FeedUrls = new List<Uri>(editedUrisEnumerables);
-                foreach(var favNewsModel in App.Favorites)
-                {
-                    if(favNewsModel.NewsPaperTitle == oldTitle)
-                    {
-                        favNewsModel.NewsPaperTitle = newsPaper.PaperTitle;
-                    }
-                }
+                //从原来报纸的订阅源中，减去编辑后存在的订阅源，即为被删除的订阅源。
+                var deletedFeeds = newsPaper.Feeds.Except(originalFeeds).ToList();
+
+                //筛选出新加的订阅源。
+                var newFeeds = newsPaper.Feeds.Except(originalFeeds).ToList();
+
+                //删除相应的订阅源。
+                newsPaper.RemoveFeeds(deletedFeeds);
+
+                //添加相应的订阅源。
+                newsPaper.AddFeeds(editedFeeds);
+
+                //跳转到修改完的页面。
                 this.Frame.Navigate(typeof(PaperPage), newsPaper);
+
+                //触发OnPaperEdited事件。
                 OnPaperEdited?.Invoke();
-                NewsPaper.SaveAllAsync();
             }
+            //添加新报纸模式
             else
             {
+                //检测是否有新标题
                 bool hasSameTitle = false;
                 foreach(var paper in NewsPaper.NewsPapers)
                 {
@@ -143,15 +133,18 @@ namespace InkingNewsstand
                         break;
                     }
                 }
+
                 if (!hasSameTitle //如果没有同名的报纸
                     && newspaperTitleTextBox.Text != "") //并且如果名字不等与""
                 {
                     newsPaper = new NewsPaper(newspaperTitleTextBox.Text);
+                    NewsPaper.AddNewsPaper(newsPaper);
+                    List<Feed> feedsToAdd = new List<Feed>();
                     foreach (var element in rssInputPanel.Children)
                     {
                         try
                         {
-                            newsPaper.AddFeedLink(new Uri((element as TextBox).Text));
+                            feedsToAdd.Add(new Feed(new Uri((element as TextBox).Text)));
                         }
                         catch (Exception)
                         {
@@ -159,7 +152,6 @@ namespace InkingNewsstand
                         }
                     }
                     NewsPaper.AddNewsPaper(newsPaper);
-                    await NewsPaper.SaveToFile(newsPaper);
                 }
                 else
                 {
@@ -169,7 +161,7 @@ namespace InkingNewsstand
                 }
             }
 
-            Invoke(() =>
+            App.Invoke(() =>
             {
                 PaperPage.thisPaperpage.RefreshNews();
             });
@@ -219,7 +211,7 @@ namespace InkingNewsstand
         /// <param name="e"></param>
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            await NewsPaper.DeleteNewsPaper(newsPaper);
+            NewsPaper.DeleteNewsPaper(newsPaper);
         }
 
         /// <summary>
@@ -250,11 +242,6 @@ namespace InkingNewsstand
                     }
                 }
             });
-        }
-
-        public async void Invoke(Action action, Windows.UI.Core.CoreDispatcherPriority Priority = Windows.UI.Core.CoreDispatcherPriority.Normal)
-        {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Priority, () => { action(); });
         }
     }
 }

@@ -25,24 +25,19 @@ namespace InkingNewsstand.Model.Migrations
 
                     b.Property<string>("Icon");
 
-                    b.Property<string>("NewsPaperPaperTitle");
-
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NewsPaperPaperTitle");
 
                     b.ToTable("Feeds");
                 });
 
             modelBuilder.Entity("InkingNewsstand.Model.News", b =>
                 {
-                    b.Property<string>("Title");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Authors");
-
-                    b.Property<DateTimeOffset>("PublishedDate");
 
                     b.Property<string>("Content");
 
@@ -60,52 +55,66 @@ namespace InkingNewsstand.Model.Migrations
 
                     b.Property<string>("NewsLink");
 
-                    b.Property<string>("NewsPaperPaperTitle");
+                    b.Property<DateTimeOffset>("PublishedDate");
 
                     b.Property<string>("Summary");
 
-                    b.HasKey("Title", "Authors", "PublishedDate")
-                        .HasName("CompositePrimaryKey_News");
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("FeedId");
-
-                    b.HasIndex("NewsPaperPaperTitle");
 
                     b.ToTable("News");
                 });
 
             modelBuilder.Entity("InkingNewsstand.Model.NewsPaper", b =>
                 {
-                    b.Property<string>("PaperTitle")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<bool>("ExtendMode");
 
                     b.Property<string>("IconType");
 
-                    b.HasKey("PaperTitle");
+                    b.Property<string>("PaperTitle");
+
+                    b.HasKey("Id");
 
                     b.ToTable("NewsPapers");
                 });
 
-            modelBuilder.Entity("InkingNewsstand.Model.Feed", b =>
+            modelBuilder.Entity("InkingNewsstand.Model.NewsPaper_Feed", b =>
                 {
-                    b.HasOne("InkingNewsstand.Model.NewsPaper")
-                        .WithMany("Feeds")
-                        .HasForeignKey("NewsPaperPaperTitle")
-                        .HasConstraintName("ManyToOne_OneFeedBelongsToManyNewsPapers");
+                    b.Property<string>("FeedId");
+
+                    b.Property<int>("NewsPaperId");
+
+                    b.HasKey("FeedId", "NewsPaperId");
+
+                    b.HasIndex("NewsPaperId");
+
+                    b.ToTable("NewsPaper_Feed");
                 });
 
             modelBuilder.Entity("InkingNewsstand.Model.News", b =>
                 {
                     b.HasOne("InkingNewsstand.Model.Feed", "Feed")
                         .WithMany("News")
+                        .HasForeignKey("FeedId");
+                });
+
+            modelBuilder.Entity("InkingNewsstand.Model.NewsPaper_Feed", b =>
+                {
+                    b.HasOne("InkingNewsstand.Model.Feed", "Feed")
+                        .WithMany("NewsPaper_Feeds")
                         .HasForeignKey("FeedId")
-                        .HasConstraintName("OneToMany_OneFeedContainsManyNews");
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("InkingNewsstand.Model.NewsPaper", "NewsPaper")
-                        .WithMany("News")
-                        .HasForeignKey("NewsPaperPaperTitle");
+                        .WithMany("NewsPaper_Feeds")
+                        .HasForeignKey("NewsPaperId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
