@@ -5,6 +5,7 @@
     xmlns:local="using:InkingNewsstand"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:classes="using:InkingNewsstand.Classes"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -17,7 +18,7 @@
             <TextBlock Grid.Row="0" Text="收藏" Style="{StaticResource HeaderTextBlockStyle}"></TextBlock>
             <GridView x:Name="NewsItemsGrid" ItemsSource="{x:Bind FavoriteNews}" ItemClick="NewsItemsGrid_ItemClick" IsItemClickEnabled="True" Grid.Row="1" HorizontalAlignment="Center">
                 <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="local:NewsItem">
+                    <DataTemplate x:DataType="classes:News">
                         <RelativePanel Width="320" Height="320">
                             <RelativePanel.Background>
                                 <SolidColorBrush Color="Black" Opacity="0.4"></SolidColorBrush>

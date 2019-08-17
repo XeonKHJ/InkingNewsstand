@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InkingNewsstand.Model.Migrations
 {
     [DbContext(typeof(InkingNewsstandContext))]
-    [Migration("20190816083151_InitialCreate")]
+    [Migration("20190817112725_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

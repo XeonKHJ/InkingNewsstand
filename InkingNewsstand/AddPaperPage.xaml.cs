@@ -109,10 +109,10 @@ namespace InkingNewsstand
                 var newFeeds = newsPaper.Feeds.Except(originalFeeds).ToList();
 
                 //删除相应的订阅源。
-                newsPaper.RemoveFeeds(deletedFeeds);
+                newsPaper.RemoveFeedsAsync(deletedFeeds);
 
                 //添加相应的订阅源。
-                newsPaper.AddFeeds(editedFeeds);
+                newsPaper.AddFeedsAsync(editedFeeds);
 
                 //跳转到修改完的页面。
                 this.Frame.Navigate(typeof(PaperPage), newsPaper);
@@ -138,7 +138,6 @@ namespace InkingNewsstand
                     && newspaperTitleTextBox.Text != "") //并且如果名字不等与""
                 {
                     newsPaper = new NewsPaper(newspaperTitleTextBox.Text);
-                    NewsPaper.AddNewsPaper(newsPaper);
                     List<Feed> feedsToAdd = new List<Feed>();
                     foreach (var element in rssInputPanel.Children)
                     {
@@ -151,7 +150,8 @@ namespace InkingNewsstand
                             continue;
                         }
                     }
-                    NewsPaper.AddNewsPaper(newsPaper);
+                    await NewsPaper.AddNewsPaperAsync(newsPaper);
+                    await newsPaper.AddFeedsAsync(feedsToAdd);
                 }
                 else
                 {
@@ -179,9 +179,9 @@ namespace InkingNewsstand
             {
                 newsPaper = (NewsPaper)e.Parameter;
                 newspaperTitleTextBox.Text = newsPaper.PaperTitle;
-                foreach(var url in newsPaper.FeedUrls)
+                foreach(var feed in newsPaper.Feeds)
                 {
-                    ((TextBox)rssInputPanel.Children[rssInputPanel.Children.Count - 1]).Text = url.AbsoluteUri;
+                    ((TextBox)rssInputPanel.Children[rssInputPanel.Children.Count - 1]).Text = feed.Id;
                     AddFeedButton_Click(null, null);
                 }
                 deleteButton.Visibility = Visibility.Visible;
@@ -237,7 +237,7 @@ namespace InkingNewsstand
                 {
                     if (isThereFeed)
                     {
-                        Invoke(()=> { AddFeedButton_Click(feedViewModel, null); }) ;
+                        App.Invoke(()=> { AddFeedButton_Click(feedViewModel, null); }) ;
                         isThereFeed = false;
                     }
                 }

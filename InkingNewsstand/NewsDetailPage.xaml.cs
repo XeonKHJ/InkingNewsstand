@@ -209,13 +209,17 @@ namespace InkingNewsstand
         string CoverUrlforPage { set; get; }
 
         private NewsPaper newsPaper = null;
+
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            //保存笔迹
-            var currentStrokes = newsCanvas.InkPresenter.StrokeContainer.GetStrokes(); //获取笔迹
-            byte[] serializedStrokes = await InkHelper.SerializeStrokes(currentStrokes); //序列化笔迹
-            News.InkStrokes = serializedStrokes; //将笔迹保存到新闻实例里
-            await News.Save(); //保存报纸
+            //序列化墨迹。
+            byte[] serializedStrokes = await InkHelper.SerializeStrokes(newsCanvas.InkPresenter);
+
+            //把墨迹保存在新闻中。
+            News.InkStrokes = serializedStrokes;
+
+            //保存新闻。
+            await News.Save();
         }
 
         /// <summary>
@@ -561,7 +565,6 @@ namespace InkingNewsstand
             printDocument.AddPagesComplete();
         }
 
-
         /*---------------打印功能结束-----------------------*/
 
         /// <summary>
@@ -687,8 +690,10 @@ namespace InkingNewsstand
             //var result = wordPicker.Lookfor(htmlBlock.SelectedText, Language_t.en);
         }
 
+
+        /*+++++++++++++++++++++++++++++++++++翻译+++++++++++++++++++++++++++++++++++*/
+
         private Flyout translationFlyout;
-        //WordPicker wordPicker = new WordPicker();
         Translator translator = new Translator();
 
         /// <summary>
@@ -812,5 +817,7 @@ namespace InkingNewsstand
 
             return new Point(x, y);
         }
+
+        /*-----------------------------------翻译----------------------------------*/
     }
 }

@@ -13,8 +13,8 @@ namespace InkingNewsstand.Model
         public string Description { get; set; }
         public string Icon { get; set; }
 
-        public List<News> News { set; get; }
+        public List<News> News { set; get; } = new List<News>();
 
-        public List<NewsPaper_Feed> NewsPaper_Feeds { set; get; }
+        public List<NewsPaper_Feed> NewsPaper_Feeds { set; get; } = new List<NewsPaper_Feed>();
     }
 }

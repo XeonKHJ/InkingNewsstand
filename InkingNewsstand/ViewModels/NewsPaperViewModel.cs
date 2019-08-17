@@ -9,21 +9,30 @@ namespace InkingNewsstand.ViewModels
 {
     public class NewsPaperViewModel
     {
-        private NewsPaper newsPaper;
-        public NewsPaperViewModel(NewsPaper _newsPaper)
+        public NewsPaper NewsPaper { set; get; }
+        public NewsPaperViewModel(NewsPaper newsPaper)
         {
-            newsPaper = _newsPaper;
+            NewsPaper = newsPaper;
+        }
+
+        public NewsPaperViewModel(string title)
+        {
+            NewsPaper = new NewsPaper(Title);
         }
 
         public string Title
         {
-            get { return newsPaper.PaperTitle; }
+            get { return NewsPaper.PaperTitle; }
         }
 
-        public string Icon
+        public string IconType
         {
-            get { return newsPaper.IconType; }
+            get { return NewsPaper.IconType; }
         }
 
+        public int Id
+        {
+            get { return NewsPaper.Id; }
+        }
     }
 }

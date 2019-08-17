@@ -57,7 +57,7 @@ namespace InkingNewsstand
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (!(e.Parameter is NewsPaper))
+            if (!(e.Parameter is NewsPaperViewModel newsPaperViewModel))
             {
                 throw new Exception();
             }
@@ -70,7 +70,9 @@ namespace InkingNewsstand
                     MainPage.MainPageNavigationView.SelectedItem = e.Parameter;
                 }
 
-                paper = (NewsPaper)e.Parameter;
+                paper = newsPaperViewModel.NewsPaper;
+
+                //注册事件
                 paper.OnNewsRefreshing += Feeds_OnNewsRefreshing;
                 paper.OnNewsRefreshed += Feeds_OnNewsRefreshed;
                 paper.NoNewNews += Feeds_NoNewNews;
@@ -179,7 +181,7 @@ namespace InkingNewsstand
         }
 
         float angle = 360;
-        private async void RefreshPaperButton_Click(object sender, RoutedEventArgs e)
+        private void RefreshPaperButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshNews();
         }

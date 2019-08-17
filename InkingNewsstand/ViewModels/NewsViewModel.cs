@@ -8,5 +8,8 @@ namespace InkingNewsstand.ViewModels
 {
     class NewsViewModel
     {
+        string Title { set; get; }
+
+
     }
 }

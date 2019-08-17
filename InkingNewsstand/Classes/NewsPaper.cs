@@ -18,7 +18,7 @@ namespace InkingNewsstand.Classes
     /// </summary>
     public class NewsPaper
     {
-        private Model.NewsPaper Model;
+        private Model.NewsPaper Model = new Model.NewsPaper { PaperTitle = "创建你的第一份报纸！" };
 
         /// <summary>
         /// 通过报纸名创建实例
@@ -35,6 +35,7 @@ namespace InkingNewsstand.Classes
         /// <param name="newsPaperModel"></param>
         public NewsPaper(Model.NewsPaper newsPaperModel)
         {
+            Model = newsPaperModel;
             foreach (var newsPaper_Feed in newsPaperModel.NewsPaper_Feeds)
             {
                 foreach (var newsModel in newsPaper_Feed.Feed.News)
@@ -89,14 +90,17 @@ namespace InkingNewsstand.Classes
         /// 添加报纸
         /// </summary>
         /// <param name="newsPaper"></param>
-        static public async void AddNewsPaper(NewsPaper newsPaper)
+        static public async Task AddNewsPaperAsync(NewsPaper newsPaper)
         {
             OnPaperAdding?.Invoke(newsPaper);
 
             //添加到数据库中
             using (var db = new Model.InkingNewsstandContext())
             {
+                //将该报纸写进数据库
                 db.NewsPapers.Add(newsPaper.Model);
+
+                //保存数据库
                 await db.SaveChangesAsync();
             }
 
@@ -107,7 +111,7 @@ namespace InkingNewsstand.Classes
         /// 往报纸添加订阅源
         /// </summary>
         /// <param name="feed">要添加的订阅源</param>
-        public async void AddFeed(Feed feed)
+        public async void AddFeedAsync(Feed feed)
         {
             using (var db = new Model.InkingNewsstandContext())
             {
@@ -124,66 +128,68 @@ namespace InkingNewsstand.Classes
                 if (feedResult == null  //如果之前FeedResult没有的话，就说明在这张报纸里面肯定没有这个订阅源，因此一定要添加。
                     || !(this.Feeds.Exists(f => f.Id == feed.Id))) //如果之前报纸中不存在这个订阅源的话。
                 {
-                    this.Model.NewsPaper_Feeds.Add(new InkingNewsstand.Model.NewsPaper_Feed { FeedId = feed.Id, NewsPaperId = this.Id });
-                    db.NewsPapers.Update(Model);
+                    var relation = new Model.NewsPaper_Feed { FeedId = feed.Id, NewsPaperId = this.Id };
+                    db.Add(relation);
+                    Model.NewsPaper_Feeds.Add(relation);
                     await db.SaveChangesAsync();
                 }
             }
         }
 
-        public async void AddFeeds(List<Feed> addedFeeds)
+        public async Task AddFeedsAsync(List<Feed> addedFeeds)
         {
             using (var db = new Model.InkingNewsstandContext())
             {
                 var feeds = db.Feeds.ToList();
                 //筛选出没有在报纸中的所有的订阅源
-                var feedModelsNotInNewsPaper = from feed in addedFeeds
-                                          where Feeds.Exists(f => f.Id == feed.Id)
-                                          select feed.Model;
+                var feedModelsNotInNewsPaper = (from feed in addedFeeds
+                                          where !Feeds.Exists(f => f.Id == feed.Id)
+                                          select feed.Model).ToList();
 
                 //筛选出新的订阅源
-                var newFeedModels = from feedModel in feedModelsNotInNewsPaper
+                var newFeedModels = (from feedModel in feedModelsNotInNewsPaper
                                where !feeds.Exists(f => f.Id == feedModel.Id)
-                               select feedModel;
+                               select feedModel).ToList();
 
                 //筛选出已经在数据库存在但在报纸中不存在的订阅源
-                var oldFeeds = from feedModel in feedModelsNotInNewsPaper
+                var oldFeeds = (from feedModel in feedModelsNotInNewsPaper
                                where Feeds.Exists(f => f.Id == feedModel.Id)
-                               select feedModel;
+                               select feedModel).ToList();
 
                 //将新的订阅源添加到数据库
                 db.Feeds.AddRange(newFeedModels);
 
-                //生成该报纸与所有要添加的订阅源的关系
-                Model.NewsPaper_Feeds.AddRange(
-                    from feedModel in feedModelsNotInNewsPaper
-                    select (new Model.NewsPaper_Feed
-                    {
-                        NewsPaperId = Id, FeedId = feedModel.Id
-                    }));
+                //新建关系实例
+                var relation = (from feedModel in feedModelsNotInNewsPaper
+                               select (new Model.NewsPaper_Feed
+                               {
+                                   NewsPaperId = Id,
+                                   FeedId = feedModel.Id
+                               })).ToList();
 
                 //更新报纸
-                db.NewsPapers.Update(Model);
-
+                db.AddRange(relation);
                 //保存数据库
                 await db.SaveChangesAsync();
             }
         }
 
-        public async void RemoveFeeds(IEnumerable<Feed> removedFeeds)
+        public async void RemoveFeedsAsync(IEnumerable<Feed> removedFeeds)
         {
             using (var db = new Model.InkingNewsstandContext())
             {
                 var removedFeedsList = removedFeeds.ToList();
 
+                //筛选出被删除的关系模型
+                var removedList = (from nf in Model.NewsPaper_Feeds
+                                   where removedFeedsList.Exists(f => f.Id == nf.FeedId)
+                                   select nf).ToList();
+
                 //从该数据库模型中剔除被删除的关系。
-                Model.NewsPaper_Feeds.Except(
-                    from nf in Model.NewsPaper_Feeds
-                    where removedFeedsList.Exists(f => f.Id == nf.FeedId)
-                    select nf);
+                Model.NewsPaper_Feeds.Except(removedList);
 
                 //更新数据库
-                db.NewsPapers.Update(Model);
+                db.RemoveRange(removedList);
 
                 //保存到数据库
                 await db.SaveChangesAsync();

@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:InkingNewsstand"
+    xmlns:viewModel="using:InkingNewsstand.ViewModels"
     xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -13,14 +14,14 @@
     <Grid>
         <NavigationView x:Name="paperNavigationView" SelectionChanged="PaperNavigationView_SelectionChanged"
                         IsBackEnabled="True" IsBackButtonVisible="Auto"
-                        BackRequested="PaperNavigationView_BackRequested" MenuItemsSource="{x:Bind NewsPapers}">
+                        BackRequested="PaperNavigationView_BackRequested" MenuItemsSource="{x:Bind NewsPapersViewCollection}">
             <NavigationView.Background>
                 <AcrylicBrush FallbackColor="White"></AcrylicBrush>
             </NavigationView.Background>
 
             <NavigationView.MenuItemTemplate>
-                <DataTemplate x:DataType="data:NewsPaper">
-                    <NavigationViewItem Content="{x:Bind PaperTitle}" Icon="Page"></NavigationViewItem>
+                <DataTemplate x:DataType="viewModel:NewsPaperViewModel">
+                    <NavigationViewItem Content="{x:Bind Title}" Icon="Page"></NavigationViewItem>
                 </DataTemplate>
             </NavigationView.MenuItemTemplate>
 

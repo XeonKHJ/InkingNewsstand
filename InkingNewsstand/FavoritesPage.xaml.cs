@@ -37,13 +37,13 @@ namespace InkingNewsstand
 
         private void GetNewsFromNewsList()
         {
-            foreach (var favNewsModel in App.Favorites)
-            {
-                FavoriteNews.Add(
-                    (NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == favNewsModel.NewsPaperTitle))
-                    .News.Find((News newsItem) => newsItem.GetHashCode() == favNewsModel.HashCode)
-                    );
-            }
+            //foreach (var favNewsModel in App.Favorites)
+            //{
+            //    FavoriteNews.Add(
+            //        (NewsPaper.NewsPapers.Find((NewsPaper paper) => paper.PaperTitle == favNewsModel.NewsPaperTitle))
+            //        .News.Find((News newsItem) => newsItem.GetHashCode() == favNewsModel.HashCode)
+            //        );
+            //}
         }
 
         private ObservableCollection<News> FavoriteNews { set; get; } = new ObservableCollection<News>();
