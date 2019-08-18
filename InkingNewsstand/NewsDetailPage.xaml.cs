@@ -219,7 +219,7 @@ namespace InkingNewsstand
             News.InkStrokes = serializedStrokes;
 
             //保存新闻。
-            await News.Save();
+            await News.SaveAsync();
         }
 
         /// <summary>

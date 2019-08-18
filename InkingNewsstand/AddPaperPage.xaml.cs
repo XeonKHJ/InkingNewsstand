@@ -109,10 +109,10 @@ namespace InkingNewsstand
                 var newFeeds = newsPaper.Feeds.Except(originalFeeds).ToList();
 
                 //删除相应的订阅源。
-                newsPaper.RemoveFeedsAsync(deletedFeeds);
+                newsPaper.RemoveFeeds(deletedFeeds);
 
                 //添加相应的订阅源。
-                newsPaper.AddFeedsAsync(editedFeeds);
+                newsPaper.AddFeeds(editedFeeds);
 
                 //跳转到修改完的页面。
                 this.Frame.Navigate(typeof(PaperPage), newsPaper);
@@ -138,12 +138,11 @@ namespace InkingNewsstand
                     && newspaperTitleTextBox.Text != "") //并且如果名字不等与""
                 {
                     newsPaper = new NewsPaper(newspaperTitleTextBox.Text);
-                    List<Feed> feedsToAdd = new List<Feed>();
                     foreach (var element in rssInputPanel.Children)
                     {
                         try
                         {
-                            feedsToAdd.Add(new Feed(new Uri((element as TextBox).Text)));
+                            newsPaper.AddFeed(new Feed(new Uri((element as TextBox).Text)));
                         }
                         catch (Exception)
                         {
@@ -151,7 +150,6 @@ namespace InkingNewsstand
                         }
                     }
                     await NewsPaper.AddNewsPaperAsync(newsPaper);
-                    await newsPaper.AddFeedsAsync(feedsToAdd);
                 }
                 else
                 {

@@ -16,7 +16,11 @@ namespace InkingNewsstand.Utilities
             {
                 db.Database.Migrate();
             }
+
+            DatabaseContext = new InkingNewsstandContext();
         }
+
+        public static InkingNewsstandContext DatabaseContext;
 
         public static List<NewsPaper> GetNewsPapers()
         {

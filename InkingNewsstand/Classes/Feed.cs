@@ -17,6 +17,7 @@ namespace InkingNewsstand.Classes
             Icon = feed.IconUri.AbsoluteUri;
         }
 
+        public static List<Feed> Feeds { set; get; } = new List<Feed>();
         public Feed(Uri uri)
         {
             Id = uri.AbsoluteUri;
@@ -31,7 +32,8 @@ namespace InkingNewsstand.Classes
         {
             Title = feed.Title.Text;
             Id = feed.Id;
-            Icon = feed.IconUri.AbsoluteUri;
+
+            Icon = feed.IconUri == null? "NoPic" : feed.IconUri.AbsoluteUri;
         }
 
         public Model.Feed Model { get; set; } = new Model.Feed();
@@ -57,28 +59,25 @@ namespace InkingNewsstand.Classes
         /// 对参数中且该订阅源中没有的新闻进行按出版日期降序排列，然后添加到数据库中。
         /// </summary>
         /// <param name="news">新闻列表</param>
-        public async Task AddNewsAsync(List<News> news)
+        public void AddNews(List<News> news)
         {
             var newNewsList = (from n1 in news
                               where (!News.Exists(n2 => n2.Title == n1.Title))
-                              select n1.Model).OrderByDescending(n=>n.PublishedDate);
+                              select n1).ToList();
 
-            Model.News.AddRange(newNewsList);
+            News.AddRange(newNewsList);
 
-            using (var db = new Model.InkingNewsstandContext())
-            {
-                db.Feeds.Update(Model);
-                await db.SaveChangesAsync();
-            }
+            //添加到新闻总列表中
+            Classes.News.NewsList.AddRange(newNewsList);
+
+            //添加到模型中
+            Model.News.AddRange(from n in news select n.Model);
+
+            //根据出版日期降序排列
+            News.OrderByDescending(n => n.PublishedDate);
         }
 
-        public List<News> News
-        {
-            get
-            {
-                return (from news in Model.News select new News(news)).ToList();
-            }
-        }
+        public List<News> News { set; get; } = new List<News>();
 
         public string Icon
         {

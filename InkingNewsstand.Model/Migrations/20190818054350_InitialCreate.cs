@@ -67,7 +67,7 @@ namespace InkingNewsstand.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NewsPaper_Feed",
+                name: "NewsPaper_Feeds",
                 columns: table => new
                 {
                     NewsPaperId = table.Column<int>(nullable: false),
@@ -75,15 +75,15 @@ namespace InkingNewsstand.Model.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NewsPaper_Feed", x => new { x.FeedId, x.NewsPaperId });
+                    table.PrimaryKey("PK_NewsPaper_Feeds", x => new { x.FeedId, x.NewsPaperId });
                     table.ForeignKey(
-                        name: "FK_NewsPaper_Feed_Feeds_FeedId",
+                        name: "FK_NewsPaper_Feeds_Feeds_FeedId",
                         column: x => x.FeedId,
                         principalTable: "Feeds",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_NewsPaper_Feed_NewsPapers_NewsPaperId",
+                        name: "FK_NewsPaper_Feeds_NewsPapers_NewsPaperId",
                         column: x => x.NewsPaperId,
                         principalTable: "NewsPapers",
                         principalColumn: "Id",
@@ -96,8 +96,8 @@ namespace InkingNewsstand.Model.Migrations
                 column: "FeedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NewsPaper_Feed_NewsPaperId",
-                table: "NewsPaper_Feed",
+                name: "IX_NewsPaper_Feeds_NewsPaperId",
+                table: "NewsPaper_Feeds",
                 column: "NewsPaperId");
         }
 
@@ -107,7 +107,7 @@ namespace InkingNewsstand.Model.Migrations
                 name: "News");
 
             migrationBuilder.DropTable(
-                name: "NewsPaper_Feed");
+                name: "NewsPaper_Feeds");
 
             migrationBuilder.DropTable(
                 name: "Feeds");

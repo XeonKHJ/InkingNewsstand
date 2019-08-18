@@ -92,20 +92,28 @@ namespace InkingNewsstand
         /// <param name="newsItems"></param>
         private void Feeds_OnNewsRefreshed(List<News> newsItems)
         {
+
             //设置订阅源选择菜单弹窗项
             if (feedsChooseMenuFlyout.Items.Count != paper.Feeds.Count) //消除缓存带来的影响
             {
                 feedsChooseMenuFlyout.Items.Clear();
                 foreach (var feed in paper.Feeds)
                 {
-                    ToggleMenuFlyoutItem toggleMenuFlyoutItem = new ToggleMenuFlyoutItem
+                    try
                     {
-                        Text = feed.Title,
-                        IsChecked = true,
-                        Tag = feed.Id
-                    };
-                    toggleMenuFlyoutItem.Click += ToggleMenuFlyoutItem_Click;
-                    feedsChooseMenuFlyout.Items.Add(toggleMenuFlyoutItem);
+                        ToggleMenuFlyoutItem toggleMenuFlyoutItem = new ToggleMenuFlyoutItem
+                        {
+                            Text = feed.Title,
+                            IsChecked = true,
+                            Tag = feed.Id
+                        };
+                        toggleMenuFlyoutItem.Click += ToggleMenuFlyoutItem_Click;
+                        feedsChooseMenuFlyout.Items.Add(toggleMenuFlyoutItem);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
                 }
             }
 

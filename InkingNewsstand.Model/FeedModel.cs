@@ -7,6 +7,7 @@ namespace InkingNewsstand.Model
 {
     public class Feed
     {
+        [Key]
         public string Id { get; set; }
 
         public string Title { get; set; }

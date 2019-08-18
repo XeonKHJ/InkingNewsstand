@@ -29,10 +29,5 @@ namespace InkingNewsstand.ViewModels
         {
             get { return NewsPaper.IconType; }
         }
-
-        public int Id
-        {
-            get { return NewsPaper.Id; }
-        }
     }
 }

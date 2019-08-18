@@ -68,6 +68,8 @@ namespace InkingNewsstand.Classes
             Model = newsModel;
         }
 
+        public static List<News> NewsList { set; get; } = new List<News>();
+
         public int Id
         {
             get { return Model.Id; }
@@ -99,7 +101,7 @@ namespace InkingNewsstand.Classes
 
         public DateTimeOffset PublishedDate
         {
-            get {return Model.PublishedDate; }
+            get { return Model.PublishedDate; }
             private set { Model.PublishedDate = value; }
         }
 
@@ -120,7 +122,7 @@ namespace InkingNewsstand.Classes
             get
             {
                 var coverUrl = HtmlConverter.GetFirstImages(InnerHTML);
-                if(coverUrl == "")
+                if (coverUrl == "")
                 {
                     coverUrl = "NoPic";
                 }
@@ -130,11 +132,12 @@ namespace InkingNewsstand.Classes
 
         public string InnerHTML { get { return Model.InnerHTML; } private set { Model.InnerHTML = value; } }
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             using(var db = new Model.InkingNewsstandContext())
             {
                 db.Update(Model);
+                await db.SaveChangesAsync();
             }
         }
 
@@ -157,7 +160,7 @@ namespace InkingNewsstand.Classes
         {
             get { return Model.IsFavorite; }
             set { Model.IsFavorite = value; }
-        } 
+        }
 
         public bool Equals(News other)
         {
@@ -179,7 +182,7 @@ namespace InkingNewsstand.Classes
         /// <returns>是否等价</returns>
         public static bool operator ==(News lhs, News rhs)
         {
-            if(lhs is null || rhs is null)
+            if (lhs is null || rhs is null)
             {
                 return false;
             }

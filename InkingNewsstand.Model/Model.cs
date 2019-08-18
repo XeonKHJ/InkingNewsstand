@@ -7,8 +7,9 @@ namespace InkingNewsstand.Model
     public class InkingNewsstandContext : DbContext
     {
         public DbSet<NewsPaper> NewsPapers { get; set; }
-        //public DbSet<News> News { get; set; }
+        public DbSet<News> News { get; set; }
         public DbSet<Feed> Feeds { set; get; }
+        public DbSet<NewsPaper_Feed> NewsPaper_Feeds { set; get; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

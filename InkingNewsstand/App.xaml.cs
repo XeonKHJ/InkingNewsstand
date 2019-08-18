@@ -18,6 +18,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using InkingNewsstand.Utilities;
+using InkingNewsstand.Classes;
 
 namespace InkingNewsstand
 {
@@ -46,9 +47,11 @@ namespace InkingNewsstand
         /// <param name="e">有关启动请求和过程的详细信息。</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-
             //加载设置
             Settings.LoadSettings();
+
+            //加载报纸
+            NewsPaper.LoadNewsPapers();
 
             Frame rootFrame = Window.Current.Content as Frame;
 

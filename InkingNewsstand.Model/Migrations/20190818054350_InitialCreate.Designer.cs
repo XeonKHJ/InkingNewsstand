@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InkingNewsstand.Model.Migrations
 {
     [DbContext(typeof(InkingNewsstandContext))]
-    [Migration("20190817112725_InitialCreate")]
+    [Migration("20190818054350_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,7 +96,7 @@ namespace InkingNewsstand.Model.Migrations
 
                     b.HasIndex("NewsPaperId");
 
-                    b.ToTable("NewsPaper_Feed");
+                    b.ToTable("NewsPaper_Feeds");
                 });
 
             modelBuilder.Entity("InkingNewsstand.Model.News", b =>

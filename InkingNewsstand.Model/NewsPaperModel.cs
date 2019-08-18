@@ -7,10 +7,9 @@ namespace InkingNewsstand.Model
 {
     public class NewsPaper
     {
+        public int Id { set; get; }
 
         public List<NewsPaper_Feed> NewsPaper_Feeds { get; set; } = new List<NewsPaper_Feed>();
-
-        public int Id { set; get; }
 
         /// <summary>
         /// 报纸标题。

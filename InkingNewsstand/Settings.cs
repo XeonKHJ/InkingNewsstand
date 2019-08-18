@@ -56,7 +56,7 @@ namespace InkingNewsstand
                 NewsWidth = (double)localSettings.Values["NewsWidth"];
                 BindingNewsWidthwithFrame = (bool)localSettings.Values["BindingNewsWidthwithFrame"];
                 var extendedFeedsContainer = localSettings.CreateContainer("ExtendedFeeds", ApplicationDataCreateDisposition.Always).Values;
-                foreach(var extendedFeedId in extendedFeedsContainer)
+                foreach (var extendedFeedId in extendedFeedsContainer)
                 {
                     ExtendedFeeds.Add(extendedFeedId.Key);
                 }
@@ -67,15 +67,18 @@ namespace InkingNewsstand
                 FontSize = (double)roamingSettings.Values["FontSize"];
                 LineSpacing = (double)roamingSettings.Values["LineSpacing"];
             }
-            catch(NullReferenceException)
+            catch (NullReferenceException)
             {
                 System.Diagnostics.Debug.WriteLine("第一次打开");
+                IsFirstTime = true;
             }
-            catch(ArgumentNullException)
+            catch (ArgumentNullException)
             {
                 System.Diagnostics.Debug.WriteLine("第一次打开");
+                IsFirstTime = true;
             }
         }
+        public static bool IsFirstTime { get; set; } = false;
     }
 
     public class SerializedSetting

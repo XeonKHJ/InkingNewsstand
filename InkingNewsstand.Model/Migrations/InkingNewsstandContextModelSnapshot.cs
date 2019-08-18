@@ -94,7 +94,7 @@ namespace InkingNewsstand.Model.Migrations
 
                     b.HasIndex("NewsPaperId");
 
-                    b.ToTable("NewsPaper_Feed");
+                    b.ToTable("NewsPaper_Feeds");
                 });
 
             modelBuilder.Entity("InkingNewsstand.Model.News", b =>
