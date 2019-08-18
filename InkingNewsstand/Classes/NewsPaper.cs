@@ -58,11 +58,28 @@ namespace InkingNewsstand.Classes
                 Feed.Feeds = (from fModel in db.Feeds
                               select new Feed(fModel)).ToList();
 
+                //3、加载新闻
+                Classes.News.NewsList = (from n in db.News
+                                         select new News(n)).ToList();
+
+                foreach(var news in Classes.News.NewsList)
+                {
+                    news.Feed = Feed.Feeds.Find(f => f.Id == news.Model.FeedId);
+                }
+
+                //3、加载每个订阅源的新闻
+                foreach(var feed in Feed.Feeds)
+                {
+                    feed.News = (from news in Classes.News.NewsList
+                                       where news.Feed.Id == feed.Id
+                                       select news).OrderByDescending(n => n.PublishedDate).ToList();
+                }
+
                 //3、加载关系模组
                 var relations = (from r in db.NewsPaper_Feeds
                                  select r).ToList();
 
-                //3、关联报纸和订阅源
+                //4、关联报纸和订阅源
                 foreach (var newsPaper in NewsPapers)
                 {
                     newsPaper.Feeds = (from feed in Feed.Feeds

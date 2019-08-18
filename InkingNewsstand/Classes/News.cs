@@ -84,7 +84,7 @@ namespace InkingNewsstand.Classes
         public Feed Feed
         {
             get { return new Feed(Model.Feed); }
-            private set { Model.Feed = value.Model; }
+            set { Model.Feed = value.Model; }
         }
 
         public string Title
