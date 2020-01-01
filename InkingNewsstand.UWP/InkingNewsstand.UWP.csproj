@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{4FB3FB55-CD11-4FA9-9D90-7BA817C2F538}</ProjectGuid>
+    <ProjectGuid>{51917875-4CCE-45A3-89AD-3963615FE1D5}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InkingNewsstand.UI.UWP</RootNamespace>
-    <AssemblyName>InkingNewsstand.UI.UWP</AssemblyName>
+    <RootNamespace>InkingNewsstand.UWP</RootNamespace>
+    <AssemblyName>InkingNewsstand.UWP</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
