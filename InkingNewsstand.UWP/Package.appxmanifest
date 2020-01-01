@@ -7,7 +7,7 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="8b9b6e5f-3a48-40e9-86c3-4439a67c0830"
+    Name="InkingNewsstand"
     Publisher="CN=redal"
     Version="1.0.0.0" />
 
@@ -15,7 +15,7 @@
 
   <Properties>
     <DisplayName>InkingNewsstand.UWP</DisplayName>
-    <PublisherDisplayName>redal</PublisherDisplayName>
+    <PublisherDisplayName>康宏嘉</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

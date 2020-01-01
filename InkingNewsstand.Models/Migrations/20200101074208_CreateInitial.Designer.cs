@@ -3,14 +3,16 @@ using System;
 using InkingNewsstand.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InkingNewsstand.Models.Migrations
 {
     [DbContext(typeof(InkingNewsstandDbContext))]
-    partial class InkingNewsstandDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200101074208_CreateInitial")]
+    partial class CreateInitial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,62 +71,11 @@ namespace InkingNewsstand.Models.Migrations
                     b.ToTable("Feeds");
                 });
 
-            modelBuilder.Entity("InkingNewsstand.Models.NewsPaperFeedModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FeedId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("NewsPaperId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FeedId");
-
-                    b.HasIndex("NewsPaperId");
-
-                    b.ToTable("NewsPaper_Feed");
-                });
-
-            modelBuilder.Entity("InkingNewsstand.Models.NewsPaperModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<byte[]>("Icon")
-                        .HasColumnType("BLOB");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("NewsPapers");
-                });
-
             modelBuilder.Entity("InkingNewsstand.Models.ArticleModel", b =>
                 {
                     b.HasOne("InkingNewsstand.Models.FeedModel", "Feed")
                         .WithMany("Articles")
                         .HasForeignKey("FeedId");
-                });
-
-            modelBuilder.Entity("InkingNewsstand.Models.NewsPaperFeedModel", b =>
-                {
-                    b.HasOne("InkingNewsstand.Models.FeedModel", "Feed")
-                        .WithMany("NewsPaperFeedModels")
-                        .HasForeignKey("FeedId");
-
-                    b.HasOne("InkingNewsstand.Models.NewsPaperModel", "NewsPaper")
-                        .WithMany("NewsPaperFeedModels")
-                        .HasForeignKey("NewsPaperId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
